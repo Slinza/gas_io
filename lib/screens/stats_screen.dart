@@ -1,4 +1,3 @@
-// firstScreen.dart
 import 'package:flutter/material.dart';
 
 class StatsScreen extends StatelessWidget {

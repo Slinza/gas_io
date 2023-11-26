@@ -1,4 +1,3 @@
-// bottomNavBar.dart
 import 'package:flutter/material.dart';
 
 class MyBottomNavBar extends StatelessWidget {
