@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gas_io/screens/app_bar.dart';
-import 'package:gas_io/screens/bottom_nav_bar.dart';
+import 'package:gas_io/components/app_bar.dart';
+import 'package:gas_io/components/bottom_nav_bar.dart';
 import 'package:gas_io/screens/stats_screen.dart';
 import 'package:gas_io/screens/refuel_screen.dart';
 import 'package:gas_io/screens/user_screen.dart';
@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: HomeScreen(),
     );
   }
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: const MyAppBar(),
       body: _buildBody(),
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: _currentIndex,
