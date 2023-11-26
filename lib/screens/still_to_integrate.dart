@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
+  const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -10,14 +12,14 @@ class Home extends StatelessWidget {
           height: 844,
           clipBehavior: Clip.antiAlias,
           decoration: ShapeDecoration(
-            color: Color(0xFFEDF3F8),
+            color: const Color(0xFFEDF3F8),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(55),
+              borderRadius: BorderRadius.circular(0),
             ),
           ),
           child: Stack(
             children: [
-              Positioned(
+              const Positioned(
                 left: 25,
                 top: 42,
                 child: Text(
@@ -35,7 +37,7 @@ class Home extends StatelessWidget {
               Positioned(
                 left: 25,
                 top: 105,
-                child: Container(
+                child: SizedBox(
                   width: 333,
                   height: 44,
                   child: Stack(
@@ -49,7 +51,7 @@ class Home extends StatelessWidget {
                             width: 333,
                             height: 44,
                             decoration: ShapeDecoration(
-                              color: Color(0xCCABCDBD),
+                              color: const Color(0xCCABCDBD),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(43),
                               ),
@@ -65,7 +67,7 @@ class Home extends StatelessWidget {
                           child: Container(
                             width: 29,
                             height: 29,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               image: DecorationImage(
                                 image: NetworkImage(
                                     "https://via.placeholder.com/29x29"),
@@ -82,7 +84,7 @@ class Home extends StatelessWidget {
               Positioned(
                 left: 313,
                 top: 31,
-                child: Container(
+                child: SizedBox(
                   width: 45,
                   height: 45,
                   child: Stack(
@@ -93,7 +95,7 @@ class Home extends StatelessWidget {
                         child: Container(
                           width: 45,
                           height: 45,
-                          decoration: ShapeDecoration(
+                          decoration: const ShapeDecoration(
                             color: Color(0xFF46BD84),
                             shape: OvalBorder(),
                           ),
@@ -105,7 +107,7 @@ class Home extends StatelessWidget {
                         child: Container(
                           width: 29,
                           height: 29,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
                                   "https://via.placeholder.com/29x29"),
@@ -127,7 +129,8 @@ class Home extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(width: 1, color: Color(0xFF9747FF)),
+                      side:
+                          const BorderSide(width: 1, color: Color(0xFF9747FF)),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
@@ -136,7 +139,7 @@ class Home extends StatelessWidget {
                       Positioned(
                         left: 20,
                         top: 20,
-                        child: Container(
+                        child: SizedBox(
                           width: 361,
                           height: 124,
                           child: Stack(
@@ -155,7 +158,7 @@ class Home extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 21,
                                 top: 15,
                                 child: Text(
@@ -172,11 +175,11 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 172,
                                 top: 14,
-                                child: Container(
+                                child: SizedBox(
                                   height: 12,
                                   child: Stack(
                                     children: [
-                                      Positioned(
+                                      const Positioned(
                                         left: 15,
                                         top: 0,
                                         child: Text(
@@ -196,7 +199,7 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 12,
                                           height: 12,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
                                                   "https://via.placeholder.com/12x12"),
@@ -212,7 +215,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 21,
                                 top: 36,
-                                child: Container(
+                                child: SizedBox(
                                   width: 138,
                                   height: 73,
                                   child: Stack(
@@ -223,11 +226,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 112,
                                           height: 71,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 116,
                                         top: 0,
                                         child: Text(
@@ -241,7 +244,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 119,
                                         top: 40,
                                         child: Text(
@@ -255,7 +258,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 24,
                                         top: 6,
                                         child: Text(
@@ -269,7 +272,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 49,
                                         top: 43,
                                         child: Text(
@@ -290,7 +293,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 194,
                                 top: 57,
-                                child: Container(
+                                child: SizedBox(
                                   width: 121,
                                   height: 33,
                                   child: Stack(
@@ -301,11 +304,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 70,
                                           height: 30,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 7,
                                         top: 3,
                                         child: Text(
@@ -319,7 +322,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 76,
                                         top: 0,
                                         child: Text(
@@ -344,7 +347,7 @@ class Home extends StatelessWidget {
                       Positioned(
                         left: 20,
                         top: 164,
-                        child: Container(
+                        child: SizedBox(
                           width: 361,
                           height: 124,
                           child: Stack(
@@ -363,7 +366,7 @@ class Home extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 21,
                                 top: 15,
                                 child: Text(
@@ -380,11 +383,11 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 172,
                                 top: 14,
-                                child: Container(
+                                child: SizedBox(
                                   height: 12,
                                   child: Stack(
                                     children: [
-                                      Positioned(
+                                      const Positioned(
                                         left: 15,
                                         top: 0,
                                         child: Text(
@@ -404,7 +407,7 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 12,
                                           height: 12,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
                                                   "https://via.placeholder.com/12x12"),
@@ -420,7 +423,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 21,
                                 top: 36,
-                                child: Container(
+                                child: SizedBox(
                                   width: 138,
                                   height: 73,
                                   child: Stack(
@@ -431,11 +434,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 112,
                                           height: 71,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 116,
                                         top: 0,
                                         child: Text(
@@ -449,7 +452,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 119,
                                         top: 40,
                                         child: Text(
@@ -463,7 +466,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 24,
                                         top: 6,
                                         child: Text(
@@ -477,7 +480,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 49,
                                         top: 43,
                                         child: Text(
@@ -498,7 +501,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 194,
                                 top: 57,
-                                child: Container(
+                                child: SizedBox(
                                   width: 121,
                                   height: 33,
                                   child: Stack(
@@ -509,11 +512,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 70,
                                           height: 30,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 7,
                                         top: 3,
                                         child: Text(
@@ -527,7 +530,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 76,
                                         top: 0,
                                         child: Text(
@@ -552,7 +555,7 @@ class Home extends StatelessWidget {
                       Positioned(
                         left: 20,
                         top: 308,
-                        child: Container(
+                        child: SizedBox(
                           width: 361,
                           height: 124,
                           child: Stack(
@@ -571,7 +574,7 @@ class Home extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 21,
                                 top: 15,
                                 child: Text(
@@ -588,11 +591,11 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 172,
                                 top: 14,
-                                child: Container(
+                                child: SizedBox(
                                   height: 12,
                                   child: Stack(
                                     children: [
-                                      Positioned(
+                                      const Positioned(
                                         left: 15,
                                         top: 0,
                                         child: Text(
@@ -612,7 +615,7 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 12,
                                           height: 12,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
                                                   "https://via.placeholder.com/12x12"),
@@ -628,7 +631,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 21,
                                 top: 36,
-                                child: Container(
+                                child: SizedBox(
                                   width: 138,
                                   height: 73,
                                   child: Stack(
@@ -639,11 +642,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 112,
                                           height: 71,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 116,
                                         top: 0,
                                         child: Text(
@@ -657,7 +660,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 119,
                                         top: 40,
                                         child: Text(
@@ -671,7 +674,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 24,
                                         top: 6,
                                         child: Text(
@@ -685,7 +688,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 49,
                                         top: 43,
                                         child: Text(
@@ -706,7 +709,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 194,
                                 top: 57,
-                                child: Container(
+                                child: SizedBox(
                                   width: 121,
                                   height: 33,
                                   child: Stack(
@@ -717,11 +720,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 70,
                                           height: 30,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 7,
                                         top: 3,
                                         child: Text(
@@ -735,7 +738,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 76,
                                         top: 0,
                                         child: Text(
@@ -760,7 +763,7 @@ class Home extends StatelessWidget {
                       Positioned(
                         left: 20,
                         top: 452,
-                        child: Container(
+                        child: SizedBox(
                           width: 361,
                           height: 124,
                           child: Stack(
@@ -779,7 +782,7 @@ class Home extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 21,
                                 top: 15,
                                 child: Text(
@@ -796,11 +799,11 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 172,
                                 top: 14,
-                                child: Container(
+                                child: SizedBox(
                                   height: 12,
                                   child: Stack(
                                     children: [
-                                      Positioned(
+                                      const Positioned(
                                         left: 15,
                                         top: 0,
                                         child: Text(
@@ -820,7 +823,7 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 12,
                                           height: 12,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
                                                   "https://via.placeholder.com/12x12"),
@@ -836,7 +839,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 21,
                                 top: 36,
-                                child: Container(
+                                child: SizedBox(
                                   width: 138,
                                   height: 73,
                                   child: Stack(
@@ -847,11 +850,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 112,
                                           height: 71,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 116,
                                         top: 0,
                                         child: Text(
@@ -865,7 +868,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 119,
                                         top: 40,
                                         child: Text(
@@ -879,7 +882,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 24,
                                         top: 6,
                                         child: Text(
@@ -893,7 +896,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 49,
                                         top: 43,
                                         child: Text(
@@ -914,7 +917,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 194,
                                 top: 57,
-                                child: Container(
+                                child: SizedBox(
                                   width: 121,
                                   height: 33,
                                   child: Stack(
@@ -925,11 +928,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 70,
                                           height: 30,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 7,
                                         top: 3,
                                         child: Text(
@@ -943,7 +946,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 76,
                                         top: 0,
                                         child: Text(
@@ -968,7 +971,7 @@ class Home extends StatelessWidget {
                       Positioned(
                         left: 20,
                         top: 596,
-                        child: Container(
+                        child: SizedBox(
                           width: 361,
                           height: 124,
                           child: Stack(
@@ -987,7 +990,7 @@ class Home extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              Positioned(
+                              const Positioned(
                                 left: 21,
                                 top: 15,
                                 child: Text(
@@ -1004,11 +1007,11 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 172,
                                 top: 14,
-                                child: Container(
+                                child: SizedBox(
                                   height: 12,
                                   child: Stack(
                                     children: [
-                                      Positioned(
+                                      const Positioned(
                                         left: 15,
                                         top: 0,
                                         child: Text(
@@ -1028,7 +1031,7 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 12,
                                           height: 12,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             image: DecorationImage(
                                               image: NetworkImage(
                                                   "https://via.placeholder.com/12x12"),
@@ -1044,7 +1047,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 21,
                                 top: 36,
-                                child: Container(
+                                child: SizedBox(
                                   width: 138,
                                   height: 73,
                                   child: Stack(
@@ -1055,11 +1058,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 112,
                                           height: 71,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 116,
                                         top: 0,
                                         child: Text(
@@ -1073,7 +1076,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 119,
                                         top: 40,
                                         child: Text(
@@ -1087,7 +1090,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 24,
                                         top: 6,
                                         child: Text(
@@ -1101,7 +1104,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 49,
                                         top: 43,
                                         child: Text(
@@ -1122,7 +1125,7 @@ class Home extends StatelessWidget {
                               Positioned(
                                 left: 194,
                                 top: 57,
-                                child: Container(
+                                child: SizedBox(
                                   width: 121,
                                   height: 33,
                                   child: Stack(
@@ -1133,11 +1136,11 @@ class Home extends StatelessWidget {
                                         child: Container(
                                           width: 70,
                                           height: 30,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                               color: Color(0xFFD9D9D9)),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 7,
                                         top: 3,
                                         child: Text(
@@ -1151,7 +1154,7 @@ class Home extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      Positioned(
+                                      const Positioned(
                                         left: 76,
                                         top: 0,
                                         child: Text(
@@ -1177,12 +1180,12 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
+              /*Positioned(
                 left: -28,
                 top: 759,
                 child: Opacity(
                   opacity: 0.90,
-                  child: Container(
+                  child: SizedBox(
                     width: 429,
                     height: 86,
                     child: Column(
@@ -1193,13 +1196,14 @@ class Home extends StatelessWidget {
                         Container(
                           width: 447,
                           height: 86,
-                          decoration: BoxDecoration(color: Color(0xFF46BD84)),
+                          decoration:
+                              const BoxDecoration(color: Color(0xFF46BD84)),
                         ),
                         const SizedBox(height: 10),
                         Container(
                           width: 24,
                           height: 24,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
                                   "https://via.placeholder.com/24x24"),
@@ -1211,7 +1215,7 @@ class Home extends StatelessWidget {
                         Container(
                           width: 24,
                           height: 24,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
                                   "https://via.placeholder.com/24x24"),
@@ -1223,7 +1227,7 @@ class Home extends StatelessWidget {
                         Container(
                           width: 24,
                           height: 24,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             image: DecorationImage(
                               image: NetworkImage(
                                   "https://via.placeholder.com/24x24"),
@@ -1235,7 +1239,7 @@ class Home extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
