@@ -1,4 +1,5 @@
 class CardData {
+  final int id;
   final double price;
   final double liters;
   final String date;
@@ -6,6 +7,7 @@ class CardData {
   final double euroPerLiter;
 
   CardData({
+    required this.id,
     required this.price,
     required this.liters,
     required this.date,
@@ -15,6 +17,7 @@ class CardData {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'price': price,
       'liters': liters,
       'date': date,
@@ -25,6 +28,7 @@ class CardData {
 
   factory CardData.fromMap(Map<String, dynamic> map) {
     return CardData(
+      id: map['id'],
       price: map['price'],
       liters: map['liters'],
       date: map['date'],
