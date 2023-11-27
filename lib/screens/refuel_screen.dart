@@ -1,9 +1,10 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
 class RefuelScreen extends StatefulWidget {
-  const RefuelScreen({super.key});
+  const RefuelScreen({Key? key}) : super(key: key);
 
   @override
   _RefuelScreenState createState() => _RefuelScreenState();
@@ -12,6 +13,7 @@ class RefuelScreen extends StatefulWidget {
 class _RefuelScreenState extends State<RefuelScreen> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<CardData> _cardList = [];
+  final ScrollController _listController = ScrollController();
 
   @override
   void initState() {
@@ -40,26 +42,36 @@ class _RefuelScreenState extends State<RefuelScreen> {
   }
 
   void _addNewCard() async {
-    // Display a form or dialog to get user input for a new card
-    // For now, let's add a dummy card
+    // Generate random values for the new card
+    final random = Random();
     CardData newCard = CardData(
-      price: 60.0,
-      liters: 40.0,
-      date: '2023-11-28',
-      location: 'Gas Station 2',
-      euroPerLiter: 1.50,
+      price: (random.nextDouble() * 100).roundToDouble(),
+      liters: (random.nextDouble() * 50).roundToDouble(),
+      date: DateTime.now().toString(),
+      location: 'Random Location',
+      euroPerLiter: (random.nextDouble() * 3).roundToDouble(),
     );
 
-    // Insert the new card into the database
+    // Insert the new card at the beginning of the list
+    _cardList.insert(0, newCard);
+
+    // Update the UI with the new list
+    setState(() {});
+
+    // Save the updated list to the database
     await _databaseHelper.insertCard(newCard);
 
-    // Reload the cards from the database
-    await _loadCards();
+    // Scroll to the top when a new card is added
+    _listController.animateTo(
+      0.0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   Widget _buildCardList() {
     return ListView.builder(
-      reverse: true,
+      controller: _listController,
       itemCount: _cardList.length,
       itemBuilder: (context, index) {
         return Card(
