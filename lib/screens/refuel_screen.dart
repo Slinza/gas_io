@@ -32,11 +32,23 @@ class _RefuelScreenState extends State<RefuelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildCardList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _addNewCard();
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              _addNewCard();
+            },
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(width: 16.0), // Add some spacing between the buttons
+          FloatingActionButton(
+            onPressed: () {
+              _removeRandomCard();
+            },
+            child: const Icon(Icons.remove),
+          ),
+        ],
       ),
     );
   }
@@ -68,6 +80,20 @@ class _RefuelScreenState extends State<RefuelScreen> {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
+  }
+
+  void _removeRandomCard() async {
+    if (_cardList.isNotEmpty) {
+      // Remove a random card from the list
+      int randomIndex = Random().nextInt(_cardList.length);
+      CardData removedCard = _cardList.removeAt(randomIndex);
+
+      // Delete the card from the database
+      await _databaseHelper.deleteCard(removedCard);
+
+      // Update the UI with the new list
+      setState(() {});
+    }
   }
 
   Widget _buildCardList() {
