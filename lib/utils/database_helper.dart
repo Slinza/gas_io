@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:gas_io/screens/refuel_screen.dart';
+import 'package:gas_io/components/refuel_card.dart';
 
 class DatabaseHelper {
   static Database? _database;

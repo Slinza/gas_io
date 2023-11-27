@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
+import 'package:gas_io/components/refuel_card.dart';
 
 class RefuelScreen extends StatefulWidget {
+  const RefuelScreen({super.key});
+
   @override
   _RefuelScreenState createState() => _RefuelScreenState();
 }
 
 class _RefuelScreenState extends State<RefuelScreen> {
-  DatabaseHelper _databaseHelper = DatabaseHelper();
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<CardData> _cardList = [];
 
   @override
@@ -31,7 +34,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
         onPressed: () {
           _addNewCard();
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -60,7 +63,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
       itemCount: _cardList.length,
       itemBuilder: (context, index) {
         return Card(
-          margin: EdgeInsets.all(8.0),
+          margin: const EdgeInsets.all(8.0),
           child: ListTile(
             title: Text('Price: ${_cardList[index].price} €'),
             subtitle: Column(
@@ -75,55 +78,6 @@ class _RefuelScreenState extends State<RefuelScreen> {
           ),
         );
       },
-    );
-  }
-
-  // void _addNewCard() {
-  //   // You can implement logic to add a new card, for now, let's add a dummy card
-  //   setState(() {
-  //     _cardList.add(CardData(
-  //       price: 50.0,
-  //       liters: 30.0,
-  //       date: '2023-11-27',
-  //       location: 'Gas Station',
-  //       euroPerLiter: 1.67,
-  //     ));
-  //   });
-  // }
-}
-
-class CardData {
-  final double price;
-  final double liters;
-  final String date;
-  final String location;
-  final double euroPerLiter;
-
-  CardData({
-    required this.price,
-    required this.liters,
-    required this.date,
-    required this.location,
-    required this.euroPerLiter,
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'price': price,
-      'liters': liters,
-      'date': date,
-      'location': location,
-      'euroPerLiter': euroPerLiter,
-    };
-  }
-
-  factory CardData.fromMap(Map<String, dynamic> map) {
-    return CardData(
-      price: map['price'],
-      liters: map['liters'],
-      date: map['date'],
-      location: map['location'],
-      euroPerLiter: map['euroPerLiter'],
     );
   }
 }
