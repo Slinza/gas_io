@@ -45,6 +45,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
     // Generate random values for the new card
     final random = Random();
     CardData newCard = CardData(
+      id: DateTime.now().millisecondsSinceEpoch,
       price: (random.nextDouble() * 100).roundToDouble(),
       liters: (random.nextDouble() * 50).roundToDouble(),
       date: DateTime.now().toString(),
