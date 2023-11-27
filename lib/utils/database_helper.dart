@@ -35,15 +35,27 @@ class DatabaseHelper {
   }
 
   Future<int> insertCard(CardData card) async {
+    print("insert card");
     final db = await database;
     return db.insert(tableName, card.toMap());
   }
 
   Future<List<CardData>> getCards() async {
+    print("get db data");
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
+  }
+
+  Future<int> deleteCard(CardData card) async {
+    print("remove db data");
+    final db = await database;
+    return db.delete(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [card.id], // Assuming you have an 'id' field in your CardData
+    );
   }
 }
