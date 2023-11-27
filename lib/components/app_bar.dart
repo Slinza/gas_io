@@ -18,15 +18,15 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           letterSpacing: 0.30,
         ),
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            // Handle the "+" button press
-            print('Add button pressed');
-          },
-        ),
-      ],
+      // actions: [
+      //   IconButton(
+      //     icon: const Icon(Icons.add),
+      //     onPressed: () {
+      //       // Handle the "+" button press
+      //       print('Add button pressed');
+      //     },
+      //   ),
+      // ],
     );
   }
 
