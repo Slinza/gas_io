@@ -56,11 +56,11 @@ class _RefuelScreenState extends State<RefuelScreen> {
     // Insert the new card at the beginning of the list
     _cardList.insert(0, newCard);
 
-    // Update the UI with the new list
-    setState(() {});
-
     // Save the updated list to the database
     await _databaseHelper.insertCard(newCard);
+
+    // Update the UI with the new list
+    setState(() {});
 
     // Scroll to the top when a new card is added
     _listController.animateTo(
