@@ -32,23 +32,11 @@ class _RefuelScreenState extends State<RefuelScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildCardList(),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              _addNewCard();
-            },
-            child: const Icon(Icons.add),
-          ),
-          const SizedBox(width: 16.0), // Add some spacing between the buttons
-          FloatingActionButton(
-            onPressed: () {
-              _removeRandomCard();
-            },
-            child: const Icon(Icons.remove),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _addNewCard();
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -82,37 +70,47 @@ class _RefuelScreenState extends State<RefuelScreen> {
     );
   }
 
-  void _removeRandomCard() async {
-    if (_cardList.isNotEmpty) {
-      // Remove a random card from the list
-      int randomIndex = Random().nextInt(_cardList.length);
-      CardData removedCard = _cardList.removeAt(randomIndex);
-
-      // Delete the card from the database
-      await _databaseHelper.deleteCard(removedCard);
-
-      // Update the UI with the new list
-      setState(() {});
-    }
-  }
-
   Widget _buildCardList() {
     return ListView.builder(
       controller: _listController,
       itemCount: _cardList.length,
       itemBuilder: (context, index) {
-        return Card(
-          margin: const EdgeInsets.all(8.0),
-          child: ListTile(
-            title: Text('Price: ${_cardList[index].price} €'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Liters: ${_cardList[index].liters} L'),
-                Text('Date: ${_cardList[index].date}'),
-                Text('Location: ${_cardList[index].location}'),
-                Text('€/L: ${_cardList[index].euroPerLiter} €/L'),
-              ],
+        final CardData card = _cardList[index];
+        return Dismissible(
+          key: Key(card.id.toString()),
+          onDismissed: (direction) async {
+            await _databaseHelper.deleteCard(card);
+            setState(() {
+              _cardList.removeAt(index);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Card dismissed'),
+              ),
+            );
+          },
+          background: Container(
+            color: Colors.red,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            alignment: AlignmentDirectional.centerStart,
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
+          child: Card(
+            margin: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text('Price: ${card.price} €'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Liters: ${card.liters} L'),
+                  Text('Date: ${card.date}'),
+                  Text('Location: ${card.location}'),
+                  Text('€/L: ${card.euroPerLiter} €/L'),
+                ],
+              ),
             ),
           ),
         );
