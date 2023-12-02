@@ -1,4 +1,13 @@
-class CardData {
+class DatabaseKeys {
+  final String idKey = 'id';
+  final String priceKey = 'price';
+  final String litersKey = 'liters';
+  final String dateKey = 'date';
+  final String locationKey = 'location';
+  final String euroPerLiterKey = 'euroPerLiter';
+}
+
+class CardData extends DatabaseKeys {
   final int id;
   final double price;
   final double liters;

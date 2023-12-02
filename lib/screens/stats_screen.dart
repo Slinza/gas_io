@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'dart:math'; //For random
+//For random
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/line_chart.dart';
+import 'package:gas_io/components/refuel_card.dart';
+import 'package:gas_io/utils/support_functions.dart';
 
 // import 'package:gas_io/components/line_chart.dart';
 
 class StatsScreen extends StatelessWidget {
   StatsScreen({Key? key}) : super(key: key);
 
-  final List<FlSpot> monthData = List.generate(12, (index) {
-    return FlSpot(index.toDouble() + 1, index * Random().nextDouble());
-  });
-  final List<FlSpot> avedrage = List.generate(12, (index) {
-    return FlSpot(index.toDouble() + 1, 3);
-  });
+  final List<FlSpot> monthData = lineDataGenerator([]);
+  final List<FlSpot> avedragePrice = lineDataGenerator([], 3);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class StatsScreen extends StatelessWidget {
           color: Colors.amber[800],
           child: LineChartWidget(
             monthData: monthData,
-            average: avedrage,
+            average: avedragePrice,
           ),
         ),
         Container(
