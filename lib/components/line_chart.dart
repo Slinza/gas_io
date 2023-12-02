@@ -18,7 +18,6 @@ class LineChartWidget extends StatelessWidget {
     print(monthData[0].runtimeType);
     return LineChart(
       LineChartData(
-        borderData: FlBorderData(show: false),
         lineBarsData: [
           // The red line
           LineChartBarData(
@@ -34,14 +33,20 @@ class LineChartWidget extends StatelessWidget {
             barWidth: 3,
             color: Colors.red,
           ),
-          // // The blue line
-          // LineChartBarData(
-          //   spots: dummyData3,
-          //   isCurved: false,
-          //   barWidth: 3,
-          //   color: Colors.blue,
-          // )
         ],
+        borderData: FlBorderData(show: false),
+        // borderData: FlBorderData(
+        //     border: const Border(bottom: BorderSide(), left: BorderSide())),
+        gridData: const FlGridData(show: false),
+        titlesData: FlTitlesData(
+          bottomTitles: AxisTitles(sideTitles: _bottomTitles),
+          leftTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: true)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
       ),
     );
   }

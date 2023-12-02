@@ -21,7 +21,7 @@ class StatsScreen extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       children: <Widget>[
         Container(
-          height: 200,
+          height: 250,
           color: Colors.amber[800],
           child: LineChartWidget(
             monthData: monthData,
