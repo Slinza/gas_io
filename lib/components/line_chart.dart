@@ -14,8 +14,6 @@ class LineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(monthData);
-    print(monthData[0].runtimeType);
     return LineChart(
       LineChartData(
         lineBarsData: [

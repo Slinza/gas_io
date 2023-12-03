@@ -4,17 +4,52 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/line_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/utils/support_functions.dart';
+import 'package:gas_io/utils/database_helper.dart';
 
 // import 'package:gas_io/components/line_chart.dart';
 
-class StatsScreen extends StatelessWidget {
+class StatsScreen extends StatefulWidget {
   StatsScreen({Key? key}) : super(key: key);
 
-  final List<FlSpot> monthData = lineDataGenerator([]);
-  final List<FlSpot> avedragePrice = lineDataGenerator([], 3);
+  @override
+  State<StatsScreen> createState() => _StatsScreenState();
+}
+
+class _StatsScreenState extends State<StatsScreen> {
+  // StatsScreen({super.key, required this.cardList});
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
+
+  List<CardData> _cardList = [];
+  List<double> _prices = [];
+  List<FlSpot> monthData = [];
+  List<FlSpot> avedragePrice = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCards();
+  }
+
+  Future<void> _loadCards() async {
+    List<CardData> cards = await _databaseHelper.getCards();
+    setState(() {
+      _cardList = cards;
+      _prepareGraphData(cards);
+    });
+  }
+
+  void _prepareGraphData(List<CardData> cards) {
+    _prices = pricesList(cards);
+    monthData = lineDataGenerator(_prices);
+    avedragePrice = lineDataGenerator([], average(_prices));
+  }
 
   @override
   Widget build(BuildContext context) {
+    print("---------------------------");
+    print(_prices);
+    print(monthData);
+    print(avedragePrice);
     return ListView(
       padding: const EdgeInsets.all(8),
       children: <Widget>[
