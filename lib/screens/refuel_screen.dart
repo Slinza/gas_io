@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:gas_io/screens/refuel_insert_form.dart';
+// import 'package:gas_io/screens/refuel_insert_form.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -116,7 +116,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
                       children: [
                         Text(
                           DateFormat(
-                            'EE, dd-MM-yyyy',
+                            'dd-MM-yyyy - HH:mm',
                           ).format(DateTime.parse(card.date)),
                           // style: const TextStyle(
                           //   color: Colors.black,
