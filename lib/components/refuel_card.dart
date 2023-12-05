@@ -6,7 +6,7 @@ class CardData {
   final int id;
   final double price;
   final double liters;
-  final String date;
+  final DateTime date;
   final String location;
   final double euroPerLiter;
 
@@ -24,7 +24,7 @@ class CardData {
       'id': id,
       'price': price,
       'liters': liters,
-      'date': date,
+      'date': date.toUtc().toIso8601String(), // Convert DateTime to string
       'location': location,
       'euroPerLiter': euroPerLiter,
     };
@@ -35,7 +35,7 @@ class CardData {
       id: map['id'],
       price: map['price'],
       liters: map['liters'],
-      date: map['date'],
+      date: DateTime.parse(map['date']), // Convert string to DateTime
       location: map['location'],
       euroPerLiter: map['euroPerLiter'],
     );
@@ -62,7 +62,7 @@ class RefuelCard extends StatelessWidget {
                   Text(
                     DateFormat(
                       'dd-MM-yyyy - HH:mm',
-                    ).format(DateTime.parse(refuelData.date)),
+                    ).format(refuelData.date),
                     style: GoogleFonts.abel(
                         textStyle: const TextStyle(fontSize: 18)),
                   ),

@@ -56,7 +56,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
       id: DateTime.now().millisecondsSinceEpoch,
       price: (random.nextDouble() * 100).roundToDouble(),
       liters: (random.nextDouble() * 50).roundToDouble(),
-      date: DateTime.now().toString(),
+      date: DateTime.now(),
       location: 'Random Location',
       euroPerLiter: (random.nextDouble() * 3).roundToDouble(),
     );
