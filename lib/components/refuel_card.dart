@@ -49,9 +49,9 @@ class RefuelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8.0),
+      margin: EdgeInsets.zero,
       child: Padding(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

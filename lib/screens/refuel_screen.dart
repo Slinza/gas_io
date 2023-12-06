@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'package:gas_io/screens/refuel_insert_form.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class RefuelScreen extends StatefulWidget {
   const RefuelScreen({Key? key}) : super(key: key);
@@ -47,14 +48,14 @@ class _RefuelScreenState extends State<RefuelScreen> {
     final random = Random();
     double euroPerLiter = 1.568 + random.nextDouble() * (2.134 - 1.568);
     double liters = 10 + random.nextDouble() * (60 - 10);
-  CardData newCard = CardData(
-    id: DateTime.now().millisecondsSinceEpoch,
-    price: liters * euroPerLiter,
-    liters: liters,
-    date: DateTime.now(),
-    location: 'Random Location',
-    euroPerLiter: euroPerLiter,
-  );
+    CardData newCard = CardData(
+      id: DateTime.now().millisecondsSinceEpoch,
+      price: liters * euroPerLiter,
+      liters: liters,
+      date: DateTime.now(),
+      location: 'Random Location',
+      euroPerLiter: euroPerLiter,
+    );
 
     // Insert the new card at the beginning of the list
     _cardList.insert(0, newCard);
@@ -79,29 +80,74 @@ class _RefuelScreenState extends State<RefuelScreen> {
       itemCount: _cardList.length,
       itemBuilder: (context, index) {
         final CardData cardData = _cardList[index];
-        return Dismissible(
-          key: Key(cardData.id.toString()),
-          onDismissed: (direction) async {
-            await _databaseHelper.deleteCard(cardData);
-            setState(() {
-              _cardList.removeAt(index);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Card dismissed'),
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Slidable(
+
+              // Specify a key if the Slidable is dismissible.
+              key: Key(cardData.id.toString()),
+
+              // The end action pane is the one at the right or the bottom side.
+              endActionPane: ActionPane(
+                extentRatio: 0.5,
+                motion: const BehindMotion(),
+                // dismissible: DismissiblePane(onDismissed: () async {
+                //   await _databaseHelper.deleteCard(cardData);
+                //   setState(() {
+                //     _cardList.removeAt(index);
+                //   });
+                //   ScaffoldMessenger.of(context).showSnackBar(
+                //     const SnackBar(
+                //       content: Text('Card dismissed'),
+                //     ),
+                //   );
+                // }),
+                children: [
+                  SlidableAction(
+                    // An action can be bigger than the others.
+                    onPressed: (context) {},
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.green,
+                    icon: Icons.edit,
+                    label: 'Edit',
+                    borderRadius: const BorderRadius.all(Radius.circular(100)),
+                  ),
+                  SlidableAction(
+                    onPressed: (context) async {
+                      await _databaseHelper.deleteCard(cardData);
+                      setState(() {
+                        _cardList.removeAt(index);
+                      });
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   const SnackBar(
+                      //     content: Text('Card dismissed'),
+                      //   ),
+                      // );
+                    },
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.red,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                    borderRadius: const BorderRadius.all(Radius.circular(100)),
+                  ),
+
+                  // Container(
+                  //   height: 10,
+                  //   width: 60,
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.red,
+                  //     borderRadius: const BorderRadius.only(
+                  //       topLeft: Radius.circular(10),
+                  //       bottomLeft: Radius.circular(10),
+                  //     ),
+                  //   ),
+                  // )
+                ],
               ),
-            );
-          },
-          background: Container(
-            color: Colors.red,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: AlignmentDirectional.centerStart,
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
-          ),
-          child: RefuelCard(refuelData: cardData)
+
+              // The child of the Slidable is what the user sees when the
+              // component is not dragged.
+              child: RefuelCard(refuelData: cardData)),
         );
       },
     );
@@ -116,7 +162,6 @@ class _RefuelScreenState extends State<RefuelScreen> {
   //     },
   //   );
   // }
-
 
   // Widget _buildBottomSheetContent() {
   //   return const RefuelForm();
@@ -223,5 +268,3 @@ class _RefuelScreenState extends State<RefuelScreen> {
     // Add any additional logic you need after saving the new card
   }
 }
-
-
