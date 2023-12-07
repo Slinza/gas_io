@@ -30,12 +30,12 @@ class CardData extends DatabaseKeys {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'price': price,
-      'liters': liters,
-      'date': date.toUtc().toIso8601String(), // Convert DateTime to string
-      'location': location,
-      'euroPerLiter': euroPerLiter,
+      idKey: id,
+      priceKey: price,
+      litersKey: liters,
+      dateKey: date.toUtc().toIso8601String(), // Convert DateTime to string
+      locationKey: location,
+      euroPerLiterKey: euroPerLiter,
     };
   }
 
