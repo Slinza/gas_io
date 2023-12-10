@@ -1,5 +1,4 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'dart:math';
 import 'package:gas_io/components/refuel_card.dart';
 
 const int monthsNumber = 12;
@@ -18,6 +17,10 @@ double averagePrice(List<CardData> data) {
 
 List<double> pricesList(List<CardData> list) {
   return list.map((e) => e.price).toList();
+}
+
+List<FlSpot> pricesMonthList(List<CardData> list) {
+  return list.map((e) => FlSpot(e.date.month.toDouble(), e.price)).toList();
 }
 
 List<FlSpot> lineDataGenerator(List<double> data, [double? defaultValue]) {

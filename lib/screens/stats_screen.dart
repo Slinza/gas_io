@@ -31,16 +31,17 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Future<void> _loadCards() async {
-    List<CardData> cards = await _databaseHelper.getCards();
+    List<CardData> cards = await _databaseHelper.getCardsByMonth();
     setState(() {
       _cardList = cards;
       _prepareGraphData(cards);
+      print(cards[0]);
     });
   }
 
   void _prepareGraphData(List<CardData> cards) {
     _prices = pricesList(cards);
-    monthData = lineDataGenerator(_prices);
+    monthData = pricesMonthList(cards);
     avedragePrice = lineDataGenerator([], average(_prices));
   }
 
@@ -48,8 +49,7 @@ class _StatsScreenState extends State<StatsScreen> {
   Widget build(BuildContext context) {
     print("---------------------------");
     print(_prices);
-    print(monthData);
-    print(avedragePrice);
+    //print(monthData);
     return ListView(
       padding: const EdgeInsets.all(8),
       children: <Widget>[

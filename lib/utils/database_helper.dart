@@ -52,6 +52,16 @@ class DatabaseHelper extends DatabaseKeys {
     });
   }
 
+  Future<List<CardData>> getCardsByMonth() async {
+    print("get db data by month");
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        "SELECT $idKey, SUM($priceKey) AS $priceKey, SUM($litersKey) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey FROM $tableName GROUP BY STRFTIME('%mm', $dateKey);");
+    return List.generate(maps.length, (i) {
+      return CardData.fromMap(maps[i]);
+    });
+  }
+
   Future<int> deleteCard(CardData card) async {
     print("remove db data");
     final db = await database;
