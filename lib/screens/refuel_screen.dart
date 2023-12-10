@@ -107,7 +107,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
                     // An action can be bigger than the others.
                     onPressed: (context) {},
                     backgroundColor: Colors.transparent,
-                    foregroundColor: Colors.green,
+                    foregroundColor: Colors.orange,
                     icon: Icons.edit,
                     label: 'Edit',
                     borderRadius: const BorderRadius.all(Radius.circular(100)),
