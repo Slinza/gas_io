@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 
-class LineChartWidget extends StatelessWidget {
-  const LineChartWidget({
+class YearLineChartWidget extends StatelessWidget {
+  const YearLineChartWidget({
     super.key,
     required this.monthData,
     required this.average,

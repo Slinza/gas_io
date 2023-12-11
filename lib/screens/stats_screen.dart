@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-//For random
 import 'package:fl_chart/fl_chart.dart';
-import 'package:gas_io/components/line_chart.dart';
+import 'package:gas_io/components/month_line_chart.dart';
+import 'package:gas_io/components/year_line_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/utils/database_helper.dart';
@@ -19,8 +19,9 @@ class _StatsScreenState extends State<StatsScreen> {
   // StatsScreen({super.key, required this.cardList});
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
-  List<FlSpot> monthData = [];
-  List<FlSpot> avedragePrice = [];
+  List<FlSpot> yearPrices = [];
+  List<FlSpot> averageYearPrices = [];
+  List<FlSpot> monthPrices = [];
 
   @override
   void initState() {
@@ -29,15 +30,22 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Future<void> _loadCards() async {
-    List<CardData> cards = await _databaseHelper.getCardsByMonth();
+    List<CardData> yearCards = await _databaseHelper.getYearCard();
+    List<CardData> monthCards = await _databaseHelper.getMonthCard();
     setState(() {
-      _prepareGraphData(cards);
+      _prepareYearGraphData(yearCards);
+      _prepareMonthGraphData(monthCards);
     });
   }
 
-  void _prepareGraphData(List<CardData> cards) {
-    monthData = pricesMonthlyList(cards);
-    avedragePrice = averageMonthlyPrice(cards);
+  void _prepareYearGraphData(List<CardData> cards) {
+    yearPrices = pricesYearlyList(cards);
+    averageYearPrices = averageYearlyPrice(cards);
+  }
+
+  void _prepareMonthGraphData(List<CardData> cards) {
+    print(cards);
+    monthPrices = monthlyPrice(cards);
   }
 
   @override
@@ -49,17 +57,16 @@ class _StatsScreenState extends State<StatsScreen> {
         Container(
           height: 250,
           color: Colors.amber[800],
-          child: LineChartWidget(
-            monthData: monthData,
-            average: avedragePrice,
+          child: MonthLineChartWidget(
+            monthData: monthPrices,
           ),
         ),
         Container(
-          height: 250,
+          height: 230,
           color: Colors.amber[500],
-          child: LineChartWidget(
-            monthData: monthData,
-            average: avedragePrice,
+          child: YearLineChartWidget(
+            monthData: yearPrices,
+            average: averageYearPrices,
           ),
         ),
         Container(

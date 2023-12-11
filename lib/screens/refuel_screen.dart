@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-// import 'package:gas_io/screens/refuel_insert_form.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
@@ -16,7 +15,6 @@ DateTime generateRandomDateTime() {
 
   // Subtract the random number of days from the current DateTime to get a random DateTime in the past year
   DateTime randomDateTime = now.subtract(Duration(days: randomDays));
-  print(randomDateTime);
   return randomDateTime;
 }
 
