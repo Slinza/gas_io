@@ -19,24 +19,15 @@ List<double> pricesList(List<CardData> list) {
   return list.map((e) => e.price).toList();
 }
 
-List<FlSpot> pricesMonthList(List<CardData> list) {
+List<FlSpot> pricesMonthlyList(List<CardData> list) {
   return list.map((e) => FlSpot(e.date.month.toDouble(), e.price)).toList();
 }
 
-List<FlSpot> lineDataGenerator(List<double> data, [double? defaultValue]) {
-  if (defaultValue == null) {
-    return List.generate(
-      monthsNumber,
-      (index) {
-        return FlSpot(index.toDouble() + 1, 1);
-      },
-    );
-  } else {
-    return List.generate(
-      monthsNumber,
-      (index) {
-        return FlSpot(index.toDouble() + 1, defaultValue);
-      },
-    );
-  }
+List<FlSpot> averageMonthlyPrice(List<CardData> data) {
+  return List.generate(
+    monthsNumber,
+    (index) {
+      return FlSpot(index.toDouble() + 1, average(pricesList(data)));
+    },
+  );
 }

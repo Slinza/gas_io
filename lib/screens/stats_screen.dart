@@ -19,8 +19,6 @@ class _StatsScreenState extends State<StatsScreen> {
   // StatsScreen({super.key, required this.cardList});
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
-  List<CardData> _cardList = [];
-  List<double> _prices = [];
   List<FlSpot> monthData = [];
   List<FlSpot> avedragePrice = [];
 
@@ -33,22 +31,17 @@ class _StatsScreenState extends State<StatsScreen> {
   Future<void> _loadCards() async {
     List<CardData> cards = await _databaseHelper.getCardsByMonth();
     setState(() {
-      _cardList = cards;
       _prepareGraphData(cards);
-      print(cards[0]);
     });
   }
 
   void _prepareGraphData(List<CardData> cards) {
-    _prices = pricesList(cards);
-    monthData = pricesMonthList(cards);
-    avedragePrice = lineDataGenerator([], average(_prices));
+    monthData = pricesMonthlyList(cards);
+    avedragePrice = averageMonthlyPrice(cards);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("---------------------------");
-    print(_prices);
     //print(monthData);
     return ListView(
       padding: const EdgeInsets.all(8),
@@ -62,9 +55,12 @@ class _StatsScreenState extends State<StatsScreen> {
           ),
         ),
         Container(
-          height: 200,
+          height: 250,
           color: Colors.amber[500],
-          child: const Center(child: Text('Entry B')),
+          child: LineChartWidget(
+            monthData: monthData,
+            average: avedragePrice,
+          ),
         ),
         Container(
           height: 200,
