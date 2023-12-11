@@ -35,11 +35,12 @@ class LineChartWidget extends StatelessWidget {
         borderData: FlBorderData(show: false),
         // borderData: FlBorderData(
         //     border: const Border(bottom: BorderSide(), left: BorderSide())),
-        gridData: const FlGridData(show: false),
+        //gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(sideTitles: _bottomTitles),
-          leftTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: true)),
+          leftTitles: const AxisTitles(
+              sideTitles:
+                  SideTitles(showTitles: true, reservedSize: 45, interval: 30)),
           topTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles:
