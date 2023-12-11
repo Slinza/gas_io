@@ -4,6 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
+// TODO: tmp function
+DateTime generateRandomDateTime() {
+  Random random = Random();
+
+  // Get the current DateTime
+  DateTime now = DateTime.now();
+
+  // Generate a random number between 0 to 365 (number of days in a year)
+  int randomDays = random.nextInt(365);
+
+  // Subtract the random number of days from the current DateTime to get a random DateTime in the past year
+  DateTime randomDateTime = now.subtract(Duration(days: randomDays));
+  print(randomDateTime);
+  return randomDateTime;
+}
+
 class RefuelScreen extends StatefulWidget {
   const RefuelScreen({Key? key}) : super(key: key);
 
@@ -47,14 +63,14 @@ class _RefuelScreenState extends State<RefuelScreen> {
     final random = Random();
     double euroPerLiter = 1.568 + random.nextDouble() * (2.134 - 1.568);
     double liters = 10 + random.nextDouble() * (60 - 10);
-  CardData newCard = CardData(
-    id: DateTime.now().millisecondsSinceEpoch,
-    price: liters * euroPerLiter,
-    liters: liters,
-    date: DateTime.now(),
-    location: 'Random Location',
-    euroPerLiter: euroPerLiter,
-  );
+    CardData newCard = CardData(
+      id: DateTime.now().millisecondsSinceEpoch,
+      price: liters * euroPerLiter,
+      liters: liters,
+      date: generateRandomDateTime(), //DateTime.now(),
+      location: 'Random Location',
+      euroPerLiter: euroPerLiter,
+    );
 
     // Insert the new card at the beginning of the list
     _cardList.insert(0, newCard);
@@ -80,29 +96,28 @@ class _RefuelScreenState extends State<RefuelScreen> {
       itemBuilder: (context, index) {
         final CardData cardData = _cardList[index];
         return Dismissible(
-          key: Key(cardData.id.toString()),
-          onDismissed: (direction) async {
-            await _databaseHelper.deleteCard(cardData);
-            setState(() {
-              _cardList.removeAt(index);
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Card dismissed'),
+            key: Key(cardData.id.toString()),
+            onDismissed: (direction) async {
+              await _databaseHelper.deleteCard(cardData);
+              setState(() {
+                _cardList.removeAt(index);
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Card dismissed'),
+                ),
+              );
+            },
+            background: Container(
+              color: Colors.red,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              alignment: AlignmentDirectional.centerStart,
+              child: const Icon(
+                Icons.delete,
+                color: Colors.white,
               ),
-            );
-          },
-          background: Container(
-            color: Colors.red,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: AlignmentDirectional.centerStart,
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
             ),
-          ),
-          child: RefuelCard(refuelData: cardData)
-        );
+            child: RefuelCard(refuelData: cardData));
       },
     );
   }
@@ -116,7 +131,6 @@ class _RefuelScreenState extends State<RefuelScreen> {
   //     },
   //   );
   // }
-
 
   // Widget _buildBottomSheetContent() {
   //   return const RefuelForm();
@@ -223,5 +237,3 @@ class _RefuelScreenState extends State<RefuelScreen> {
     // Add any additional logic you need after saving the new card
   }
 }
-
-
