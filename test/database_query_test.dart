@@ -6,7 +6,7 @@ void main() {
   test('Fetch monthly data from DB', () {
     final DatabaseHelper db = DatabaseHelper();
 
-    Future<List<CardData>> cardList = db.getCardsByMonth();
+    Future<List<CardData>> cardList = db.getMonthCard();
     expect(cardList, cardList);
   });
 }

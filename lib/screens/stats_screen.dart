@@ -44,7 +44,6 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   void _prepareMonthGraphData(List<CardData> cards) {
-    print(cards);
     monthPrices = monthlyPrice(cards);
   }
 

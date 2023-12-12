@@ -33,6 +33,34 @@ List<FlSpot> averageYearlyPrice(List<CardData> data) {
   );
 }
 
+Map<int, double> mapOfDailyPrices(List<CardData> objects) {
+  Map<int, double> resultMap = {};
+
+  objects.forEach(
+    (obj) {
+      if (resultMap.containsKey(obj.date.day)) {
+        if (resultMap[obj.date.day] != null)
+          resultMap.update(obj.date.day, (value) => value + obj.price);
+      } else {
+        resultMap[obj.date.day] = obj.price;
+      }
+    },
+  );
+
+  return resultMap;
+}
+
 List<FlSpot> monthlyPrice(List<CardData> data) {
-  return data.map((e) => FlSpot(e.date.day.toDouble(), e.price)).toList();
+  List<FlSpot> monthlyList = [];
+  double padding = 0;
+  Map<int, double> priceMap = mapOfDailyPrices(data);
+  for (int i = 1; i <= 31; i++) {
+    if (priceMap.containsKey(i)) {
+      padding += priceMap[i] ??= 0;
+      monthlyList.add(FlSpot(i.toDouble(), padding));
+    } else {
+      monthlyList.add(FlSpot(i.toDouble(), padding));
+    }
+  }
+  return monthlyList;
 }

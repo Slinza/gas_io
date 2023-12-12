@@ -65,7 +65,7 @@ class DatabaseHelper extends DatabaseKeys {
     final db = await database;
     int month = DateTime.now().month;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM $tableName WHERE STRFTIME('%mm', $dateKey) = '$month';");
+        "SELECT * FROM $tableName WHERE STRFTIME('%m', $dateKey) = '$month';");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
