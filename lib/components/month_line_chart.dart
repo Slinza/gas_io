@@ -17,14 +17,17 @@ class MonthLineChartWidget extends StatelessWidget {
         lineBarsData: [
           LineChartBarData(
             spots: monthData,
-            isCurved: true,
+            isCurved: false,
             barWidth: 3,
-            color: Colors.orange,
+            color: Colors.amber,
+            dotData: FlDotData(show: false),
           ),
         ],
-        borderData: FlBorderData(show: true),
-        // borderData: FlBorderData(
-        //     border: const Border(bottom: BorderSide(), left: BorderSide())),
+        minY: 0,
+        maxX: 31,
+        borderData: FlBorderData(
+            show: true,
+            border: const Border(bottom: BorderSide(), left: BorderSide())),
         gridData: const FlGridData(show: false),
         titlesData: const FlTitlesData(
           bottomTitles: AxisTitles(

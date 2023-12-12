@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/month_line_chart.dart';
+import 'package:gas_io/components/expense_type_pie.dart';
 import 'package:gas_io/components/year_line_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/utils/support_functions.dart';
@@ -22,6 +23,7 @@ class _StatsScreenState extends State<StatsScreen> {
   List<FlSpot> yearPrices = [];
   List<FlSpot> averageYearPrices = [];
   List<FlSpot> monthPrices = [];
+  List<PieChartSectionData> pieYearData = [];
 
   @override
   void initState() {
@@ -35,6 +37,12 @@ class _StatsScreenState extends State<StatsScreen> {
     setState(() {
       _prepareYearGraphData(yearCards);
       _prepareMonthGraphData(monthCards);
+      pieYearData = [
+        PieChartSectionData(
+            value: 10,
+            radius:
+                100), //TODO: add real values once the type of the expense will be introduced
+      ];
     });
   }
 
@@ -71,7 +79,7 @@ class _StatsScreenState extends State<StatsScreen> {
         Container(
           height: 200,
           color: Colors.amber[100],
-          child: const Center(child: Text('Entry C')),
+          child: YearPieChartWidget(pieData: pieYearData),
         ),
       ],
     );
