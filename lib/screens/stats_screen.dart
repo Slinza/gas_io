@@ -39,7 +39,7 @@ class _StatsScreenState extends State<StatsScreen> {
       _prepareMonthGraphData(monthCards);
       pieYearData = [
         PieChartSectionData(
-            value: 10,
+            //value: 10,
             radius:
                 100), //TODO: add real values once the type of the expense will be introduced
       ];
