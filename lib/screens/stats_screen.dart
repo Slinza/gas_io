@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-//For random
 import 'package:fl_chart/fl_chart.dart';
-import 'package:gas_io/components/line_chart.dart';
+import 'package:gas_io/components/month_line_chart.dart';
+import 'package:gas_io/components/expense_type_pie.dart';
+import 'package:gas_io/components/year_line_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/utils/database_helper.dart';
@@ -19,10 +20,10 @@ class _StatsScreenState extends State<StatsScreen> {
   // StatsScreen({super.key, required this.cardList});
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
-  List<CardData> _cardList = [];
-  List<double> _prices = [];
-  List<FlSpot> monthData = [];
-  List<FlSpot> avedragePrice = [];
+  List<FlSpot> yearPrices = [];
+  List<FlSpot> averageYearPrices = [];
+  List<FlSpot> monthPrices = [];
+  List<PieChartSectionData> pieYearData = [];
 
   @override
   void initState() {
@@ -31,24 +32,31 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Future<void> _loadCards() async {
-    List<CardData> cards = await _databaseHelper.getCardsByMonth();
+    List<CardData> yearCards = await _databaseHelper.getYearCard();
+    List<CardData> monthCards = await _databaseHelper.getMonthCard();
     setState(() {
-      _cardList = cards;
-      _prepareGraphData(cards);
-      print(cards[0]);
+      _prepareYearGraphData(yearCards);
+      _prepareMonthGraphData(monthCards);
+      pieYearData = [
+        PieChartSectionData(
+            //value: 10,
+            radius:
+                100), //TODO: add real values once the type of the expense will be introduced
+      ];
     });
   }
 
-  void _prepareGraphData(List<CardData> cards) {
-    _prices = pricesList(cards);
-    monthData = pricesMonthList(cards);
-    avedragePrice = lineDataGenerator([], average(_prices));
+  void _prepareYearGraphData(List<CardData> cards) {
+    yearPrices = pricesYearlyList(cards);
+    averageYearPrices = averageYearlyPrice(cards);
+  }
+
+  void _prepareMonthGraphData(List<CardData> cards) {
+    monthPrices = monthlyPrice(cards);
   }
 
   @override
   Widget build(BuildContext context) {
-    print("---------------------------");
-    print(_prices);
     //print(monthData);
     return ListView(
       padding: const EdgeInsets.all(8),
@@ -56,20 +64,22 @@ class _StatsScreenState extends State<StatsScreen> {
         Container(
           height: 250,
           color: Colors.amber[800],
-          child: LineChartWidget(
-            monthData: monthData,
-            average: avedragePrice,
+          child: MonthLineChartWidget(
+            monthData: monthPrices,
+          ),
+        ),
+        Container(
+          height: 230,
+          color: Colors.amber[500],
+          child: YearLineChartWidget(
+            monthData: yearPrices,
+            average: averageYearPrices,
           ),
         ),
         Container(
           height: 200,
-          color: Colors.amber[500],
-          child: const Center(child: Text('Entry B')),
-        ),
-        Container(
-          height: 200,
           color: Colors.amber[100],
-          child: const Center(child: Text('Entry C')),
+          child: YearPieChartWidget(pieData: pieYearData),
         ),
       ],
     );

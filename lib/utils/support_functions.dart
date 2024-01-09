@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
 const int monthsNumber = 12;
+const int monthDays = 31;
 
 double average(List<double> data) {
   if (data.isNotEmpty) {
@@ -19,24 +20,47 @@ List<double> pricesList(List<CardData> list) {
   return list.map((e) => e.price).toList();
 }
 
-List<FlSpot> pricesMonthList(List<CardData> list) {
+List<FlSpot> pricesYearlyList(List<CardData> list) {
   return list.map((e) => FlSpot(e.date.month.toDouble(), e.price)).toList();
 }
 
-List<FlSpot> lineDataGenerator(List<double> data, [double? defaultValue]) {
-  if (defaultValue == null) {
-    return List.generate(
-      monthsNumber,
-      (index) {
-        return FlSpot(index.toDouble() + 1, 1);
-      },
-    );
-  } else {
-    return List.generate(
-      monthsNumber,
-      (index) {
-        return FlSpot(index.toDouble() + 1, defaultValue);
-      },
-    );
+List<FlSpot> averageYearlyPrice(List<CardData> data) {
+  return List.generate(
+    monthsNumber,
+    (index) {
+      return FlSpot(index.toDouble() + 1, average(pricesList(data)));
+    },
+  );
+}
+
+Map<int, double> mapOfDailyPrices(List<CardData> objects) {
+  Map<int, double> resultMap = {};
+
+  objects.forEach(
+    (obj) {
+      if (resultMap.containsKey(obj.date.day)) {
+        if (resultMap[obj.date.day] != null)
+          resultMap.update(obj.date.day, (value) => value + obj.price);
+      } else {
+        resultMap[obj.date.day] = obj.price;
+      }
+    },
+  );
+
+  return resultMap;
+}
+
+List<FlSpot> monthlyPrice(List<CardData> data) {
+  List<FlSpot> monthlyList = [];
+  double padding = 0;
+  Map<int, double> priceMap = mapOfDailyPrices(data);
+  for (int i = 1; i <= 31; i++) {
+    if (priceMap.containsKey(i)) {
+      padding += priceMap[i] ??= 0;
+      monthlyList.add(FlSpot(i.toDouble(), padding));
+    } else {
+      monthlyList.add(FlSpot(i.toDouble(), padding));
+    }
   }
+  return monthlyList;
 }
