@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     switch (_currentIndex) {
       case 0:
-        return const StatsScreen();
+        return StatsScreen();
       case 1:
         return const RefuelScreen();
       case 2:

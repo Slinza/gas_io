@@ -2,7 +2,16 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CardData {
+class DatabaseKeys {
+  final String idKey = 'id';
+  final String priceKey = 'price';
+  final String litersKey = 'liters';
+  final String dateKey = 'date';
+  final String locationKey = 'location';
+  final String euroPerLiterKey = 'euroPerLiter';
+}
+
+class CardData extends DatabaseKeys {
   final int id;
   final double price;
   final double liters;
@@ -21,12 +30,12 @@ class CardData {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'price': price,
-      'liters': liters,
-      'date': date.toUtc().toIso8601String(), // Convert DateTime to string
-      'location': location,
-      'euroPerLiter': euroPerLiter,
+      idKey: id,
+      priceKey: price,
+      litersKey: liters,
+      dateKey: date.toUtc().toIso8601String(), // Convert DateTime to string
+      locationKey: location,
+      euroPerLiterKey: euroPerLiter,
     };
   }
 

@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
-class DatabaseHelper {
+class DatabaseHelper extends DatabaseKeys {
   static Database? _database;
   static const String dbName = 'card_database.db';
   static const String tableName = 'cards';
@@ -22,12 +22,12 @@ class DatabaseHelper {
       onCreate: (db, version) {
         return db.execute('''
           CREATE TABLE $tableName(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            price REAL,
-            liters REAL,
-            date TEXT,
-            location TEXT,
-            euroPerLiter REAL
+            $idKey INTEGER PRIMARY KEY AUTOINCREMENT,
+            $priceKey REAL,
+            $litersKey REAL,
+            $dateKey TEXT,
+            $locationKey TEXT,
+            $euroPerLiterKey REAL
           )
         ''');
       },
@@ -47,6 +47,25 @@ class DatabaseHelper {
       tableName,
       orderBy: 'date DESC',
     );
+    return List.generate(maps.length, (i) {
+      return CardData.fromMap(maps[i]);
+    });
+  }
+
+  Future<List<CardData>> getYearCard() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        "SELECT $idKey, SUM($priceKey) AS $priceKey, SUM($litersKey) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey FROM $tableName GROUP BY STRFTIME('%mm', $dateKey);");
+    return List.generate(maps.length, (i) {
+      return CardData.fromMap(maps[i]);
+    });
+  }
+
+  Future<List<CardData>> getMonthCard() async {
+    final db = await database;
+    int month = DateTime.now().month;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        "SELECT * FROM $tableName WHERE STRFTIME('%m', $dateKey) = '$month';");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
