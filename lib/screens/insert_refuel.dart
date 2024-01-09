@@ -96,11 +96,11 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   decoration: InputDecoration(labelText: 'Liters'),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                 ),
-                // TextFormField(
-                //   readOnly: true,
-                //   controller: _dateController,
-                //   decoration: InputDecoration(labelText: 'Date'),
-                // ),
+                TextFormField(
+                  readOnly: true,
+                  controller: _dateController,
+                  decoration: InputDecoration(labelText: 'Date'),
+                ),
                 // TextFormField(
                 //   readOnly: true,
                 //   controller: _locationController,
@@ -130,8 +130,9 @@ class _InsertRefuelState extends State<InsertRefuel> {
 
   void _saveDataAndClose(BuildContext context) async{
     // Extract data from controllers
-    double price = double.tryParse(_priceController.text) ?? 0.1;
-    double liters = double.tryParse(_litersController.text) ?? 0.1;
+    double price = double.tryParse(_priceController.text.replaceAll(',', '.')) ?? 0.1;
+    double liters = double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.1;
+
     // String date = _dateController.text;
     // String location = _locationController.text;
     // double euroPerLiter = double.tryParse(_euroPerLiterController.text) ?? 0.0;
