@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import 'package:gas_io/components/refuel_card.dart';
+import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/utils/key_parameters.dart';
 
 class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
@@ -97,5 +98,16 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       where: 'id = ?',
       whereArgs: [card.id], // Assuming you have an 'id' field in your CardData
     );
+  }
+
+  Future<List<UserData>> getUserData(int Id) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      userTableName,
+      orderBy: 'username DESC',
+    );
+    return List.generate(maps.length, (i) {
+      return UserData.fromMap(maps[i]);
+    });
   }
 }
