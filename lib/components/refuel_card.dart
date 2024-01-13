@@ -2,16 +2,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DatabaseKeys {
-  final String idKey = 'id';
-  final String priceKey = 'price';
-  final String litersKey = 'liters';
-  final String dateKey = 'date';
-  final String locationKey = 'location';
-  final String euroPerLiterKey = 'euroPerLiter';
-}
+import 'package:gas_io/utils/key_parameters.dart';
 
-class CardData extends DatabaseKeys {
+class CardData with DatabaseCardKeys {
   final int id;
   final double price;
   final double liters;
