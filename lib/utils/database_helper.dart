@@ -11,10 +11,11 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   static const String dbName = 'card_database.db';
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
-
-    _database = await initDatabase();
-    return _database!;
+    if (_database != null) {
+      return _database!;
+    } else {
+      return initDatabase();
+    }
   }
 
   Future<Database> initDatabase() async {
@@ -22,33 +23,40 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     return openDatabase(
       path,
       version: 1,
-      onCreate: (db, version) {
-        return db.execute('''
-          CREATE TABLE $cardTableName(
-            $idKey INTEGER PRIMARY KEY AUTOINCREMENT,
-            $priceKey REAL,
-            $litersKey REAL,
-            $dateKey TEXT,
-            $locationKey TEXT,
-            $euroPerLiterKey REAL
-          );
-          CREATE TABLE $userTableName(
+      onCreate: (db, version) async {
+        await db.execute('''
+            CREATE TABLE $userTableName (
             $userIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
             $userNameKey TEXT,
             $userSurnameKey TEXT,
-            $userUsernameKey TEXT,
-          );
-          CREATE TABLE $carTableName(
+            $userUsernameKey TEXT
+          )
+          ''');
+        await db.execute('''
+          CREATE TABLE $carTableName (
             $carIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
             $carUserIdKey REAL,
             $carBrandKey TEXT,
             $carModelKey REAL,
             $carYearKey REAL,
             $carConsumptionKey REAL
-          );
-          INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");
-          INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey) VALUES(0,"Brand", "Model",0000,0);
-        ''');
+          )
+          ''');
+        await db.execute('''
+          CREATE TABLE $cardTableName(
+            $idKey INTEGER PRIMARY KEY AUTOINCREMENT,
+            $relatedCarIdKey REAL,
+            $priceKey REAL,
+            $litersKey REAL,
+            $dateKey TEXT,
+            $locationKey TEXT,
+            $euroPerLiterKey REAL
+          )
+          ''');
+        await db.execute(
+            '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
+        await db.execute(
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey) VALUES(0,"Brand", "Model",0000,0);''');
       },
     );
   }

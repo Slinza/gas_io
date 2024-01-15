@@ -1,6 +1,7 @@
 mixin DatabaseCardKeys {
   final String cardTableName = 'cards';
   final String idKey = 'id';
+  final String relatedCarIdKey = 'carId';
   final String priceKey = 'price';
   final String litersKey = 'liters';
   final String dateKey = 'date';

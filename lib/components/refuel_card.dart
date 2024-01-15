@@ -6,6 +6,7 @@ import 'package:gas_io/utils/key_parameters.dart';
 
 class CardData with DatabaseCardKeys {
   final int id;
+  final int carId;
   final double price;
   final double liters;
   final DateTime date;
@@ -14,6 +15,7 @@ class CardData with DatabaseCardKeys {
 
   CardData({
     required this.id,
+    required this.carId,
     required this.price,
     required this.liters,
     required this.date,
@@ -24,6 +26,7 @@ class CardData with DatabaseCardKeys {
   Map<String, dynamic> toMap() {
     return {
       idKey: id,
+      relatedCarIdKey: carId,
       priceKey: price,
       litersKey: liters,
       dateKey: date.toUtc().toIso8601String(), // Convert DateTime to string
@@ -35,6 +38,7 @@ class CardData with DatabaseCardKeys {
   factory CardData.fromMap(Map<String, dynamic> map) {
     return CardData(
       id: map['id'],
+      carId: map["carId"],
       price: map['price'],
       liters: map['liters'],
       date: DateTime.parse(map['date']), // Convert string to DateTime

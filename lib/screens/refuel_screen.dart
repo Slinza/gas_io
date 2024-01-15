@@ -63,9 +63,11 @@ class _RefuelScreenState extends State<RefuelScreen> {
     double liters = 10 + random.nextDouble() * (60 - 10);
     CardData newCard = CardData(
       id: DateTime.now().millisecondsSinceEpoch,
+      carId: 0, // TODO: connect to local user and car ID
       price: liters * euroPerLiter,
       liters: liters,
-      date: generateRandomDateTime(), //DateTime.now(),
+      date:
+          generateRandomDateTime(), //DateTime.now(), // TODO: Remove the random DateTime generation
       location: 'Random Location',
       euroPerLiter: euroPerLiter,
     );
