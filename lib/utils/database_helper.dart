@@ -35,7 +35,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
         await db.execute('''
           CREATE TABLE $carTableName (
             $carIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
-            $carUserIdKey REAL,
+            $carUserIdKey INTEGER,
             $carBrandKey TEXT,
             $carModelKey REAL,
             $carYearKey REAL,
@@ -45,7 +45,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
         await db.execute('''
           CREATE TABLE $cardTableName(
             $idKey INTEGER PRIMARY KEY AUTOINCREMENT,
-            $relatedCarIdKey REAL,
+            $relatedCarIdKey INTEGER,
             $priceKey REAL,
             $litersKey REAL,
             $dateKey TEXT,
@@ -108,14 +108,14 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     );
   }
 
-  Future<List<UserData>> getUserData(int Id) async {
+  Future<UserData> getUserData(int id) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       userTableName,
-      orderBy: 'username DESC',
+      // where: 'id = ?',
+      // whereArgs: [id],
+      orderBy: 'username DESC LIMIT 1',
     );
-    return List.generate(maps.length, (i) {
-      return UserData.fromMap(maps[i]);
-    });
+    return UserData.fromMap(maps.first);
   }
 }

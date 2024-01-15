@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:gas_io/utils/database_helper.dart';
+import 'package:gas_io/components/user_schema.dart';
+
 class UserScreen extends StatefulWidget {
   @override
   _UserScreenState createState() => _UserScreenState();
@@ -7,16 +10,29 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   bool isEditable = false;
-  String userName = 'Username';
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
+  UserData userData = UserData(id: 0, name: "", surname: "", username: "");
+  String userName = "sdfase";
   String carBrand = 'Brand';
   String carModel = 'Model';
   String profilePic =
       'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg';
 
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
   void toggleEditable() {
     setState(() {
       isEditable = !isEditable;
     });
+  }
+
+  Future<void> _loadUserData() async {
+    userData = await _databaseHelper.getUserData(0);
+    userName = userData.username;
   }
 
   @override
