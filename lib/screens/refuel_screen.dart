@@ -7,14 +7,15 @@ import 'package:gas_io/components/refuel_card.dart';
 DateTime generateRandomDateTime() {
   Random random = Random();
 
-  // Get the current DateTime
-  DateTime now = DateTime.now();
+// Get the current year
+  int currentYear = DateTime.now().year;
 
-  // Generate a random number between 0 to 365 (number of days in a year)
+// Generate a random number between 0 to 365 (number of days in a year)
   int randomDays = random.nextInt(365);
 
-  // Subtract the random number of days from the current DateTime to get a random DateTime in the past year
-  DateTime randomDateTime = now.subtract(Duration(days: randomDays));
+// Subtract the random number of days from the start of the current year to get a random DateTime in the past year
+  DateTime randomDateTime =
+      DateTime(currentYear, 12, 31).subtract(Duration(days: randomDays));
   return randomDateTime;
 }
 

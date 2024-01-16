@@ -54,7 +54,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
     final random = Random();
     CardData newCard = CardData(
       id: DateTime.now().millisecondsSinceEpoch,
-      carId: 0, // TODO: connect to local user and car ID
+      carId: CAR_ID, // TODO: connect to local user and car ID
       price: (random.nextDouble() * 100).roundToDouble(),
       liters: (random.nextDouble() * 50).roundToDouble(),
       date: DateTime.now(),

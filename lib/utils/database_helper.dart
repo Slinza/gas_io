@@ -97,8 +97,14 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   Future<List<CardData>> getMonthCard() async {
     final db = await database;
     int month = DateTime.now().month;
+    String formattedMonth = '';
+    if (month <= 9) {
+      formattedMonth = '0$month';
+    } else {
+      formattedMonth = month.toString();
+    }
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $carID AND $relatedCarIdKey =  STRFTIME('%m', $dateKey) = '$month';");
+        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $carID AND STRFTIME('%m', $dateKey) = '$formattedMonth';");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
