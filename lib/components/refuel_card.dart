@@ -2,17 +2,11 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DatabaseKeys {
-  final String idKey = 'id';
-  final String priceKey = 'price';
-  final String litersKey = 'liters';
-  final String dateKey = 'date';
-  final String locationKey = 'location';
-  final String euroPerLiterKey = 'euroPerLiter';
-}
+import 'package:gas_io/utils/key_parameters.dart';
 
-class CardData extends DatabaseKeys {
+class CardData with DatabaseCardKeys {
   final int id;
+  final int carId;
   final double price;
   final double liters;
   final DateTime date;
@@ -21,6 +15,7 @@ class CardData extends DatabaseKeys {
 
   CardData({
     required this.id,
+    required this.carId,
     required this.price,
     required this.liters,
     required this.date,
@@ -31,6 +26,7 @@ class CardData extends DatabaseKeys {
   Map<String, dynamic> toMap() {
     return {
       idKey: id,
+      relatedCarIdKey: carId,
       priceKey: price,
       litersKey: liters,
       dateKey: date.toUtc().toIso8601String(), // Convert DateTime to string
@@ -42,6 +38,7 @@ class CardData extends DatabaseKeys {
   factory CardData.fromMap(Map<String, dynamic> map) {
     return CardData(
       id: map['id'],
+      carId: map["carId"],
       price: map['price'],
       liters: map['liters'],
       date: DateTime.parse(map['date']), // Convert string to DateTime
