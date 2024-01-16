@@ -18,14 +18,25 @@ class _RefuelScreenState extends State<RefuelScreen> {
   List<CardData> _cardList = [];
   final ScrollController _listController = ScrollController();
 
+  int selectedCarId = 1; //FIXME: Initialize with a default car ID
+  Map<int, String> cars = {};
+
   @override
   void initState() {
     super.initState();
+    _loadCars();
     _loadCards();
   }
 
+  Future<void> _loadCars() async {
+    final Map<int, String> carMap = await _databaseHelper.getCarsMap();
+    setState(() {
+      cars = carMap;
+    });
+  }
+
   Future<void> _loadCards() async {
-    List<CardData> cards = await _databaseHelper.getCards();
+    List<CardData> cards = await _databaseHelper.getCardsByCar(selectedCarId);
     setState(() {
       _cardList = cards;
     });
@@ -54,6 +65,27 @@ class _RefuelScreenState extends State<RefuelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // title: Text('Refuel Screen'),
+        actions: [
+          // Car Selector Dropdown
+          DropdownButton<int>(
+            value: selectedCarId,
+            onChanged: (int? newValue) {
+              setState(() {
+                selectedCarId = newValue ?? 0;
+                _loadCards();
+              });
+            },
+            items: cars.keys.toList().map<DropdownMenuItem<int>>((int value) {
+              return DropdownMenuItem<int>(
+                value: value,
+                child: Text(cars[value] ?? ''),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
       body: _buildCardList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
