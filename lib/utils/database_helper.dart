@@ -6,9 +6,13 @@ import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/utils/key_parameters.dart';
 
+const int CAR_ID = 0;
+
 class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   static Database? _database;
   static const String dbName = 'card_database.db';
+
+  static int carID = CAR_ID;
 
   Future<Database> get database async {
     if (_database != null) {
@@ -72,6 +76,8 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       cardTableName,
+      where: '$relatedCarIdKey = ?',
+      whereArgs: [carID],
       orderBy: 'date DESC',
     );
     return List.generate(maps.length, (i) {
@@ -82,7 +88,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   Future<List<CardData>> getYearCard() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, SUM($priceKey) AS $priceKey, SUM($litersKey) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey FROM $cardTableName GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, SUM($priceKey) AS $priceKey, SUM($litersKey) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey FROM $cardTableName WHERE $relatedCarIdKey = $carID GROUP BY STRFTIME('%mm', $dateKey);");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
@@ -92,7 +98,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     final db = await database;
     int month = DateTime.now().month;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM $cardTableName WHERE STRFTIME('%m', $dateKey) = '$month';");
+        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $carID AND $relatedCarIdKey =  STRFTIME('%m', $dateKey) = '$month';");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
@@ -114,7 +120,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       userTableName,
       // where: 'id = ?',
       // whereArgs: [id],
-      orderBy: 'username DESC LIMIT 1',
+      orderBy: 'username DESC LIMIT 1', // TODO make it user related
     );
     return UserData.fromMap(maps.first);
   }
