@@ -1,9 +1,9 @@
-
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class InsertRefuel extends StatefulWidget {
   const InsertRefuel({Key? key}) : super(key: key);
@@ -24,7 +24,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
 
   DateTime selectedDateTime = DateTime.now();
 
-
   int selectedCarId = -1;
   Map<int, String> cars = {};
 
@@ -33,7 +32,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
     super.initState();
     _loadCars();
     // Format the initial datetime and set it to the controller
-    _dateController.text = DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+    _dateController.text =
+        DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
   }
 
   Future<void> _loadCars() async {
@@ -54,7 +54,46 @@ class _InsertRefuelState extends State<InsertRefuel> {
         title: Text('Insert Refuel'),
       ),
       body:
-          SingleChildScrollView(
+          // TODO: substitute Form with FormBuilder
+          // FormBuilder(
+          //   key: _formKey,
+          //   child: Column(
+          //     children: [
+          //       FormBuilderTextField(
+          //         name: 'email',
+          //         decoration: const InputDecoration(labelText: 'Email'),
+          //         validator: FormBuilderValidators.compose([
+          //           FormBuilderValidators.required(),
+          //           FormBuilderValidators.email(),
+          //         ]),
+          //       ),
+          //       const SizedBox(height: 10),
+          //       FormBuilderTextField(
+          //         name: 'password',
+          //         decoration: const InputDecoration(labelText: 'Password'),
+          //         obscureText: true,
+          //         validator: FormBuilderValidators.compose([
+          //           FormBuilderValidators.required(),
+          //         ]),
+          //       ),
+          //       MaterialButton(
+          //         color: Theme.of(context).colorScheme.secondary,
+          //         onPressed: () {
+          //           // Validate and save the form values
+          //           _formKey.currentState?.saveAndValidate();
+          //           debugPrint(_formKey.currentState?.value.toString());
+          //
+          //           // On another side, can access all field values without saving form with instantValues
+          //           _formKey.currentState?.validate();
+          //           debugPrint(_formKey.currentState?.instantValue.toString());
+          //         },
+          //         child: const Text('Login'),
+          //       )
+          //     ],
+          //   ),
+          // ),
+
+      SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: Form(
@@ -93,12 +132,14 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 TextFormField(
                   controller: _kmController,
                   decoration: const InputDecoration(labelText: 'Km'),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                 ),
                 TextFormField(
                   controller: _litersController,
                   decoration: const InputDecoration(labelText: 'Liters'),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   onChanged: (_) => _updatePrice(),
                 ),
                 // TextFormField(
@@ -109,7 +150,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 TextFormField(
                   controller: _euroPerLiterController,
                   decoration: const InputDecoration(labelText: 'Price (€/L)'),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   onChanged: (_) => _updatePrice(),
                 ),
                 TextFormField(
@@ -145,10 +187,9 @@ class _InsertRefuelState extends State<InsertRefuel> {
     double liters =
         double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
     double euroPerLiter =
-        double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ?? 0.0;
-    double km =
-        double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
-
+        double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ??
+            0.0;
+    double km = double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
 
     CardData newCard = CardData(
         id: DateTime.now().millisecondsSinceEpoch,
@@ -168,8 +209,11 @@ class _InsertRefuelState extends State<InsertRefuel> {
 
   void _updatePrice() {
     // Update the price based on Liters and €/L values
-    double liters = double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
-    double euroPerLiter = double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ?? 0.0;
+    double liters =
+        double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
+    double euroPerLiter =
+        double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ??
+            0.0;
 
     double price = liters * euroPerLiter;
 
@@ -204,7 +248,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
           );
 
           // Format and update the date controller
-          _dateController.text = DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+          _dateController.text =
+              DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
         });
       }
     }
