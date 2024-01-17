@@ -17,6 +17,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _litersController = TextEditingController();
+  final TextEditingController _kmController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _euroPerLiterController = TextEditingController();
@@ -90,6 +91,11 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   ),
                 ),
                 TextFormField(
+                  controller: _kmController,
+                  decoration: const InputDecoration(labelText: 'Km'),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                ),
+                TextFormField(
                   controller: _litersController,
                   decoration: const InputDecoration(labelText: 'Liters'),
                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -135,9 +141,14 @@ class _InsertRefuelState extends State<InsertRefuel> {
   void _saveDataAndClose(BuildContext context) async {
     // Extract data from controllers
     double price =
-        double.tryParse(_priceController.text.replaceAll(',', '.')) ?? 0.1;
+        double.tryParse(_priceController.text.replaceAll(',', '.')) ?? 0.0;
     double liters =
-        double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.1;
+        double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
+    double euroPerLiter =
+        double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ?? 0.0;
+    double km =
+        double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
+
 
     CardData newCard = CardData(
         id: DateTime.now().millisecondsSinceEpoch,
@@ -146,8 +157,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
         liters: liters,
         date: selectedDateTime,
         location: 'Random Location',
-        euroPerLiter: price / liters,
-        km: 120.1);
+        euroPerLiter: euroPerLiter,
+        km: km);
     // TODO: handle km update also on the car
     await _databaseHelper.insertCard(newCard);
 
