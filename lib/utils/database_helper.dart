@@ -62,9 +62,9 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
         await db.execute(
             '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(0,"Brand", "Model",0000, 0.0, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(0,"Fiat", "Panda", 0000, 0.0, 0.0);''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(1,"Skoda", "Karoq",0000, 0.0, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(1,"Lancia", "Delta", 0000, 0.0, 0.0);''');
       },
     );
   }

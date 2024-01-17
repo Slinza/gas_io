@@ -1,13 +1,9 @@
-import 'dart:ffi';
-import 'dart:math';
+
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:gas_io/screens/insert_refuel.dart';
-// import 'package:gas_io/screens/refuel_insert_form.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class InsertRefuel extends StatefulWidget {
   const InsertRefuel({Key? key}) : super(key: key);
@@ -25,6 +21,9 @@ class _InsertRefuelState extends State<InsertRefuel> {
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _euroPerLiterController = TextEditingController();
 
+  DateTime selectedDateTime = DateTime.now();
+
+
   int selectedCarId = -1;
   Map<int, String> cars = {};
 
@@ -32,6 +31,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
   void initState() {
     super.initState();
     _loadCars();
+    // Format the initial datetime and set it to the controller
+    _dateController.text = DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
   }
 
   Future<void> _loadCars() async {
@@ -50,65 +51,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Insert Refuel'),
-        // actions: [
-        //   DropdownButtonFormField<int>(
-        //     value: selectedCarId,
-        //     onChanged: (int? newValue) {
-        //       setState(() {
-        //         selectedCarId = newValue ?? 0;
-        //         // selectedCarName = cars[selectedCarId] ?? '';
-        //       });
-        //     },
-        //     items: cars.keys.toList().map<DropdownMenuItem<int>>((int value) {
-        //       return DropdownMenuItem<int>(
-        //         value: value,
-        //         child: Text(cars[value] ?? ''),
-        //       );
-        //     }).toList(),
-        //     decoration: InputDecoration(labelText: 'Car'),
-        //   ),
-        // ]
       ),
       body:
-
-          // FormBuilder(
-          //   key: _formKey,
-          //   child: Column(
-          //     children: [
-          //       FormBuilderTextField(
-          //         name: 'email',
-          //         decoration: const InputDecoration(labelText: 'Email'),
-          //         validator: FormBuilderValidators.compose([
-          //           FormBuilderValidators.required(),
-          //           FormBuilderValidators.email(),
-          //         ]),
-          //       ),
-          //       const SizedBox(height: 10),
-          //       FormBuilderTextField(
-          //         name: 'password',
-          //         decoration: const InputDecoration(labelText: 'Password'),
-          //         obscureText: true,
-          //         validator: FormBuilderValidators.compose([
-          //           FormBuilderValidators.required(),
-          //         ]),
-          //       ),
-          //       MaterialButton(
-          //         color: Theme.of(context).colorScheme.secondary,
-          //         onPressed: () {
-          //           // Validate and save the form values
-          //           _formKey.currentState?.saveAndValidate();
-          //           debugPrint(_formKey.currentState?.value.toString());
-          //
-          //           // On another side, can access all field values without saving form with instantValues
-          //           _formKey.currentState?.validate();
-          //           debugPrint(_formKey.currentState?.instantValue.toString());
-          //         },
-          //         child: const Text('Login'),
-          //       )
-          //     ],
-          //   ),
-          // ),
-
           SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -133,36 +77,44 @@ class _InsertRefuelState extends State<InsertRefuel> {
                       child: Text(cars[value] ?? ''),
                     );
                   }).toList(),
-                  decoration: InputDecoration(labelText: 'Car'),
+                  decoration: const InputDecoration(labelText: 'Car'),
                 ),
-                TextFormField(
-                  controller: _priceController,
-                  decoration: InputDecoration(labelText: 'Price'),
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
+                GestureDetector(
+                  onTap: () => _selectDateTime(context),
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: _dateController,
+                      decoration: InputDecoration(labelText: 'Date and Time'),
+                    ),
                   ),
-                  onSaved: (value) {},
                 ),
                 TextFormField(
                   controller: _litersController,
-                  decoration: InputDecoration(labelText: 'Liters'),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                ),
-                TextFormField(
-                  readOnly: true,
-                  controller: _dateController,
-                  decoration: InputDecoration(labelText: 'Date'),
+                  decoration: const InputDecoration(labelText: 'Liters'),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (_) => _updatePrice(),
                 ),
                 // TextFormField(
                 //   readOnly: true,
                 //   controller: _locationController,
                 //   decoration: InputDecoration(labelText: 'Location'),
                 // ),
-                // TextFormField(
-                //   readOnly: true,
-                //   controller: _euroPerLiterController,
-                //   decoration: InputDecoration(labelText: 'EuroPerLiter'),
-                // ),
+                TextFormField(
+                  controller: _euroPerLiterController,
+                  decoration: const InputDecoration(labelText: 'Price (€/L)'),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (_) => _updatePrice(),
+                ),
+                TextFormField(
+                  controller: _priceController,
+                  decoration: const InputDecoration(labelText: 'Cost (€)'),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  enabled: false, // Disable user input
+                  onSaved: (value) {},
+                ),
                 SizedBox(height: 16.0), // Spacer for some vertical separation
                 ElevatedButton(
                   onPressed: () {
@@ -187,21 +139,12 @@ class _InsertRefuelState extends State<InsertRefuel> {
     double liters =
         double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.1;
 
-    // String date = _dateController.text;
-    // String location = _locationController.text;
-    // double euroPerLiter = double.tryParse(_euroPerLiterController.text) ?? 0.0;
-
-
-
-    final random = Random();
-    // double euroPerLiter = 1.568 + random.nextDouble() * (2.134 - 1.568);
-    // double liters = 10 + random.nextDouble() * (60 - 10);
     CardData newCard = CardData(
         id: DateTime.now().millisecondsSinceEpoch,
         carId: selectedCarId,
         price: price,
         liters: liters,
-        date: DateTime.now(),
+        date: selectedDateTime,
         location: 'Random Location',
         euroPerLiter: price / liters,
         km: 120.1);
@@ -210,5 +153,49 @@ class _InsertRefuelState extends State<InsertRefuel> {
 
     // Navigator.pop with the result (you can pass some data as a result)
     Navigator.of(context).pop(newCard);
+  }
+
+  void _updatePrice() {
+    // Update the price based on Liters and €/L values
+    double liters = double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
+    double euroPerLiter = double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ?? 0.0;
+
+    double price = liters * euroPerLiter;
+
+    // Update the price field
+    setState(() {
+      _priceController.text = price.toStringAsFixed(2); // Format as needed
+    });
+  }
+
+  Future<void> _selectDateTime(BuildContext context) async {
+    final DateTime? pickedDateTime = await showDatePicker(
+      context: context,
+      initialDate: selectedDateTime,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDateTime != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
+      );
+
+      if (pickedTime != null) {
+        setState(() {
+          selectedDateTime = DateTime(
+            pickedDateTime.year,
+            pickedDateTime.month,
+            pickedDateTime.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+
+          // Format and update the date controller
+          _dateController.text = DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+        });
+      }
+    }
   }
 }
