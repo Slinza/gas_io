@@ -12,6 +12,7 @@ class CardData with DatabaseCardKeys {
   final DateTime date;
   final String location;
   final double euroPerLiter;
+  final double km;
 
   CardData({
     required this.id,
@@ -21,6 +22,7 @@ class CardData with DatabaseCardKeys {
     required this.date,
     required this.location,
     required this.euroPerLiter,
+    required this.km,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,6 +34,7 @@ class CardData with DatabaseCardKeys {
       dateKey: date.toUtc().toIso8601String(), // Convert DateTime to string
       locationKey: location,
       euroPerLiterKey: euroPerLiter,
+      kmKey: km,
     };
   }
 
@@ -44,6 +47,7 @@ class CardData with DatabaseCardKeys {
       date: DateTime.parse(map['date']), // Convert string to DateTime
       location: map['location'],
       euroPerLiter: map['euroPerLiter'],
+      km: map['km']
     );
   }
 }
@@ -55,9 +59,9 @@ class RefuelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(8.0),
+      margin: EdgeInsets.zero,
       child: Padding(
-        padding: EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

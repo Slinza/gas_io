@@ -7,6 +7,7 @@ mixin DatabaseCardKeys {
   final String dateKey = 'date';
   final String locationKey = 'location';
   final String euroPerLiterKey = 'euroPerLiter';
+  final String kmKey = 'km';
 }
 
 mixin DatabaseUserKeys {
@@ -25,4 +26,5 @@ mixin DatabaseCarKeys {
   final String carModelKey = 'model';
   final String carYearKey = 'year';
   final String carConsumptionKey = 'fuelConsumption';
+  final String carTotalKmKey = 'totalKm';
 }
