@@ -64,3 +64,21 @@ List<FlSpot> monthlyPrice(List<CardData> data) {
   }
   return monthlyList;
 }
+
+int findMaxY(List<FlSpot> data) {
+  int max = 0;
+  for (final spot in data) {
+    if (spot.y > max) {
+      max = (spot.y).ceil();
+    }
+  }
+  return max;
+}
+
+int approximateToNextDivisibleByFactor(int number, int factor) {
+  if (number % factor == 0) {
+    return number;
+  } else {
+    return number + (factor - (number % factor));
+  }
+}

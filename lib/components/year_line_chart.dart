@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:fl_chart/fl_chart.dart';
+
+import 'package:gas_io/utils/support_functions.dart';
+
+const int YEAR_FACTOR = 20;
 
 class YearLineChartWidget extends StatelessWidget {
   const YearLineChartWidget({
@@ -14,6 +17,8 @@ class YearLineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double upperLimit = getUpperLimitMonth(monthData);
+    double interval = getIntervalMonth(upperLimit);
     return LineChart(
       LineChartData(
         lineBarsData: [
@@ -32,15 +37,19 @@ class YearLineChartWidget extends StatelessWidget {
             color: Colors.red,
           ),
         ],
+        minY: 0,
+        maxY: upperLimit,
         borderData: FlBorderData(show: false),
         // borderData: FlBorderData(
         //     border: const Border(bottom: BorderSide(), left: BorderSide())),
         //gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(sideTitles: _bottomTitles),
-          leftTitles: const AxisTitles(
-              sideTitles:
-                  SideTitles(showTitles: true, reservedSize: 45, interval: 30)),
+          leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 45,
+                  interval: interval <= 0.0 ? 1 : interval)),
           topTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles:
@@ -78,4 +87,13 @@ class YearLineChartWidget extends StatelessWidget {
           return Text(text);
         },
       );
+}
+
+double getUpperLimitMonth(List<FlSpot> monthData) {
+  int max = findMaxY(monthData);
+  return approximateToNextDivisibleByFactor(max, YEAR_FACTOR).toDouble();
+}
+
+double getIntervalMonth(double upperLimit) {
+  return (upperLimit / YEAR_FACTOR).toDouble();
 }

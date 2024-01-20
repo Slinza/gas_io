@@ -59,25 +59,28 @@ class _StatsScreenState extends State<StatsScreen> {
   Widget build(BuildContext context) {
     //print(monthData);
     return ListView(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
       children: <Widget>[
+        SizedBox(height: 40.0),
         Container(
           height: 250,
-          color: Colors.amber[800],
+          // color: Colors.amber[800],
           child: MonthLineChartWidget(
             monthData: monthPrices,
           ),
         ),
+        SizedBox(height: 30.0),
         Container(
           height: 230,
-          color: Colors.amber[500],
+          // color: Colors.amber[500],
           child: YearLineChartWidget(
             monthData: yearPrices,
             average: averageYearPrices,
           ),
         ),
+        SizedBox(height: 16.0),
         Container(
-          height: 200,
+          height: 100,
           color: Colors.amber[100],
           child: YearPieChartWidget(pieData: pieYearData),
         ),
