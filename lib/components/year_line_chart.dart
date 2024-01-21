@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import 'package:gas_io/utils/support_functions.dart';
+import 'package:gas_io/design/themes.dart';
 
-const int YEAR_FACTOR = 20;
+const int YEAR_FACTOR = 8;
 
 class YearLineChartWidget extends StatelessWidget {
   const YearLineChartWidget({
@@ -27,14 +28,14 @@ class YearLineChartWidget extends StatelessWidget {
             spots: monthData,
             isCurved: true,
             barWidth: 3,
-            color: Colors.indigo,
+            color: primaryColor,
           ),
           // The orange line
           LineChartBarData(
             spots: average,
             isCurved: true,
             barWidth: 3,
-            color: Colors.red,
+            color: const Color.fromARGB(255, 231, 101, 92),
           ),
         ],
         minY: 0,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/month_line_chart.dart';
-import 'package:gas_io/components/expense_type_pie.dart';
+//import 'package:gas_io/components/expense_type_pie.dart';
 import 'package:gas_io/components/year_line_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/utils/database_helper.dart';
+import 'package:gas_io/design/styles.dart';
 
 // import 'package:gas_io/components/line_chart.dart';
 
@@ -62,12 +63,24 @@ class _StatsScreenState extends State<StatsScreen> {
       padding: const EdgeInsets.all(10),
       children: <Widget>[
         SizedBox(height: 40.0),
+        const Text(
+          "Expense of the month",
+          style: subtitleTextStyle,
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 30.0),
         Container(
           height: 250,
           // color: Colors.amber[800],
           child: MonthLineChartWidget(
             monthData: monthPrices,
           ),
+        ),
+        SizedBox(height: 50.0),
+        const Text(
+          "Yearly consume trend",
+          style: subtitleTextStyle,
+          textAlign: TextAlign.center,
         ),
         SizedBox(height: 30.0),
         Container(
@@ -79,11 +92,11 @@ class _StatsScreenState extends State<StatsScreen> {
           ),
         ),
         SizedBox(height: 16.0),
-        Container(
-          height: 100,
-          color: Colors.amber[100],
-          child: YearPieChartWidget(pieData: pieYearData),
-        ),
+        // Container(
+        //   height: 100,
+        //   color: Colors.amber[100],
+        //   child: YearPieChartWidget(pieData: pieYearData),
+        // ),
       ],
     );
   }

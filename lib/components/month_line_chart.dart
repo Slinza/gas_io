@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import 'package:gas_io/utils/support_functions.dart';
+import 'package:gas_io/design/themes.dart';
 
 const int INTERVAL_FACTOR = 3;
 
@@ -23,13 +24,13 @@ class MonthLineChartWidget extends StatelessWidget {
           LineChartBarData(
             spots: monthData,
             isCurved: false,
-            color: Colors.amber,
+            color: primaryColor,
             barWidth: 3,
             isStrokeCapRound: true,
             dotData: FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
-              color: Colors.amber.withOpacity(0.2),
+              color: primaryColor.withOpacity(0.2),
             ),
           ),
         ],

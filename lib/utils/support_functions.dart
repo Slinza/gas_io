@@ -28,7 +28,8 @@ List<FlSpot> averageYearlyPrice(List<CardData> data) {
   return List.generate(
     monthsNumber,
     (index) {
-      return FlSpot(index.toDouble() + 1, average(pricesList(data)));
+      return FlSpot(
+          index.toDouble() + 1, roundedNumber(average(pricesList(data))));
     },
   );
 }
@@ -57,9 +58,9 @@ List<FlSpot> monthlyPrice(List<CardData> data) {
   for (int i = 1; i <= 31; i++) {
     if (priceMap.containsKey(i)) {
       padding += priceMap[i] ??= 0;
-      monthlyList.add(FlSpot(i.toDouble(), padding));
+      monthlyList.add(FlSpot(i.toDouble(), roundedNumber(padding)));
     } else {
-      monthlyList.add(FlSpot(i.toDouble(), padding));
+      monthlyList.add(FlSpot(i.toDouble(), roundedNumber(padding)));
     }
   }
   return monthlyList;
@@ -81,4 +82,8 @@ int approximateToNextDivisibleByFactor(int number, int factor) {
   } else {
     return number + (factor - (number % factor));
   }
+}
+
+double roundedNumber(double number) {
+  return double.parse(number.toStringAsFixed(2));
 }
