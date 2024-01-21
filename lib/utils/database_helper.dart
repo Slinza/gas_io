@@ -92,7 +92,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   Future<List<CardData>> getYearCard() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, $relatedCarIdKey, SUM($priceKey) AS $priceKey, SUM($litersKey) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey FROM $cardTableName WHERE $relatedCarIdKey = $carID GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey FROM $cardTableName WHERE $relatedCarIdKey = $carID GROUP BY STRFTIME('%mm', $dateKey);");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
