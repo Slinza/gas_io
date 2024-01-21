@@ -29,38 +29,42 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       version: 1,
       onCreate: (db, version) async {
         await db.execute('''
-            CREATE TABLE $userTableName (
-            $userIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
-            $userNameKey TEXT,
-            $userSurnameKey TEXT,
-            $userUsernameKey TEXT
-          )
-          ''');
+          CREATE TABLE $userTableName (
+          $userIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
+          $userNameKey TEXT,
+          $userSurnameKey TEXT,
+          $userUsernameKey TEXT
+        )
+        ''');
         await db.execute('''
-          CREATE TABLE $carTableName (
-            $carIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
-            $carUserIdKey INTEGER,
-            $carBrandKey TEXT,
-            $carModelKey REAL,
-            $carYearKey REAL,
-            $carConsumptionKey REAL
-          )
-          ''');
+        CREATE TABLE $carTableName (
+          $carIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
+          $carUserIdKey INTEGER,
+          $carBrandKey TEXT,
+          $carModelKey REAL,
+          $carYearKey INT,
+          $carConsumptionKey REAL,
+          $carTotalKmKey REAL
+        )
+        ''');
         await db.execute('''
-          CREATE TABLE $cardTableName(
-            $idKey INTEGER PRIMARY KEY AUTOINCREMENT,
-            $relatedCarIdKey INTEGER,
-            $priceKey REAL,
-            $litersKey REAL,
-            $dateKey TEXT,
-            $locationKey TEXT,
-            $euroPerLiterKey REAL
-          )
-          ''');
+        CREATE TABLE $cardTableName(
+          $idKey INTEGER PRIMARY KEY AUTOINCREMENT,
+          $relatedCarIdKey INTEGER,
+          $priceKey REAL,
+          $litersKey REAL,
+          $dateKey TEXT,
+          $locationKey TEXT,
+          $euroPerLiterKey REAL,
+          $kmKey REAL
+        )
+        ''');
         await db.execute(
             '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey) VALUES(0,"Brand", "Model",0000,0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(0,"Fiat", "Panda", 0000, 0.0, 0.0);''');
+        await db.execute(
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(1,"Lancia", "Delta", 0000, 0.0, 0.0);''');
       },
     );
   }
@@ -71,13 +75,13 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     return db.insert(cardTableName, card.toMap());
   }
 
-  Future<List<CardData>> getCards() async {
+  Future<List<CardData>> getCardsByCar(selectedCarId) async {
     print("get db data");
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       cardTableName,
       where: '$relatedCarIdKey = ?',
-      whereArgs: [carID],
+      whereArgs: [selectedCarId],
       orderBy: 'date DESC',
     );
     return List.generate(maps.length, (i) {
@@ -124,10 +128,32 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       userTableName,
-      // where: 'id = ?',
-      // whereArgs: [id],
       orderBy: 'username DESC LIMIT 1', // TODO make it user related
     );
     return UserData.fromMap(maps.first);
+  }
+
+  Future<Map<int, String>> getCarsMap() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      carTableName,
+      columns: [carIdKey, carBrandKey, carModelKey],
+    );
+
+    return {
+      for (var car in maps)
+        car[carIdKey]: '${car[carBrandKey]} ${car[carModelKey]}'
+    };
+  }
+
+  // New method to update total kilometers traveled by a car
+  Future<void> updateTotalKm(int carId, double totalKm) async {
+    final db = await database;
+    await db.update(
+      carTableName,
+      {carTotalKmKey: totalKm},
+      where: '$carIdKey = ?',
+      whereArgs: [carId],
+    );
   }
 }
