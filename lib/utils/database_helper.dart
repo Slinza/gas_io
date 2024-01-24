@@ -6,13 +6,9 @@ import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/utils/key_parameters.dart';
 
-const int CAR_ID = 0;
-
 class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   static Database? _database;
   static const String dbName = 'card_database.db';
-
-  static int carID = CAR_ID;
 
   Future<Database> get database async {
     if (_database != null) {
@@ -89,16 +85,16 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     });
   }
 
-  Future<List<CardData>> getYearCard() async {
+  Future<List<CardData>> getYearCard(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey FROM $cardTableName WHERE $relatedCarIdKey = $carID GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId GROUP BY STRFTIME('%mm', $dateKey);");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
   }
 
-  Future<List<CardData>> getMonthCard() async {
+  Future<List<CardData>> getMonthCard(selectedCarId) async {
     final db = await database;
     int month = DateTime.now().month;
     String formattedMonth = '';
@@ -108,7 +104,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       formattedMonth = month.toString();
     }
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $carID AND STRFTIME('%m', $dateKey) = '$formattedMonth';");
+        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND STRFTIME('%m', $dateKey) = '$formattedMonth';");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
