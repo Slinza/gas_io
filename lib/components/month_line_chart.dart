@@ -49,7 +49,7 @@ class MonthLineChartWidget extends StatelessWidget {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 30,
+              reservedSize: 37,
               interval: interval <= 0.0 ? 1 : interval,
             ),
           ),
@@ -63,7 +63,8 @@ class MonthLineChartWidget extends StatelessWidget {
 
 double getUpperLimitMonth(List<FlSpot> monthData) {
   int max = findMaxY(monthData);
-  return approximateToNextDivisibleByFactor(max, INTERVAL_FACTOR).toDouble();
+  return approximateByFactor(approximateByFactor(max, INTERVAL_FACTOR), 10)
+      .toDouble();
 }
 
 double getIntervalMonth(double upperLimit) {

@@ -76,7 +76,7 @@ int findMaxY(List<FlSpot> data) {
   return max;
 }
 
-int approximateToNextDivisibleByFactor(int number, int factor) {
+int approximateByFactor(int number, int factor) {
   if (number % factor == 0) {
     return number;
   } else {

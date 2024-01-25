@@ -43,7 +43,7 @@ class YearLineChartWidget extends StatelessWidget {
         borderData: FlBorderData(show: false),
         // borderData: FlBorderData(
         //     border: const Border(bottom: BorderSide(), left: BorderSide())),
-        //gridData: const FlGridData(show: false),
+        gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(sideTitles: _bottomTitles),
           leftTitles: AxisTitles(
@@ -92,7 +92,8 @@ class YearLineChartWidget extends StatelessWidget {
 
 double getUpperLimitMonth(List<FlSpot> monthData) {
   int max = findMaxY(monthData);
-  return approximateToNextDivisibleByFactor(max, YEAR_FACTOR).toDouble();
+  return approximateByFactor(approximateByFactor(max, YEAR_FACTOR), 10)
+      .toDouble();
 }
 
 double getIntervalMonth(double upperLimit) {
