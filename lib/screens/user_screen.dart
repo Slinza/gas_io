@@ -4,6 +4,8 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 
 class UserScreen extends StatefulWidget {
+  const UserScreen({super.key});
+
   @override
   _UserScreenState createState() => _UserScreenState();
 }
@@ -50,7 +52,7 @@ class _UserScreenState extends State<UserScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -75,7 +77,7 @@ class _UserScreenState extends State<UserScreen> {
                             color: Colors.black.withOpacity(0.5),
                             spreadRadius: 1.0,
                             blurRadius: 2.0,
-                            offset: Offset(1.0, 1.0),
+                            offset: const Offset(1.0, 1.0),
                           ),
                         ],
                       ),
@@ -92,12 +94,12 @@ class _UserScreenState extends State<UserScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             // Text(
             //   'Name',
             //   style: TextStyle(fontWeight: FontWeight.bold),
             // ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             TextField(
               enabled: isEditable,
               textAlign: TextAlign.center,
@@ -112,17 +114,17 @@ class _UserScreenState extends State<UserScreen> {
               },
             ),
 
-            SizedBox(height: 24.0),
-            Text(
+            const SizedBox(height: 24.0),
+            const Text(
               'Selected Car',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             TextField(
               enabled: isEditable,
               decoration: InputDecoration(
                 hintText: carBrand,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (value) {
                 setState(() {
@@ -130,12 +132,12 @@ class _UserScreenState extends State<UserScreen> {
                 });
               },
             ),
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             TextField(
               enabled: isEditable,
               decoration: InputDecoration(
                 hintText: carModel,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (value) {
                 setState(() {

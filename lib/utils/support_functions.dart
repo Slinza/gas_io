@@ -37,16 +37,15 @@ List<FlSpot> averageYearlyPrice(List<CardData> data) {
 Map<int, double> mapOfDailyPrices(List<CardData> objects) {
   Map<int, double> resultMap = {};
 
-  objects.forEach(
-    (obj) {
+  for (var obj in objects) {
       if (resultMap.containsKey(obj.date.day)) {
-        if (resultMap[obj.date.day] != null)
+        if (resultMap[obj.date.day] != null) {
           resultMap.update(obj.date.day, (value) => value + obj.price);
+        }
       } else {
         resultMap[obj.date.day] = obj.price;
       }
-    },
-  );
+    }
 
   return resultMap;
 }

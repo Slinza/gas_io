@@ -13,7 +13,7 @@ import 'package:gas_io/design/styles.dart';
 const int CAR_ID = 1; // TODO move it as a parameter passed in the context
 
 class StatsScreen extends StatefulWidget {
-  StatsScreen({Key? key}) : super(key: key);
+  const StatsScreen({Key? key}) : super(key: key);
 
   @override
   State<StatsScreen> createState() => _StatsScreenState();
@@ -66,28 +66,28 @@ class _StatsScreenState extends State<StatsScreen> {
     return ListView(
       padding: const EdgeInsets.all(15),
       children: <Widget>[
-        SizedBox(height: 40.0),
+        const SizedBox(height: 40.0),
         const Text(
           "Expense of the month",
           style: subtitleTextStyle,
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 30.0),
-        Container(
+        const SizedBox(height: 30.0),
+        SizedBox(
           height: 250,
           // color: Colors.amber[800],
           child: MonthLineChartWidget(
             monthData: monthPrices,
           ),
         ),
-        SizedBox(height: 50.0),
+        const SizedBox(height: 50.0),
         const Text(
           "Yearly consume trend",
           style: subtitleTextStyle,
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 30.0),
-        Container(
+        const SizedBox(height: 30.0),
+        SizedBox(
           height: 230,
           // color: Colors.amber[500],
           child: YearLineChartWidget(
@@ -95,7 +95,7 @@ class _StatsScreenState extends State<StatsScreen> {
             average: averageYearPrices,
           ),
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         // Container(
         //   height: 100,
         //   color: Colors.amber[100],

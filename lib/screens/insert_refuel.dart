@@ -51,7 +51,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Insert Refuel'),
+        title: const Text('Insert Refuel'),
       ),
       body:
           // TODO: substitute Form with FormBuilder
@@ -95,7 +95,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
 
       SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -125,7 +125,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                     child: TextFormField(
                       readOnly: true,
                       controller: _dateController,
-                      decoration: InputDecoration(labelText: 'Date and Time'),
+                      decoration: const InputDecoration(labelText: 'Date and Time'),
                     ),
                   ),
                 ),
@@ -163,14 +163,14 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   enabled: false, // Disable user input
                   onSaved: (value) {},
                 ),
-                SizedBox(height: 16.0), // Spacer for some vertical separation
+                const SizedBox(height: 16.0), // Spacer for some vertical separation
                 ElevatedButton(
                   onPressed: () {
                     // if(_formKey.currentState!.validate()){
                     _saveDataAndClose(context);
                     // }
                   },
-                  child: Text('Save'),
+                  child: const Text('Save'),
                 ),
               ],
             ),
