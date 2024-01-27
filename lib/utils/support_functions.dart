@@ -38,14 +38,14 @@ Map<int, double> mapOfDailyPrices(List<CardData> objects) {
   Map<int, double> resultMap = {};
 
   for (var obj in objects) {
-      if (resultMap.containsKey(obj.date.day)) {
-        if (resultMap[obj.date.day] != null) {
-          resultMap.update(obj.date.day, (value) => value + obj.price);
-        }
-      } else {
-        resultMap[obj.date.day] = obj.price;
+    if (resultMap.containsKey(obj.date.day)) {
+      if (resultMap[obj.date.day] != null) {
+        resultMap.update(obj.date.day, (value) => value + obj.price);
       }
+    } else {
+      resultMap[obj.date.day] = obj.price;
     }
+  }
 
   return resultMap;
 }
@@ -83,6 +83,6 @@ int approximateByFactor(int number, int factor) {
   }
 }
 
-double roundedNumber(double number) {
-  return double.parse(number.toStringAsFixed(2));
+double roundedNumber(double number, [int decimals = 2]) {
+  return double.parse(number.toStringAsFixed(decimals));
 }
