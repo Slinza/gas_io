@@ -119,13 +119,15 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     );
   }
 
-  Future<UserData> getUserData(int id) async {
+  Future<List<UserData>> getUserData() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       userTableName,
-      orderBy: 'username DESC LIMIT 1', // TODO make it user related
+      orderBy: 'username DESC',
     );
-    return UserData.fromMap(maps.first);
+    return List.generate(maps.length, (i) {
+      return UserData.fromMap(maps[i]);
+    });
   }
 
   Future<Map<int, String>> getCarsMap() async {
@@ -150,5 +152,35 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       where: '$carIdKey = ?',
       whereArgs: [carId],
     );
+  }
+
+  Future<void> updateUsername(int userId, String newUsername) async {
+    final db = await database;
+    await db.update(
+      userTableName,
+      {userUsernameKey: newUsername},
+      where: '$userIdKey = ?',
+      whereArgs: [userId],
+    );
+  }
+
+  Future<int> insertUser(UserData user) async {
+    Database db = await database;
+    return await db.insert(userTableName, user.toMap());
+  }
+
+  Future<UserData?> getUser() async {
+    Database db = await database;
+    List<Map<String, dynamic>> maps = await db.query(userTableName, limit: 1);
+    if (maps.length > 0) {
+      return UserData.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  Future<int> updateUser(UserData user) async {
+    Database db = await database;
+    return await db.update(userTableName, user.toMap(),
+        where: '$userIdKey = ?', whereArgs: [user.id]);
   }
 }

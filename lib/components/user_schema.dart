@@ -1,10 +1,10 @@
 import 'package:gas_io/utils/key_parameters.dart';
 
 class UserData with DatabaseUserKeys {
-  final int id;
-  final String name;
-  final String surname;
-  final String username;
+  int id;
+  String name;
+  String surname;
+  String username;
 
   UserData({
     required this.id,
