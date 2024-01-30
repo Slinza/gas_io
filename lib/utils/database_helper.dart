@@ -40,7 +40,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
           $carModelKey REAL,
           $carYearKey INT,
           $carConsumptionKey REAL,
-          $carTotalKmKey REAL
+          $carInitialKmKey REAL
         )
         ''');
         await db.execute('''
@@ -58,9 +58,9 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
         await db.execute(
             '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(0,"Fiat", "Panda", 0000, 0.0, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carInitialKmKey) VALUES(0,"Fiat", "Panda", 0000, 0.0, 0.0);''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carTotalKmKey) VALUES(1,"Lancia", "Delta", 0000, 0.0, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carInitialKmKey) VALUES(1,"Lancia", "Delta", 0000, 0.0, 0.0);''');
       },
     );
   }
@@ -147,7 +147,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     final db = await database;
     await db.update(
       carTableName,
-      {carTotalKmKey: totalKm},
+      {carInitialKmKey: totalKm},
       where: '$carIdKey = ?',
       whereArgs: [carId],
     );
