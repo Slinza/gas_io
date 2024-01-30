@@ -57,7 +57,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
 
     final newCard = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const InsertRefuel()),
+      MaterialPageRoute(builder: (context) => InsertRefuel(widget.selectedCarId)),
     );
 
     // Check if the result is not null and reload the cards

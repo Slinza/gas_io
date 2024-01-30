@@ -152,4 +152,19 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       whereArgs: [carId],
     );
   }
+
+  Future<Map<String, dynamic>> getCarDetailsById(int carId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      carTableName,
+      where: '$carIdKey = ?',
+      whereArgs: [carId],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first;
+    } else {
+      throw Exception("Car with ID $carId not found");
+    }
+  }
 }
