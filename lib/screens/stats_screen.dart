@@ -10,10 +10,10 @@ import 'package:gas_io/design/styles.dart';
 
 // import 'package:gas_io/components/line_chart.dart';
 
-const int CAR_ID = 1; // TODO move it as a parameter passed in the context
 
 class StatsScreen extends StatefulWidget {
-  StatsScreen({Key? key}) : super(key: key);
+  int selectedCarId;
+  StatsScreen({Key? key, required this.selectedCarId}) : super(key: key);
 
   @override
   State<StatsScreen> createState() => _StatsScreenState();
@@ -34,11 +34,19 @@ class _StatsScreenState extends State<StatsScreen> {
     _loadCards();
   }
 
+  @override
+  void didUpdateWidget(covariant StatsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedCarId != oldWidget.selectedCarId) {
+      _loadCards();
+    }
+  }
+
   Future<void> _loadCards() async {
     List<CardData> yearCards = await _databaseHelper
-        .getYearCard(CAR_ID); // TODO make it taking the auto context
+        .getYearCard(widget.selectedCarId); // TODO make it taking the auto context
     List<CardData> monthCards = await _databaseHelper
-        .getMonthCard(CAR_ID); // TODO make it taking the auto context
+        .getMonthCard(widget.selectedCarId); // TODO make it taking the auto context
     setState(() {
       _prepareYearGraphData(yearCards);
       _prepareMonthGraphData(monthCards);

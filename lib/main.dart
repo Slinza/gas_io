@@ -4,6 +4,7 @@ import 'package:gas_io/components/bottom_nav_bar.dart';
 import 'package:gas_io/screens/stats_screen.dart';
 import 'package:gas_io/screens/refuel_screen.dart';
 import 'package:gas_io/screens/user_screen.dart';
+import 'package:gas_io/utils/database_helper.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,12 +30,38 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
   int _currentIndex = 1;
+
+  int selectedCarId = 1; // Initialize with a default car ID
+  Map<int, String> cars = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCars();
+  }
+
+  Future<void> _loadCars() async {
+    final Map<int, String> carMap = await _databaseHelper.getCarsMap();
+    setState(() {
+      cars = carMap;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(),
+      appBar: MyAppBar(
+        selectedCarId: selectedCarId,
+        cars: cars,
+        onCarChanged: (int newValue) {
+          setState(() {
+            selectedCarId = newValue;
+            _loadCars();
+          });
+        },
+      ),
       body: _buildBody(),
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: _currentIndex,
@@ -50,9 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildBody() {
     switch (_currentIndex) {
       case 0:
-        return StatsScreen();
+        return StatsScreen(selectedCarId: selectedCarId);
       case 1:
-        return const RefuelScreen();
+        return RefuelScreen(selectedCarId: selectedCarId);
       case 2:
         return UserScreen();
       default:
