@@ -182,6 +182,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     Database db = await database;
     return await db.update(userTableName, user.toMap(),
         where: '$userIdKey = ?', whereArgs: [user.id]);
+  }
 
   Future<Map<String, dynamic>> getCarDetailsById(int carId) async {
     final db = await database;
