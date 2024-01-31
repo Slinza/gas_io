@@ -26,5 +26,5 @@ mixin DatabaseCarKeys {
   final String carModelKey = 'model';
   final String carYearKey = 'year';
   final String carConsumptionKey = 'fuelConsumption';
-  final String carTotalKmKey = 'totalKm';
+  final String carInitialKmKey = 'initialKm';
 }

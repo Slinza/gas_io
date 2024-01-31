@@ -5,8 +5,13 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../components/app_bar.dart';
+
+
+
 class RefuelScreen extends StatefulWidget {
-  const RefuelScreen({Key? key}) : super(key: key);
+  int selectedCarId;
+  RefuelScreen({Key? key, required this.selectedCarId}) : super(key: key);
 
   @override
   _RefuelScreenState createState() => _RefuelScreenState();
@@ -17,25 +22,24 @@ class _RefuelScreenState extends State<RefuelScreen> {
   List<CardData> _cardList = [];
   final ScrollController _listController = ScrollController();
 
-  int selectedCarId = 1; //FIXME: Initialize with a default car ID
-  Map<int, String> cars = {};
+
 
   @override
   void initState() {
     super.initState();
-    _loadCars();
     _loadCards();
   }
 
-  Future<void> _loadCars() async {
-    final Map<int, String> carMap = await _databaseHelper.getCarsMap();
-    setState(() {
-      cars = carMap;
-    });
+  @override
+  void didUpdateWidget(covariant RefuelScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedCarId != oldWidget.selectedCarId) {
+      _loadCards();
+    }
   }
 
   Future<void> _loadCards() async {
-    List<CardData> cards = await _databaseHelper.getCardsByCar(selectedCarId);
+    List<CardData> cards = await _databaseHelper.getCardsByCar(widget.selectedCarId);
     setState(() {
       _cardList = cards;
     });
@@ -52,7 +56,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
 
     final newCard = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const InsertRefuel()),
+      MaterialPageRoute(builder: (context) => InsertRefuel(widget.selectedCarId)),
     );
 
     // Check if the result is not null and reload the cards
@@ -64,34 +68,9 @@ class _RefuelScreenState extends State<RefuelScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // title: Text('Refuel Screen'),
-        actions: [
-          // Car Selector Dropdown
-          DropdownButton<int>(
-            value: selectedCarId,
-            onChanged: (int? newValue) {
-              setState(() {
-                selectedCarId = newValue ?? 0;
-                _loadCards();
-              });
-            },
-            items: cars.keys.toList().map<DropdownMenuItem<int>>((int value) {
-              return DropdownMenuItem<int>(
-                value: value,
-                child: Text(cars[value] ?? ''),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
       body: _buildCardList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => const InsertRefuel()));
-          // Navigator.push(context, MaterialPageRoute<void>(builder (context): builder))
-          _addNewCard();
-        },
+        onPressed: _addNewCard,
         child: const Icon(Icons.add),
       ),
     );

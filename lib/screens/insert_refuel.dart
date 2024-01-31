@@ -6,7 +6,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 // import 'package:form_builder_validators/form_builder_validators.dart';
 
 class InsertRefuel extends StatefulWidget {
-  const InsertRefuel({Key? key}) : super(key: key);
+  int selectedCarId;
+  InsertRefuel( this.selectedCarId, {Key? key}) : super(key: key);
 
   @override
   _InsertRefuelState createState() => _InsertRefuelState();
@@ -24,26 +25,37 @@ class _InsertRefuelState extends State<InsertRefuel> {
 
   DateTime selectedDateTime = DateTime.now();
 
-  int selectedCarId = -1;
+  late int selectedCarId = widget.selectedCarId;
   Map<int, String> cars = {};
+  late Map<String, dynamic> carDetails;
+
 
   @override
   void initState() {
     super.initState();
     _loadCars();
+    _loadCarDetails();
     // Format the initial datetime and set it to the controller
     _dateController.text =
         DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+  }
+
+  Future<void> _loadCarDetails() async {
+    final Map<String, dynamic> carDet = await _databaseHelper.getCarDetailsById(selectedCarId);
+    setState(() {
+      carDetails=carDet;
+    });
+    print(carDetails);
   }
 
   Future<void> _loadCars() async {
     final Map<int, String> carMap = await _databaseHelper.getCarsMap();
     setState(() {
       cars = carMap;
-      if (carMap.isNotEmpty) {
-        selectedCarId = carMap.keys.toList()[0];
-        // selectedCarName = carMap[selectedCarId] ?? ''; // Set the first car as default
-      }
+      // if (carMap.isNotEmpty) {
+      //   selectedCarId = carMap.keys.toList()[0];
+      //   // selectedCarName = carMap[selectedCarId] ?? ''; // Set the first car as default
+      // }
     });
   }
 
@@ -106,6 +118,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   onChanged: (int? newValue) {
                     setState(() {
                       selectedCarId = newValue ?? 0;
+                      _loadCarDetails();
+
                       // selectedCarName = cars[selectedCarId] ?? '';
                     });
                   },
