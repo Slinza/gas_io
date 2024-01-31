@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
 import 'package:gas_io/screens/insert_refuel.dart';
 // import 'package:gas_io/screens/refuel_insert_form.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../components/app_bar.dart';
-
-
 
 class RefuelScreen extends StatefulWidget {
   int selectedCarId;
@@ -21,8 +20,6 @@ class _RefuelScreenState extends State<RefuelScreen> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<CardData> _cardList = [];
   final ScrollController _listController = ScrollController();
-
-
 
   @override
   void initState() {
@@ -39,7 +36,8 @@ class _RefuelScreenState extends State<RefuelScreen> {
   }
 
   Future<void> _loadCards() async {
-    List<CardData> cards = await _databaseHelper.getCardsByCar(widget.selectedCarId);
+    List<CardData> cards =
+        await _databaseHelper.getCardsByCar(widget.selectedCarId);
     setState(() {
       _cardList = cards;
     });
@@ -56,7 +54,8 @@ class _RefuelScreenState extends State<RefuelScreen> {
 
     final newCard = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => InsertRefuel(widget.selectedCarId)),
+      MaterialPageRoute(
+          builder: (context) => InsertRefuel(widget.selectedCarId)),
     );
 
     // Check if the result is not null and reload the cards

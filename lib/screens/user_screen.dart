@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
+import 'package:gas_io/components/car_card.dart';
 
 const USER_ID = 0; //TODO: Make it changiable
 
@@ -14,6 +15,8 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   UserData? _user;
   final DatabaseHelper _databaseHelper = DatabaseHelper();
+  List<CarData> _cardList = [];
+  final ScrollController _listController = ScrollController();
   String profilePic = 'assets/user_icon.png';
 
   @override
@@ -25,6 +28,7 @@ class _UserScreenState extends State<UserScreen> {
   Future<void> fetchUserData() async {
     //DatabaseHelper helper = DatabaseHelper.instance;
     _user = await _databaseHelper.getUser();
+    _cardList = await _databaseHelper.getCarsByUser(USER_ID);
     setState(() {});
   }
 
@@ -34,7 +38,7 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.push(
                 context,
@@ -73,6 +77,20 @@ class _UserScreenState extends State<UserScreen> {
                         border: InputBorder.none,
                       ),
                     ),
+                    const SizedBox(height: 16.0),
+                    Container(
+                        width: 200,
+                        height: 450,
+                        child: ListView.builder(
+                          controller: _listController,
+                          itemCount: _cardList.length,
+                          itemBuilder: (context, index) {
+                            final CarData carData = _cardList[index];
+                            return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: CarCard(carData: carData));
+                          },
+                        ))
                   ],
                 )
               : null),

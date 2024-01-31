@@ -52,19 +52,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Name',
               ),
             ),
             TextField(
               controller: _surnameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Surname',
               ),
             ),
             TextField(
               controller: _usernameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Username',
               ),
             ),
@@ -72,7 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onPressed: () {
                 saveUserData();
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         ),

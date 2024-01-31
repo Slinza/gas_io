@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import 'package:gas_io/components/refuel_card.dart';
+import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/utils/key_parameters.dart';
 
@@ -197,5 +198,19 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     } else {
       throw Exception("Car with ID $carId not found");
     }
+  }
+
+  Future<List<CarData>> getCarsByUser(int userId) async {
+    print("get db data");
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      carTableName,
+      where: '$carUserIdKey = ?',
+      whereArgs: [userId],
+      orderBy: 'id DESC',
+    );
+    return List.generate(maps.length, (i) {
+      return CarData.fromMap(maps[i]);
+    });
   }
 }
