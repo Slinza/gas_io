@@ -153,6 +153,33 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     );
   }
 
+
+  Future<Map<String, CardData?>> getPreviousAndNextRefuel(int selectedCarId, DateTime currentDate) async {
+    final db = await database;
+
+    // Get the previous refuel
+    final List<Map<String, dynamic>> previousRefuelMap = await db.rawQuery(
+        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey < ? ORDER BY $dateKey DESC LIMIT 1;",
+        [currentDate.toIso8601String()]
+    );
+    CardData? previousRefuel;
+    if (previousRefuelMap.isNotEmpty) {
+      previousRefuel = CardData.fromMap(previousRefuelMap.first);
+    }
+
+    // Get the next refuel
+    final List<Map<String, dynamic>> nextRefuelMap = await db.rawQuery(
+        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey > ? ORDER BY $dateKey ASC LIMIT 1;",
+        [currentDate.toIso8601String()]
+    );
+    CardData? nextRefuel;
+    if (nextRefuelMap.isNotEmpty) {
+      nextRefuel = CardData.fromMap(nextRefuelMap.first);
+    }
+
+    return {'previousRefuel': previousRefuel, 'nextRefuel': nextRefuel};
+  }
+
   Future<Map<String, dynamic>> getCarDetailsById(int carId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(

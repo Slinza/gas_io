@@ -1,9 +1,10 @@
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-// import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 class InsertRefuel extends StatefulWidget {
   int selectedCarId;
@@ -16,18 +17,19 @@ class InsertRefuel extends StatefulWidget {
 class _InsertRefuelState extends State<InsertRefuel> {
   final _formKey = GlobalKey<FormBuilderState>();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _litersController = TextEditingController();
+  final TextEditingController _costController = TextEditingController();
+  TextEditingController _litersController = TextEditingController();
   final TextEditingController _kmController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _euroPerLiterController = TextEditingController();
+  TextEditingController _pricePerLiterController = TextEditingController();
 
   DateTime selectedDateTime = DateTime.now();
 
   late int selectedCarId = widget.selectedCarId;
   Map<int, String> cars = {};
   late Map<String, dynamic> carDetails;
+  double previousRefuelKm = -1;
+  double nextRefuelKm = -1;
 
 
   @override
@@ -35,10 +37,26 @@ class _InsertRefuelState extends State<InsertRefuel> {
     super.initState();
     _loadCars();
     _loadCarDetails();
-    // Format the initial datetime and set it to the controller
-    _dateController.text =
-        DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
+    _loadPreviousAndNextRefuel();
   }
+
+  Future<void> _loadPreviousAndNextRefuel() async {
+    Map<String, CardData?> refuels = await _databaseHelper
+        .getPreviousAndNextRefuel(selectedCarId, selectedDateTime);
+
+    CardData? previousRefuel = refuels['previousRefuel'];
+    CardData? nextRefuel = refuels['nextRefuel'];
+
+    if (previousRefuel != null) {
+      previousRefuelKm = previousRefuel.km;
+    }
+
+    if (nextRefuel != null) {
+      nextRefuelKm = nextRefuel.km;
+    }
+  }
+
+
 
   Future<void> _loadCarDetails() async {
     final Map<String, dynamic> carDet = await _databaseHelper.getCarDetailsById(selectedCarId);
@@ -63,150 +81,190 @@ class _InsertRefuelState extends State<InsertRefuel> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Insert Refuel'),
+        title: Row(
+          children: [
+            Icon(Icons.directions_car), // Add car icon
+            SizedBox(width: 8.0),
+            Text(
+              '${cars[selectedCarId] ?? ''}',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold, // Make the text bold
+                color: Colors.blue, // Change the text color
+              ),
+            ),
+            Text(
+              ' refuel', // Screen name suggestion
+              style: TextStyle(
+                fontSize: 18.0,
+              ),
+            ),
+          ],
+        ),
       ),
       body:
-          // TODO: substitute Form with FormBuilder
-          // FormBuilder(
-          //   key: _formKey,
-          //   child: Column(
-          //     children: [
-          //       FormBuilderTextField(
-          //         name: 'email',
-          //         decoration: const InputDecoration(labelText: 'Email'),
-          //         validator: FormBuilderValidators.compose([
-          //           FormBuilderValidators.required(),
-          //           FormBuilderValidators.email(),
-          //         ]),
-          //       ),
-          //       const SizedBox(height: 10),
-          //       FormBuilderTextField(
-          //         name: 'password',
-          //         decoration: const InputDecoration(labelText: 'Password'),
-          //         obscureText: true,
-          //         validator: FormBuilderValidators.compose([
-          //           FormBuilderValidators.required(),
-          //         ]),
-          //       ),
-          //       MaterialButton(
-          //         color: Theme.of(context).colorScheme.secondary,
-          //         onPressed: () {
-          //           // Validate and save the form values
-          //           _formKey.currentState?.saveAndValidate();
-          //           debugPrint(_formKey.currentState?.value.toString());
-          //
-          //           // On another side, can access all field values without saving form with instantValues
-          //           _formKey.currentState?.validate();
-          //           debugPrint(_formKey.currentState?.instantValue.toString());
-          //         },
-          //         child: const Text('Login'),
-          //       )
-          //     ],
-          //   ),
-          // ),
-
       SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Form(
+          // TODO: substitute Form with FormBuilder
+          child: FormBuilder(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                DropdownButtonFormField<int>(
-                  value: selectedCarId,
-                  onChanged: (int? newValue) {
-                    setState(() {
-                      selectedCarId = newValue ?? 0;
-                      _loadCarDetails();
+                Row(
+                  children: [
+                    Expanded(
+                      child: FormBuilderDateTimePicker(
+                        onSaved: (value) => {
+                          selectedDateTime=value!,
+                          _loadPreviousAndNextRefuel()
+                        },
+                        // controller: _dateController,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                        ]),
+                        name: 'date',
+                        // firstDate: DateTime(2000),
+                        lastDate: DateTime.now(),
+                        initialEntryMode: DatePickerEntryMode.calendar,
+                        initialValue: DateTime.now(),
+                        format: DateFormat("dd/MM/yyyy  HH:mm"), //DateFormat('HH:mm, dd MMMM yyyy'),
+                        inputType: InputType.both,
+                        decoration: const InputDecoration(
+                          labelText: 'Refuel Time',
+                          alignLabelWithHint: true, // Align label with the hint
 
-                      // selectedCarName = cars[selectedCarId] ?? '';
-                    });
-                  },
-                  items: cars.keys
-                      .toList()
-                      .map<DropdownMenuItem<int>>((int value) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(cars[value] ?? ''),
-                    );
-                  }).toList(),
-                  decoration: const InputDecoration(labelText: 'Car'),
-                ),
-                GestureDetector(
-                  onTap: () => _selectDateTime(context),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      readOnly: true,
-                      controller: _dateController,
-                      decoration: InputDecoration(labelText: 'Date and Time'),
+                          border: OutlineInputBorder(),
+                          // suffixIcon: IconButton(
+                          //   icon: const Icon(Icons.close),
+                          //   onPressed: () {
+                          //     _formKey.currentState!.fields['date']?.didChange(null);
+                          //   },
+                          // ),
+                        ),
+                      ),
                     ),
+                    const SizedBox(width: 5.0),
+                    Expanded(
+                      child: FormBuilderTextField(
+                        controller: _kmController,
+                        name: 'km',
+                        decoration: const InputDecoration(
+                          labelText: 'Total KM',
+                          suffixText: "Km",
+                          border: const OutlineInputBorder(),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.numeric(),
+                          FormBuilderValidators.min(carDetails["initialKm"], errorText: "Lower than initial car km"),
+                          //TODO: the km inserted must be higher than the previous refuel and lower than a possible next refuel
+                          if (previousRefuelKm > carDetails["initialKm"]) FormBuilderValidators.min(previousRefuelKm, errorText: "Lower than previous refuel"),
+                          if (nextRefuelKm > previousRefuelKm) FormBuilderValidators.max(nextRefuelKm, errorText: "Higher than next refuel"),
+
+                        ]),
+                        onSaved: (_) => _kmController.text=_kmController.text.replaceAll(',', '.'),
+                          keyboardType:
+                              const TextInputType.numberWithOptions(decimal: true),
+                      ),
+                    ),
+                  ],
+                ),
+
+
+                const SizedBox(height: 16.0),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FormBuilderTextField(
+                        controller: _litersController,
+                        name: 'liters',
+                        decoration: const InputDecoration(
+                          labelText: 'Liters',
+                          suffixText: "L",
+                          border: const OutlineInputBorder(),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.numeric()
+                        ]),
+                        keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                        onSaved: (_) => _litersController.text=_litersController.text.replaceAll(',', '.'),
+                        onChanged:(_) => _updatePrice(),
+                      ),
+                    ),
+                    SizedBox(width: 5,),
+                    Expanded(
+                      child: FormBuilderTextField(
+                        controller: _pricePerLiterController,
+                        name: 'pricePerLiter',
+                        decoration: const InputDecoration(
+                          labelText: 'Price',
+                          suffixText: "€/L",
+                          border: const OutlineInputBorder(),
+                        ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.numeric()
+                        ]),
+                        keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                        onSaved: (_) => _pricePerLiterController.text=_pricePerLiterController.text.replaceAll(',', '.'),
+                        onChanged: (_) => _updatePrice(),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16.0),
+                FormBuilderTextField(
+                  controller: _costController,
+                  name: 'cost',
+                  decoration: const InputDecoration(
+                    labelText: 'Cost',
+                    border: const OutlineInputBorder(),
+                    suffixText: "€",
                   ),
+                  enabled: false,
+                  readOnly: true,
+
                 ),
-                TextFormField(
-                  controller: _kmController,
-                  decoration: const InputDecoration(labelText: 'Km'),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                ),
-                TextFormField(
-                  controller: _litersController,
-                  decoration: const InputDecoration(labelText: 'Liters'),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  onChanged: (_) => _updatePrice(),
-                ),
-                // TextFormField(
-                //   readOnly: true,
-                //   controller: _locationController,
-                //   decoration: InputDecoration(labelText: 'Location'),
-                // ),
-                TextFormField(
-                  controller: _euroPerLiterController,
-                  decoration: const InputDecoration(labelText: 'Price (€/L)'),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  onChanged: (_) => _updatePrice(),
-                ),
-                TextFormField(
-                  controller: _priceController,
-                  decoration: const InputDecoration(labelText: 'Cost (€)'),
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
-                  ),
-                  enabled: false, // Disable user input
-                  onSaved: (value) {},
-                ),
-                SizedBox(height: 16.0), // Spacer for some vertical separation
-                ElevatedButton(
+                const SizedBox(height: 16.0), // Spacer for some vertical separation
+                MaterialButton(
+                  color: Theme.of(context).colorScheme.primary,
                   onPressed: () {
-                    // if(_formKey.currentState!.validate()){
-                    _saveDataAndClose(context);
-                    // }
+                    if(_formKey.currentState!.saveAndValidate()){
+                      // debugPrint(_formKey.currentState?.value.toString());
+                      _saveDataAndClose(context);
+                    }
                   },
-                  child: Text('Save'),
-                ),
+                  child: const Text('Save'),
+                )
               ],
             ),
           ),
-        ),
       ),
-    );
+      ),
+
+      );
   }
+
 
   void _saveDataAndClose(BuildContext context) async {
     // Extract data from controllers
     double price =
-        double.tryParse(_priceController.text.replaceAll(',', '.')) ?? 0.0;
+        double.tryParse(_costController.text.replaceAll(',', '.')) ?? 0.0;
     double liters =
         double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
     double euroPerLiter =
-        double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ??
+        double.tryParse(_pricePerLiterController.text.replaceAll(',', '.')) ??
             0.0;
     double km = double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
 
     CardData newCard = CardData(
-        id: DateTime.now().millisecondsSinceEpoch,
+        id: DateTime.now().toUtc().millisecondsSinceEpoch,
         carId: selectedCarId,
         price: price,
         liters: liters,
@@ -216,7 +274,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
         km: km);
     // TODO: handle km update also on the car
     await _databaseHelper.insertCard(newCard);
-
     // Navigator.pop with the result (you can pass some data as a result)
     Navigator.of(context).pop(newCard);
   }
@@ -226,46 +283,12 @@ class _InsertRefuelState extends State<InsertRefuel> {
     double liters =
         double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
     double euroPerLiter =
-        double.tryParse(_euroPerLiterController.text.replaceAll(',', '.')) ??
+        double.tryParse(_pricePerLiterController.text.replaceAll(',', '.')) ??
             0.0;
-
     double price = liters * euroPerLiter;
-
     // Update the price field
     setState(() {
-      _priceController.text = price.toStringAsFixed(2); // Format as needed
+      _costController.text = price.toStringAsFixed(2); // Format as needed
     });
-  }
-
-  Future<void> _selectDateTime(BuildContext context) async {
-    final DateTime? pickedDateTime = await showDatePicker(
-      context: context,
-      initialDate: selectedDateTime,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    );
-
-    if (pickedDateTime != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
-      );
-
-      if (pickedTime != null) {
-        setState(() {
-          selectedDateTime = DateTime(
-            pickedDateTime.year,
-            pickedDateTime.month,
-            pickedDateTime.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-
-          // Format and update the date controller
-          _dateController.text =
-              DateFormat('yyyy-MM-dd HH:mm').format(selectedDateTime);
-        });
-      }
-    }
   }
 }
