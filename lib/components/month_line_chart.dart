@@ -16,7 +16,7 @@ class MonthLineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double upperLimit = getUpperLimitMonth(monthData);
+    double upperLimit = roundedNumber(getUpperLimitMonth(monthData), 0);
     double interval = getIntervalMonth(upperLimit);
     return LineChart(
       LineChartData(
@@ -27,7 +27,7 @@ class MonthLineChartWidget extends StatelessWidget {
             color: primaryColor,
             barWidth: 3,
             isStrokeCapRound: true,
-            dotData: FlDotData(show: false),
+            dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
               color: primaryColor.withOpacity(0.2),
@@ -42,7 +42,7 @@ class MonthLineChartWidget extends StatelessWidget {
             border: const Border(bottom: BorderSide(), left: BorderSide())),
         gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
-          bottomTitles: AxisTitles(
+          bottomTitles: const AxisTitles(
             sideTitles:
                 SideTitles(showTitles: false, reservedSize: 30, interval: 3),
           ),
@@ -53,8 +53,10 @@ class MonthLineChartWidget extends StatelessWidget {
               interval: interval <= 0.0 ? 1 : interval,
             ),
           ),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
       ),
     );
@@ -63,7 +65,8 @@ class MonthLineChartWidget extends StatelessWidget {
 
 double getUpperLimitMonth(List<FlSpot> monthData) {
   int max = findMaxY(monthData);
-  return approximateByFactor(approximateByFactor(max, INTERVAL_FACTOR), 10)
+  return approximateByFactor(
+          approximateByFactor(max, INTERVAL_FACTOR), INTERVAL_FACTOR)
       .toDouble();
 }
 

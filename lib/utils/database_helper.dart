@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import 'package:gas_io/components/refuel_card.dart';
+import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/utils/key_parameters.dart';
 
@@ -120,13 +120,15 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     );
   }
 
-  Future<UserData> getUserData(int id) async {
+  Future<List<UserData>> getUserData() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       userTableName,
-      orderBy: 'username DESC LIMIT 1', // TODO make it user related
+      orderBy: 'username DESC',
     );
-    return UserData.fromMap(maps.first);
+    return List.generate(maps.length, (i) {
+      return UserData.fromMap(maps[i]);
+    });
   }
 
   Future<Map<int, String>> getCarsMap() async {
@@ -153,6 +155,36 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     );
   }
 
+  Future<void> updateUsername(int userId, String newUsername) async {
+    final db = await database;
+    await db.update(
+      userTableName,
+      {userUsernameKey: newUsername},
+      where: '$userIdKey = ?',
+      whereArgs: [userId],
+    );
+  }
+
+  Future<int> insertUser(UserData user) async {
+    Database db = await database;
+    return await db.insert(userTableName, user.toMap());
+  }
+
+  Future<UserData?> getUser() async {
+    Database db = await database;
+    List<Map<String, dynamic>> maps = await db.query(userTableName, limit: 1);
+    if (maps.length > 0) {
+      return UserData.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  Future<int> updateUser(UserData user) async {
+    Database db = await database;
+    return await db.update(userTableName, user.toMap(),
+        where: '$userIdKey = ?', whereArgs: [user.id]);
+  }
+
   Future<Map<String, dynamic>> getCarDetailsById(int carId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -166,5 +198,19 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     } else {
       throw Exception("Car with ID $carId not found");
     }
+  }
+
+  Future<List<CarData>> getCarsByUser(int userId) async {
+    print("get db data");
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      carTableName,
+      where: '$carUserIdKey = ?',
+      whereArgs: [userId],
+      orderBy: 'id DESC',
+    );
+    return List.generate(maps.length, (i) {
+      return CarData.fromMap(maps[i]);
+    });
   }
 }
