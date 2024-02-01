@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gas_io/screens/insert_refuel.dart';
-// import 'package:gas_io/screens/refuel_insert_form.dart';
+import 'package:gas_io/screens/modify_refuel.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -48,6 +48,22 @@ class _RefuelScreenState extends State<RefuelScreen> {
       curve: Curves.easeInOut,
     );
   }
+
+
+  Future<void> _modifyCard(refuelId) async {
+    // Navigate to the insert page and wait for the result
+    final newCard = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ModifyRefuel(refuelId)),
+    );
+
+    // Check if the result is not null and reload the cards
+    if (newCard != null) {
+      _loadCards();
+    }
+  }
+
 
   Future<void> _addNewCard() async {
     // Navigate to the insert page and wait for the result
@@ -106,7 +122,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
                 children: [
                   SlidableAction(
                     // An action can be bigger than the others.
-                    onPressed: (context) {},
+                    onPressed: (context) => _modifyCard(cardData.id),
                     backgroundColor: Colors.transparent,
                     foregroundColor: Colors.orange,
                     icon: Icons.edit,
