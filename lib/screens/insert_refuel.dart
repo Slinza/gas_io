@@ -18,26 +18,27 @@ class _InsertRefuelState extends State<InsertRefuel> {
   final _formKey = GlobalKey<FormBuilderState>();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   final TextEditingController _costController = TextEditingController();
-  TextEditingController _litersController = TextEditingController();
+  final TextEditingController _litersController = TextEditingController();
   final TextEditingController _kmController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
-  TextEditingController _pricePerLiterController = TextEditingController();
+  // final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _pricePerLiterController = TextEditingController();
 
   DateTime selectedDateTime = DateTime.now();
 
-  late int selectedCarId = widget.selectedCarId;
+  late int selectedCarId;
   Map<int, String> cars = {};
-  late Map<String, dynamic> carDetails;
+  Map<String, dynamic> carDetails= {};
   double previousRefuelKm = -1;
   double nextRefuelKm = -1;
 
 
   @override
   void initState() {
-    super.initState();
+    selectedCarId = widget.selectedCarId;
     _loadCars();
     _loadCarDetails();
     _loadPreviousAndNextRefuel();
+    super.initState();
   }
 
   Future<void> _loadPreviousAndNextRefuel() async {
@@ -46,14 +47,15 @@ class _InsertRefuelState extends State<InsertRefuel> {
 
     CardData? previousRefuel = refuels['previousRefuel'];
     CardData? nextRefuel = refuels['nextRefuel'];
+    setState(() {
+      if (previousRefuel != null) {
+        previousRefuelKm = previousRefuel.km;
+      }
 
-    if (previousRefuel != null) {
-      previousRefuelKm = previousRefuel.km;
-    }
-
-    if (nextRefuel != null) {
-      nextRefuelKm = nextRefuel.km;
-    }
+      if (nextRefuel != null) {
+        nextRefuelKm = nextRefuel.km;
+      }
+    });
   }
 
 
@@ -63,7 +65,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
     setState(() {
       carDetails=carDet;
     });
-    print(carDetails);
   }
 
   Future<void> _loadCars() async {
@@ -106,7 +107,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
       SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          // TODO: substitute Form with FormBuilder
           child: FormBuilder(
             key: _formKey,
             child: Column(
@@ -158,10 +158,10 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.numeric(),
-                          FormBuilderValidators.min(carDetails["initialKm"], errorText: "Lower than initial car km"),
-                          //TODO: the km inserted must be higher than the previous refuel and lower than a possible next refuel
-                          if (previousRefuelKm > carDetails["initialKm"]) FormBuilderValidators.min(previousRefuelKm, errorText: "Lower than previous refuel"),
-                          if (nextRefuelKm > previousRefuelKm) FormBuilderValidators.max(nextRefuelKm, errorText: "Higher than next refuel"),
+                          if (carDetails.isNotEmpty) FormBuilderValidators.min(carDetails["initialKm"], errorText: "Lower than initial car km"),
+                          // the km inserted must be higher than the previous refuel and lower than a possible next refuel
+                          if (carDetails.isNotEmpty && previousRefuelKm > carDetails["initialKm"]) FormBuilderValidators.min(previousRefuelKm, errorText: "Lower than previous refuel"),
+                          if (carDetails.isNotEmpty && nextRefuelKm > previousRefuelKm) FormBuilderValidators.max(nextRefuelKm, errorText: "Higher than next refuel"),
 
                         ]),
                         onSaved: (_) => _kmController.text=_kmController.text.replaceAll(',', '.'),
