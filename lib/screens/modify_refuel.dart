@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
@@ -6,15 +5,16 @@ import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class InsertRefuel extends StatefulWidget {
+class ModifyRefuel extends StatefulWidget {
   int selectedCarId;
-  InsertRefuel(this.selectedCarId, {Key? key}) : super(key: key);
+  CardData cardData;
+  ModifyRefuel(this.selectedCarId, this.cardData, {Key? key}) : super(key: key);
 
   @override
-  _InsertRefuelState createState() => _InsertRefuelState();
+  _ModifyRefuelState createState() => _ModifyRefuelState();
 }
 
-class _InsertRefuelState extends State<InsertRefuel> {
+class _ModifyRefuelState extends State<ModifyRefuel> {
   final _formKey = GlobalKey<FormBuilderState>();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   final TextEditingController _costController = TextEditingController();
@@ -23,8 +23,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
   // final TextEditingController _locationController = TextEditingController();
   final TextEditingController _pricePerLiterController =
       TextEditingController();
-
-  DateTime selectedDateTime = DateTime.now();
 
   late int selectedCarId;
   Map<int, String> cars = {};
@@ -37,13 +35,27 @@ class _InsertRefuelState extends State<InsertRefuel> {
     selectedCarId = widget.selectedCarId;
     _loadCars();
     _loadCarDetails();
-    _loadPreviousAndNextRefuel();
+    _loadPreviousAndNextRefuel(widget.cardData.date, widget.cardData.id);
+    _loadRefuelData(widget.cardData);
     super.initState();
   }
 
-  Future<void> _loadPreviousAndNextRefuel() async {
+  // final String relatedCarIdKey = 'carId';
+
+  void _loadRefuelData(cardData) {
+    setState(() {
+      _pricePerLiterController.text = cardData.euroPerLiter.toString();
+      _litersController.text = cardData.liters.toString();
+      _costController.text = cardData.price.toString();
+      _kmController.text= cardData.km.toString();
+
+      // _costController.text = price.toStringAsFixed(2); // Format as needed
+    });
+  }
+
+  Future<void> _loadPreviousAndNextRefuel(selectedDateTime, refuelId) async {
     Map<String, CardData?> refuels = await _databaseHelper
-        .getPreviousAndNextRefuel(selectedCarId, selectedDateTime);
+        .getPreviousAndNextRefuel(selectedCarId, selectedDateTime, excludeRefuelId: refuelId);
 
     CardData? previousRefuel = refuels['previousRefuel'];
     CardData? nextRefuel = refuels['nextRefuel'];
@@ -83,14 +95,14 @@ class _InsertRefuelState extends State<InsertRefuel> {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.directions_car), // Add car icon
-            SizedBox(width: 8.0),
+            const Icon(Icons.directions_car), // Add car icon
+            const SizedBox(width: 8.0),
             Text(
-              '${cars[selectedCarId] ?? ''}',
-              style: TextStyle(
+              cars[selectedCarId] ?? '',
+              style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold, // Make the text bold
-                color: Colors.blue, // Change the text color
+                color: Colors.orange, // Change the text color
               ),
             ),
             // Text(
@@ -104,7 +116,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: FormBuilder(
             key: _formKey,
             child: Column(
@@ -114,10 +126,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   children: [
                     Expanded(
                       child: FormBuilderDateTimePicker(
-                        onChanged: (value) => {
-                          selectedDateTime = value!,
-                          _loadPreviousAndNextRefuel()
-                        },
+                        onChanged: (value) => _loadPreviousAndNextRefuel(value, widget.cardData.id)
+                        ,
                         // controller: _dateController,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -126,7 +136,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         // firstDate: DateTime(2000),
                         lastDate: DateTime.now(),
                         initialEntryMode: DatePickerEntryMode.calendar,
-                        initialValue: DateTime.now(),
+                        initialValue: widget.cardData.date,
                         format: DateFormat(
                             "dd/MM/yyyy  HH:mm"), //DateFormat('HH:mm, dd MMMM yyyy'),
                         inputType: InputType.both,
@@ -152,7 +162,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         decoration: const InputDecoration(
                           labelText: 'Total KM',
                           suffixText: "Km",
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -192,7 +202,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         decoration: const InputDecoration(
                           labelText: 'Liters',
                           suffixText: "L",
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -205,7 +215,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         onChanged: (_) => _updatePrice(),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Expanded(
@@ -215,7 +225,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         decoration: const InputDecoration(
                           labelText: 'Price',
                           suffixText: "€/L",
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -237,7 +247,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   name: 'cost',
                   decoration: const InputDecoration(
                     labelText: 'Cost',
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                     suffixText: "€",
                   ),
                   enabled: false,
@@ -246,14 +256,14 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 const SizedBox(
                     height: 16.0), // Spacer for some vertical separation
                 MaterialButton(
-                  color: Colors.blue,
+                  color: Colors.orange,
                   onPressed: () {
                     if (_formKey.currentState!.saveAndValidate()) {
                       // debugPrint(_formKey.currentState?.value.toString());
                       _saveDataAndClose(context);
                     }
                   },
-                  child: const Text('ADD REFUEL'),
+                  child: const Text('UPDATE REFUEL'),
                 )
               ],
             ),
@@ -275,16 +285,15 @@ class _InsertRefuelState extends State<InsertRefuel> {
     double km = double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
 
     CardData newCard = CardData(
-        id: DateTime.now().toUtc().millisecondsSinceEpoch,
+        id: widget.cardData.id,
         carId: selectedCarId,
         price: price,
         liters: liters,
-        date: selectedDateTime,
+        date: _formKey.currentState!.value["date"],
         location: 'Random Location',
         euroPerLiter: euroPerLiter,
         km: km);
-    // TODO: handle km update also on the car
-    await _databaseHelper.insertCard(newCard);
+    await _databaseHelper.updateCard(newCard);
     // Navigator.pop with the result (you can pass some data as a result)
     Navigator.of(context).pop(newCard);
   }

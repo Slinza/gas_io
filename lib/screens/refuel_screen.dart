@@ -50,12 +50,12 @@ class _RefuelScreenState extends State<RefuelScreen> {
   }
 
 
-  Future<void> _modifyCard(refuelId) async {
+  Future<void> _modifyCard(cardData) async {
     // Navigate to the insert page and wait for the result
     final newCard = await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => ModifyRefuel(refuelId)),
+          builder: (context) => ModifyRefuel(widget.selectedCarId, cardData)),
     );
 
     // Check if the result is not null and reload the cards
@@ -122,7 +122,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
                 children: [
                   SlidableAction(
                     // An action can be bigger than the others.
-                    onPressed: (context) => _modifyCard(cardData.id),
+                    onPressed: (context) => _modifyCard(cardData),
                     backgroundColor: Colors.transparent,
                     foregroundColor: Colors.orange,
                     icon: Icons.edit,
