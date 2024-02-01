@@ -8,7 +8,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 
 class InsertRefuel extends StatefulWidget {
   int selectedCarId;
-  InsertRefuel( this.selectedCarId, {Key? key}) : super(key: key);
+  InsertRefuel(this.selectedCarId, {Key? key}) : super(key: key);
 
   @override
   _InsertRefuelState createState() => _InsertRefuelState();
@@ -21,16 +21,16 @@ class _InsertRefuelState extends State<InsertRefuel> {
   final TextEditingController _litersController = TextEditingController();
   final TextEditingController _kmController = TextEditingController();
   // final TextEditingController _locationController = TextEditingController();
-  final TextEditingController _pricePerLiterController = TextEditingController();
+  final TextEditingController _pricePerLiterController =
+      TextEditingController();
 
   DateTime selectedDateTime = DateTime.now();
 
   late int selectedCarId;
   Map<int, String> cars = {};
-  Map<String, dynamic> carDetails= {};
+  Map<String, dynamic> carDetails = {};
   double previousRefuelKm = -1;
   double nextRefuelKm = -1;
-
 
   @override
   void initState() {
@@ -58,12 +58,11 @@ class _InsertRefuelState extends State<InsertRefuel> {
     });
   }
 
-
-
   Future<void> _loadCarDetails() async {
-    final Map<String, dynamic> carDet = await _databaseHelper.getCarDetailsById(selectedCarId);
+    final Map<String, dynamic> carDet =
+        await _databaseHelper.getCarDetailsById(selectedCarId);
     setState(() {
-      carDetails=carDet;
+      carDetails = carDet;
     });
   }
 
@@ -103,8 +102,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
           ],
         ),
       ),
-      body:
-      SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(16.0),
           child: FormBuilder(
@@ -117,7 +115,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                     Expanded(
                       child: FormBuilderDateTimePicker(
                         onSaved: (value) => {
-                          selectedDateTime=value!,
+                          selectedDateTime = value!,
                           _loadPreviousAndNextRefuel()
                         },
                         // controller: _dateController,
@@ -129,7 +127,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         lastDate: DateTime.now(),
                         initialEntryMode: DatePickerEntryMode.calendar,
                         initialValue: DateTime.now(),
-                        format: DateFormat("dd/MM/yyyy  HH:mm"), //DateFormat('HH:mm, dd MMMM yyyy'),
+                        format: DateFormat(
+                            "dd/MM/yyyy  HH:mm"), //DateFormat('HH:mm, dd MMMM yyyy'),
                         inputType: InputType.both,
                         decoration: const InputDecoration(
                           labelText: 'Refuel Time',
@@ -158,20 +157,27 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                           FormBuilderValidators.numeric(),
-                          if (carDetails.isNotEmpty) FormBuilderValidators.min(carDetails["initialKm"], errorText: "Lower than initial car km"),
+                          if (carDetails.isNotEmpty)
+                            FormBuilderValidators.min(carDetails["initialKm"],
+                                errorText: "Lower than initial car km"),
                           // the km inserted must be higher than the previous refuel and lower than a possible next refuel
-                          if (carDetails.isNotEmpty && previousRefuelKm > carDetails["initialKm"]) FormBuilderValidators.min(previousRefuelKm, errorText: "Lower than previous refuel"),
-                          if (carDetails.isNotEmpty && nextRefuelKm > previousRefuelKm) FormBuilderValidators.max(nextRefuelKm, errorText: "Higher than next refuel"),
-
+                          if (carDetails.isNotEmpty &&
+                              previousRefuelKm > carDetails["initialKm"])
+                            FormBuilderValidators.min(previousRefuelKm,
+                                errorText: "Lower than previous refuel"),
+                          if (carDetails.isNotEmpty &&
+                              nextRefuelKm > previousRefuelKm)
+                            FormBuilderValidators.max(nextRefuelKm,
+                                errorText: "Higher than next refuel"),
                         ]),
-                        onSaved: (_) => _kmController.text=_kmController.text.replaceAll(',', '.'),
-                          keyboardType:
-                              const TextInputType.numberWithOptions(decimal: true),
+                        onSaved: (_) => _kmController.text =
+                            _kmController.text.replaceAll(',', '.'),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
                       ),
                     ),
                   ],
                 ),
-
 
                 const SizedBox(height: 16.0),
                 Row(
@@ -189,13 +195,16 @@ class _InsertRefuelState extends State<InsertRefuel> {
                           FormBuilderValidators.required(),
                           FormBuilderValidators.numeric()
                         ]),
-                        keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                        onSaved: (_) => _litersController.text=_litersController.text.replaceAll(',', '.'),
-                        onChanged:(_) => _updatePrice(),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        onSaved: (_) => _litersController.text =
+                            _litersController.text.replaceAll(',', '.'),
+                        onChanged: (_) => _updatePrice(),
                       ),
                     ),
-                    SizedBox(width: 5,),
+                    SizedBox(
+                      width: 5,
+                    ),
                     Expanded(
                       child: FormBuilderTextField(
                         controller: _pricePerLiterController,
@@ -209,9 +218,10 @@ class _InsertRefuelState extends State<InsertRefuel> {
                           FormBuilderValidators.required(),
                           FormBuilderValidators.numeric()
                         ]),
-                        keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                        onSaved: (_) => _pricePerLiterController.text=_pricePerLiterController.text.replaceAll(',', '.'),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        onSaved: (_) => _pricePerLiterController.text =
+                            _pricePerLiterController.text.replaceAll(',', '.'),
                         onChanged: (_) => _updatePrice(),
                       ),
                     ),
@@ -229,13 +239,13 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   ),
                   enabled: false,
                   readOnly: true,
-
                 ),
-                const SizedBox(height: 16.0), // Spacer for some vertical separation
+                const SizedBox(
+                    height: 16.0), // Spacer for some vertical separation
                 MaterialButton(
                   color: Theme.of(context).colorScheme.primary,
                   onPressed: () {
-                    if(_formKey.currentState!.saveAndValidate()){
+                    if (_formKey.currentState!.saveAndValidate()) {
                       // debugPrint(_formKey.currentState?.value.toString());
                       _saveDataAndClose(context);
                     }
@@ -245,12 +255,10 @@ class _InsertRefuelState extends State<InsertRefuel> {
               ],
             ),
           ),
+        ),
       ),
-      ),
-
-      );
+    );
   }
-
 
   void _saveDataAndClose(BuildContext context) async {
     // Extract data from controllers

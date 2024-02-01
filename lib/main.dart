@@ -55,15 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: _currentIndex == 2
           ? null // Set app bar to null when UserScreen is selected
           : MyAppBar(
-        selectedCarId: selectedCarId,
-        cars: cars,
-        onCarChanged: (int newValue) {
-          setState(() {
-            selectedCarId = newValue;
-            _loadCars();
-          });
-        },
-      ),
+              selectedCarId: selectedCarId,
+              cars: cars,
+              onCarChanged: (int newValue) {
+                setState(() {
+                  selectedCarId = newValue;
+                  _loadCars();
+                });
+              },
+            ),
       body: _buildBody(),
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: _currentIndex,
