@@ -1,12 +1,9 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gas_io/screens/insert_refuel.dart';
 import 'package:gas_io/screens/modify_refuel.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
-import '../components/app_bar.dart';
 
 class RefuelScreen extends StatefulWidget {
   int selectedCarId;
@@ -49,7 +46,6 @@ class _RefuelScreenState extends State<RefuelScreen> {
     );
   }
 
-
   Future<void> _modifyCard(cardData) async {
     // Navigate to the insert page and wait for the result
     final newCard = await Navigator.push(
@@ -63,7 +59,6 @@ class _RefuelScreenState extends State<RefuelScreen> {
       _loadCards();
     }
   }
-
 
   Future<void> _addNewCard() async {
     // Navigate to the insert page and wait for the result

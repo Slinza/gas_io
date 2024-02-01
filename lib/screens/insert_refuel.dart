@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
@@ -83,11 +82,11 @@ class _InsertRefuelState extends State<InsertRefuel> {
       appBar: AppBar(
         title: Row(
           children: [
-            Icon(Icons.directions_car), // Add car icon
-            SizedBox(width: 8.0),
+            const Icon(Icons.directions_car), // Add car icon
+            const SizedBox(width: 8.0),
             Text(
-              '${cars[selectedCarId] ?? ''}',
-              style: TextStyle(
+              cars[selectedCarId] ?? '',
+              style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold, // Make the text bold
                 color: Colors.blue, // Change the text color
@@ -104,7 +103,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: FormBuilder(
             key: _formKey,
             child: Column(
@@ -152,7 +151,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         decoration: const InputDecoration(
                           labelText: 'Total KM',
                           suffixText: "Km",
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -192,7 +191,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         decoration: const InputDecoration(
                           labelText: 'Liters',
                           suffixText: "L",
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -205,7 +204,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         onChanged: (_) => _updatePrice(),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 5,
                     ),
                     Expanded(
@@ -215,7 +214,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         decoration: const InputDecoration(
                           labelText: 'Price',
                           suffixText: "€/L",
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
@@ -237,7 +236,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   name: 'cost',
                   decoration: const InputDecoration(
                     labelText: 'Cost',
-                    border: const OutlineInputBorder(),
+                    border: OutlineInputBorder(),
                     suffixText: "€",
                   ),
                   enabled: false,
@@ -283,7 +282,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
         location: 'Random Location',
         euroPerLiter: euroPerLiter,
         km: km);
-    // TODO: handle km update also on the car
     await _databaseHelper.insertCard(newCard);
     // Navigator.pop with the result (you can pass some data as a result)
     Navigator.of(context).pop(newCard);

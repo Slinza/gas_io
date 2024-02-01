@@ -70,7 +70,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   }
 
   Future<List<CardData>> getCardsByCar(selectedCarId) async {
-    print("get db data");
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       cardTableName,
@@ -109,7 +108,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   }
 
   Future<int> deleteCard(CardData card) async {
-    print("remove db data");
     final db = await database;
     return db.delete(
       cardTableName,
@@ -152,14 +150,15 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   }
 
   Future<Map<String, CardData?>> getPreviousAndNextRefuel(
-      int selectedCarId, DateTime currentDate, {int? excludeRefuelId}) async {
+      int selectedCarId, DateTime currentDate,
+      {int? excludeRefuelId}) async {
     final db = await database;
 
     // Get the previous refuel
     final List<Map<String, dynamic>> previousRefuelMap = await db.rawQuery(
       "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey < ?"
-          "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
-          " ORDER BY $dateKey DESC LIMIT 1;",
+      "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
+      " ORDER BY $dateKey DESC LIMIT 1;",
       [currentDate.toIso8601String()],
     );
     CardData? previousRefuel;
@@ -170,8 +169,8 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     // Get the next refuel
     final List<Map<String, dynamic>> nextRefuelMap = await db.rawQuery(
       "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey > ?"
-          "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
-          " ORDER BY $dateKey ASC LIMIT 1;",
+      "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
+      " ORDER BY $dateKey ASC LIMIT 1;",
       [currentDate.toIso8601String()],
     );
     CardData? nextRefuel;
@@ -181,7 +180,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
 
     return {'previousRefuel': previousRefuel, 'nextRefuel': nextRefuel};
   }
-
 
   Future<Map<String, dynamic>> getCarDetailsById(int carId) async {
     final db = await database;

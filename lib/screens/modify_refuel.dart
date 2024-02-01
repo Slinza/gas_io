@@ -47,7 +47,7 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
       _pricePerLiterController.text = cardData.euroPerLiter.toString();
       _litersController.text = cardData.liters.toString();
       _costController.text = cardData.price.toString();
-      _kmController.text= cardData.km.toString();
+      _kmController.text = cardData.km.toString();
 
       // _costController.text = price.toStringAsFixed(2); // Format as needed
     });
@@ -55,7 +55,8 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
 
   Future<void> _loadPreviousAndNextRefuel(selectedDateTime, refuelId) async {
     Map<String, CardData?> refuels = await _databaseHelper
-        .getPreviousAndNextRefuel(selectedCarId, selectedDateTime, excludeRefuelId: refuelId);
+        .getPreviousAndNextRefuel(selectedCarId, selectedDateTime,
+            excludeRefuelId: refuelId);
 
     CardData? previousRefuel = refuels['previousRefuel'];
     CardData? nextRefuel = refuels['nextRefuel'];
@@ -126,8 +127,8 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
                   children: [
                     Expanded(
                       child: FormBuilderDateTimePicker(
-                        onChanged: (value) => _loadPreviousAndNextRefuel(value, widget.cardData.id)
-                        ,
+                        onChanged: (value) => _loadPreviousAndNextRefuel(
+                            value, widget.cardData.id),
                         // controller: _dateController,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
