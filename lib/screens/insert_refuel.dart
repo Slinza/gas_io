@@ -93,12 +93,12 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 color: Colors.blue, // Change the text color
               ),
             ),
-            Text(
-              ' refuel', // Screen name suggestion
-              style: TextStyle(
-                fontSize: 18.0,
-              ),
-            ),
+            // Text(
+            //   ' refuel', // Screen name suggestion
+            //   style: TextStyle(
+            //     fontSize: 18.0,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -243,14 +243,14 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 const SizedBox(
                     height: 16.0), // Spacer for some vertical separation
                 MaterialButton(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Colors.blue,
                   onPressed: () {
                     if (_formKey.currentState!.saveAndValidate()) {
                       // debugPrint(_formKey.currentState?.value.toString());
                       _saveDataAndClose(context);
                     }
                   },
-                  child: const Text('Save'),
+                  child: const Text('ADD REFUEL'),
                 )
               ],
             ),
