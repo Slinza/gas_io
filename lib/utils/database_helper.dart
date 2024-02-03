@@ -39,7 +39,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
           $carBrandKey TEXT,
           $carModelKey REAL,
           $carYearKey INT,
-          $carConsumptionKey REAL,
           $carInitialKmKey REAL
         )
         ''');
@@ -58,9 +57,9 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
         await db.execute(
             '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carInitialKmKey) VALUES(0,"Fiat", "Panda", 0000, 0.0, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey) VALUES(0,"Fiat", "Panda", 0000, 0.0);''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carConsumptionKey, $carInitialKmKey) VALUES(1,"Lancia", "Delta", 0000, 0.0, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey) VALUES(1,"Lancia", "Delta", 0000, 0.0);''');
       },
     );
   }
@@ -72,7 +71,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   }
 
   Future<List<CardData>> getCardsByCar(selectedCarId) async {
-    print("get db data");
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
       cardTableName,
@@ -111,7 +109,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   }
 
   Future<int> deleteCard(CardData card) async {
-    print("remove db data");
     final db = await database;
     return db.delete(
       cardTableName,
@@ -153,6 +150,38 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       where: '$carIdKey = ?',
       whereArgs: [carId],
     );
+  }
+
+  Future<Map<String, CardData?>> getPreviousAndNextRefuel(
+      int selectedCarId, DateTime currentDate,
+      {int? excludeRefuelId}) async {
+    final db = await database;
+
+    // Get the previous refuel
+    final List<Map<String, dynamic>> previousRefuelMap = await db.rawQuery(
+      "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey < ?"
+      "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
+      " ORDER BY $dateKey DESC LIMIT 1;",
+      [currentDate.toIso8601String()],
+    );
+    CardData? previousRefuel;
+    if (previousRefuelMap.isNotEmpty) {
+      previousRefuel = CardData.fromMap(previousRefuelMap.first);
+    }
+
+    // Get the next refuel
+    final List<Map<String, dynamic>> nextRefuelMap = await db.rawQuery(
+      "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey > ?"
+      "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
+      " ORDER BY $dateKey ASC LIMIT 1;",
+      [currentDate.toIso8601String()],
+    );
+    CardData? nextRefuel;
+    if (nextRefuelMap.isNotEmpty) {
+      nextRefuel = CardData.fromMap(nextRefuelMap.first);
+    }
+
+    return {'previousRefuel': previousRefuel, 'nextRefuel': nextRefuel};
   }
 
   Future<void> updateUsername(int userId, String newUsername) async {
@@ -198,6 +227,22 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     } else {
       throw Exception("Car with ID $carId not found");
     }
+  }
+
+  Future<void> updateCard(CardData newCard) async {
+    final db = await database;
+
+    // // Ensure that the card has a valid ID
+    // if (newCard.id == null) {
+    //   throw ArgumentError("Card ID cannot be null for update operation");
+    // }
+
+    await db.update(
+      cardTableName,
+      newCard.toMap(),
+      where: '$idKey = ?',
+      whereArgs: [newCard.id],
+    );
   }
 
   Future<List<CarData>> getCarsByUser(int userId) async {

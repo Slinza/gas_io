@@ -44,7 +44,7 @@ class CardData with DatabaseCardKeys {
       carId: map["carId"],
       price: map['price'],
       liters: map['liters'],
-      date: DateTime.parse(map['date']), // Convert string to DateTime
+      date: DateTime.parse(map['date']).toLocal(), // Convert string to DateTime
       location: map['location'],
       euroPerLiter: map['euroPerLiter'],
       km: map['km']
