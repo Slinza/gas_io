@@ -105,6 +105,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FormBuilder(
+
             key: _formKey,
             child: Column(
               // crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -254,6 +255,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   },
                   child: const Text('ADD REFUEL'),
                 )
+
               ],
             ),
           ),

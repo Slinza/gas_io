@@ -47,10 +47,11 @@ class YearLineChartWidget extends StatelessWidget {
         titlesData: FlTitlesData(
           bottomTitles: AxisTitles(sideTitles: _bottomTitles),
           leftTitles: AxisTitles(
-              sideTitles: SideTitles(
-                  showTitles: true,
-                  reservedSize: 45,
-                  interval: interval <= 0.0 ? 1 : interval)),
+            sideTitles: SideTitles(
+                showTitles: true,
+                reservedSize: 45,
+                interval: interval <= 0.0 ? 1 : interval),
+          ),
           topTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles:
@@ -97,5 +98,5 @@ double getUpperLimitMonth(List<FlSpot> monthData) {
 }
 
 double getIntervalMonth(double upperLimit) {
-  return (upperLimit / YEAR_FACTOR).toDouble();
+  return roundedNumber((upperLimit / YEAR_FACTOR), 0).toDouble();
 }

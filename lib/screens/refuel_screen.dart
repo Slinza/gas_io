@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
 import 'package:gas_io/screens/insert_refuel.dart';
 import 'package:gas_io/screens/modify_refuel.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class RefuelScreen extends StatefulWidget {
   int selectedCarId;
