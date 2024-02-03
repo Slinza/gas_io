@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,7 +9,6 @@ class CarData with DatabaseCarKeys {
   final String brand;
   final String model;
   final int year;
-  final double fuelConsumption;
   final double initialKm;
 
   CarData({
@@ -19,7 +17,6 @@ class CarData with DatabaseCarKeys {
     required this.brand,
     required this.model,
     required this.year,
-    required this.fuelConsumption,
     required this.initialKm,
   });
 
@@ -30,7 +27,6 @@ class CarData with DatabaseCarKeys {
       carBrandKey: brand,
       carModelKey: model,
       carYearKey: year,
-      carConsumptionKey: fuelConsumption,
       carInitialKmKey: initialKm,
     };
   }
@@ -42,7 +38,6 @@ class CarData with DatabaseCarKeys {
       brand: map['brand'],
       model: map['model'],
       year: map['year'],
-      fuelConsumption: map['fuelConsumption'],
       initialKm: map['initialKm'],
     );
   }
@@ -80,11 +75,11 @@ class CarCard extends StatelessWidget {
                     style: GoogleFonts.abel(
                         textStyle: const TextStyle(fontSize: 18)),
                   ),
-                  Text(
-                    "l/km = ${carData.fuelConsumption}",
-                    style: GoogleFonts.abel(
-                        textStyle: const TextStyle(fontSize: 18)),
-                  ),
+                  // Text(
+                  //   "l/km = ${carData.fuelConsumption}",
+                  //   style: GoogleFonts.abel(
+                  //       textStyle: const TextStyle(fontSize: 18)),
+                  // ),
                 ]),
           ],
         ),
