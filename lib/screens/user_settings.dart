@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 
-class SettingsScreen extends StatefulWidget {
+class UserSettingsScreen extends StatefulWidget {
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _UserSettingsScreenState createState() => _UserSettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _UserSettingsScreenState extends State<UserSettingsScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _surnameController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();

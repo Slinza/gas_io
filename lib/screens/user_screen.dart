@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
+import 'package:gas_io/screens/car_settings.dart';
 import 'package:gas_io/components/car_card.dart';
 
 const USER_ID = 0; //TODO: Make it changiable
@@ -38,11 +39,24 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
+            icon: const Icon(Icons.add_circle_rounded),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CarSettingsScreen()),
+              ).then((value) {
+                if (value != null && value) {
+                  fetchUserData();
+                }
+              });
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SettingsScreen()),
+                MaterialPageRoute(builder: (context) => UserSettingsScreen()),
               ).then((value) {
                 if (value != null && value) {
                   fetchUserData();

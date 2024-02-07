@@ -184,6 +184,8 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     return {'previousRefuel': previousRefuel, 'nextRefuel': nextRefuel};
   }
 
+  // USER SECTION
+
   Future<void> updateUsername(int userId, String newUsername) async {
     final db = await database;
     await db.update(
@@ -212,6 +214,13 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     Database db = await database;
     return await db.update(userTableName, user.toMap(),
         where: '$userIdKey = ?', whereArgs: [user.id]);
+  }
+
+  // CAR SECTION
+
+  Future<int> insertCar(CarData car) async {
+    Database db = await database;
+    return await db.insert(carTableName, car.toMap());
   }
 
   Future<Map<String, dynamic>> getCarDetailsById(int carId) async {
