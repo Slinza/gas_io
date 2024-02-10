@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gas_io/screens/user_screen.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
+import 'package:gas_io/screens/user_screen.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 
@@ -14,6 +16,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
   TextEditingController _modelController = TextEditingController();
   TextEditingController _yearController = TextEditingController();
   TextEditingController _initialKmController = TextEditingController();
+  Map<String, dynamic> carDetails = {};
 
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<CarCard> car = [];
@@ -33,7 +36,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
     super.initState();
   }
 
-  Future<void> saveUserData() async {
+  Future<void> saveCarData() async {
     CarData? car = CarData(
         id: 0,
         userId: USER_ID,
@@ -54,41 +57,89 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings Screen'),
+        title: const Text('New Car'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            FormBuilderTextField(
               controller: _brandController,
+              name: 'brand',
               decoration: const InputDecoration(
                 labelText: 'Brand',
+                border: OutlineInputBorder(),
               ),
+              validator: FormBuilderValidators.compose(
+                [
+                  FormBuilderValidators.required(),
+                ],
+              ),
+              onSaved: (_) => _brandController.text,
             ),
-            TextField(
+            const SizedBox(height: 16.0),
+            FormBuilderTextField(
               controller: _modelController,
+              name: 'model',
               decoration: const InputDecoration(
                 labelText: 'Model',
+                border: OutlineInputBorder(),
               ),
+              validator: FormBuilderValidators.compose(
+                [
+                  FormBuilderValidators.required(),
+                ],
+              ),
+              onSaved: (_) => _modelController.text,
             ),
-            TextField(
+            const SizedBox(height: 16.0),
+            FormBuilderTextField(
               controller: _yearController,
+              name: 'year',
               decoration: const InputDecoration(
                 labelText: 'Construction Year',
+                //suffixText: "Year",
+                border: OutlineInputBorder(),
               ),
+              validator: FormBuilderValidators.compose(
+                [
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.numeric(),
+                  // TODO: add construction year limitation
+                  FormBuilderValidators.min(1900),
+                ],
+              ),
+              onSaved: (_) => _yearController.text,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: false),
             ),
-            TextField(
+            const SizedBox(height: 16.0),
+            FormBuilderTextField(
               controller: _initialKmController,
+              name: 'km',
               decoration: const InputDecoration(
-                labelText: 'Initial Km',
+                labelText: 'Total KM',
+                suffixText: "Km",
+                border: OutlineInputBorder(),
               ),
+              validator: FormBuilderValidators.compose(
+                [
+                  FormBuilderValidators.required(),
+                  FormBuilderValidators.numeric(),
+                  FormBuilderValidators.min(0),
+                ],
+              ),
+              onSaved: (_) => _initialKmController.text =
+                  _initialKmController.text.replaceAll(',', '.'),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
             ),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                saveUserData();
+                saveCarData();
               },
-              child: const Text('Save'),
+              child: const Text('Add'),
             ),
           ],
         ),
