@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 
-class SettingsScreen extends StatefulWidget {
+class UserSettingsScreen extends StatefulWidget {
+  const UserSettingsScreen({super.key});
+
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _UserSettingsScreenState createState() => _UserSettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _surnameController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
+class _UserSettingsScreenState extends State<UserSettingsScreen> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   @override
@@ -44,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings Screen'),
+        title: const Text('Settings Screen'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

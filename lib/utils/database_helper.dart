@@ -184,6 +184,8 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     return {'previousRefuel': previousRefuel, 'nextRefuel': nextRefuel};
   }
 
+  // USER SECTION
+
   Future<void> updateUsername(int userId, String newUsername) async {
     final db = await database;
     await db.update(
@@ -202,7 +204,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   Future<UserData?> getUser() async {
     Database db = await database;
     List<Map<String, dynamic>> maps = await db.query(userTableName, limit: 1);
-    if (maps.length > 0) {
+    if (maps.isNotEmpty) {
       return UserData.fromMap(maps.first);
     }
     return null;
@@ -212,6 +214,13 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     Database db = await database;
     return await db.update(userTableName, user.toMap(),
         where: '$userIdKey = ?', whereArgs: [user.id]);
+  }
+
+  // CAR SECTION
+
+  Future<int> insertCar(CarData car) async {
+    Database db = await database;
+    return await db.insert(carTableName, car.toMap());
   }
 
   Future<Map<String, dynamic>> getCarDetailsById(int carId) async {
@@ -252,7 +261,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       carTableName,
       where: '$carUserIdKey = ?',
       whereArgs: [userId],
-      orderBy: 'id DESC',
+      orderBy: 'id ASC',
     );
     return List.generate(maps.length, (i) {
       return CarData.fromMap(maps[i]);

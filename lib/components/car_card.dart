@@ -4,12 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gas_io/utils/key_parameters.dart';
 
 class CarData with DatabaseCarKeys {
-  final int id;
-  final int userId;
-  final String brand;
-  final String model;
-  final int year;
-  final double initialKm;
+  int id;
+  int userId;
+  String brand;
+  String model;
+  int year;
+  double initialKm;
 
   CarData({
     required this.id,

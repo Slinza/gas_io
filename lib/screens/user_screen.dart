@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
+import 'package:gas_io/screens/car_settings.dart';
 import 'package:gas_io/components/car_card.dart';
 
 const USER_ID = 0; //TODO: Make it changiable
 
 class UserScreen extends StatefulWidget {
+  const UserScreen({super.key});
+
   @override
   _UserScreenState createState() => _UserScreenState();
 }
@@ -38,11 +41,24 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
+            icon: const Icon(Icons.add_circle_rounded),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CarSettingsScreen()),
+              ).then((value) {
+                if (value != null && value) {
+                  fetchUserData();
+                }
+              });
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SettingsScreen()),
+                MaterialPageRoute(builder: (context) => const UserSettingsScreen()),
               ).then((value) {
                 if (value != null && value) {
                   fetchUserData();
@@ -78,7 +94,7 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                    Container(
+                    SizedBox(
                         width: 200,
                         height: 450,
                         child: ListView.builder(
