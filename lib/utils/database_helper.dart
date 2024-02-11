@@ -204,7 +204,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   Future<UserData?> getUser() async {
     Database db = await database;
     List<Map<String, dynamic>> maps = await db.query(userTableName, limit: 1);
-    if (maps.length > 0) {
+    if (maps.isNotEmpty) {
       return UserData.fromMap(maps.first);
     }
     return null;

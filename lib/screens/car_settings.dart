@@ -7,15 +7,17 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 
 class CarSettingsScreen extends StatefulWidget {
+  const CarSettingsScreen({super.key});
+
   @override
   _CarSettingsScreenState createState() => _CarSettingsScreenState();
 }
 
 class _CarSettingsScreenState extends State<CarSettingsScreen> {
-  TextEditingController _brandController = TextEditingController();
-  TextEditingController _modelController = TextEditingController();
-  TextEditingController _yearController = TextEditingController();
-  TextEditingController _initialKmController = TextEditingController();
+  final TextEditingController _brandController = TextEditingController();
+  final TextEditingController _modelController = TextEditingController();
+  final TextEditingController _yearController = TextEditingController();
+  final TextEditingController _initialKmController = TextEditingController();
   Map<String, dynamic> carDetails = {};
 
   final DatabaseHelper _databaseHelper = DatabaseHelper();
