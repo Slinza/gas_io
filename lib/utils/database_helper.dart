@@ -261,7 +261,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       carTableName,
       where: '$carUserIdKey = ?',
       whereArgs: [userId],
-      orderBy: 'id DESC',
+      orderBy: 'id ASC',
     );
     return List.generate(maps.length, (i) {
       return CarData.fromMap(maps[i]);
