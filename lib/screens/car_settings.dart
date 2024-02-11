@@ -20,16 +20,6 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
 
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<CarCard> car = [];
-  // final int selectedCarId;
-  // final Map<int, String> cars;
-  // final Function(int) onCarChanged;
-
-  // const MyAppBar({
-  //   Key? key,
-  //   required this.selectedCarId,
-  //   required this.cars,
-  //   required this.onCarChanged,
-  // }) : super(key: key);
 
   @override
   void initState() {
@@ -38,17 +28,14 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
 
   Future<void> saveCarData() async {
     CarData? car = CarData(
-        id: 0,
-        userId: USER_ID,
-        brand: "Brand",
-        model: "Model",
-        year: 2024,
-        initialKm: 0);
+      id: DateTime.now().toUtc().millisecondsSinceEpoch,
+      userId: USER_ID,
+      brand: _brandController.text,
+      model: _modelController.text,
+      year: int.parse(_yearController.text),
+      initialKm: double.parse(_initialKmController.text),
+    );
 
-    car.brand = _brandController.text;
-    car.model = _modelController.text;
-    // car.year = _yearController.text;
-    // car.initialKm = _initialKmController.text;
     await _databaseHelper.insertCar(car);
     Navigator.pop(context, true);
   }
@@ -118,7 +105,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
               controller: _initialKmController,
               name: 'km',
               decoration: const InputDecoration(
-                labelText: 'Total KM',
+                labelText: 'Initial Km',
                 suffixText: "Km",
                 border: OutlineInputBorder(),
               ),
