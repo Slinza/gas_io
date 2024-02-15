@@ -48,7 +48,11 @@ class _UserScreenState extends State<UserScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => const CarSettingsScreen()),
-              );
+              ).then((value) {
+                if (value != null && value) {
+                  fetchUserData();
+                }
+              });
             },
           ),
           IconButton(
