@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gas_io/screens/car_settings_modification.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gas_io/utils/key_parameters.dart';
+import 'package:gas_io/components/fuel_type.dart';
 
 class CarData with DatabaseCarKeys {
   int id;
@@ -10,6 +12,7 @@ class CarData with DatabaseCarKeys {
   String model;
   int year;
   double initialKm;
+  String fuelType;
 
   CarData({
     required this.id,
@@ -18,6 +21,7 @@ class CarData with DatabaseCarKeys {
     required this.model,
     required this.year,
     required this.initialKm,
+    required this.fuelType,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,18 +32,19 @@ class CarData with DatabaseCarKeys {
       carModelKey: model,
       carYearKey: year,
       carInitialKmKey: initialKm,
+      carFuelType: fuelType,
     };
   }
 
   factory CarData.fromMap(Map<String, dynamic> map) {
     return CarData(
-      id: map['id'],
-      userId: map["userId"],
-      brand: map['brand'],
-      model: map['model'],
-      year: map['year'],
-      initialKm: map['initialKm'],
-    );
+        id: map['id'],
+        userId: map["userId"],
+        brand: map['brand'],
+        model: map['model'],
+        year: map['year'],
+        initialKm: map['initialKm'],
+        fuelType: map['fuelType']);
   }
 }
 
@@ -49,39 +54,56 @@ class CarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    carData.brand,
-                    style: GoogleFonts.abel(
-                        textStyle: const TextStyle(fontSize: 18)),
-                  ),
-                  Text(
-                    carData.model,
-                    style: GoogleFonts.abel(
-                        textStyle: const TextStyle(fontSize: 18)),
-                  ),
-                  Text(
-                    "year = ${carData.year}",
-                    style: GoogleFonts.abel(
-                        textStyle: const TextStyle(fontSize: 18)),
-                  ),
-                  // Text(
-                  //   "l/km = ${carData.fuelConsumption}",
-                  //   style: GoogleFonts.abel(
-                  //       textStyle: const TextStyle(fontSize: 18)),
-                  // ),
-                ]),
-          ],
+    return SizedBox(
+      height: 80,
+      child: GestureDetector(
+        onTap: () => {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ModifyCarSettingsScreen(carData)),
+          ) //.then((value) {
+          //   if (value != null && value) {
+          //     fetchUserData();
+          //   }
+          // });
+        },
+        child: Card(
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      carData.brand,
+                      style: GoogleFonts.abel(
+                          textStyle: const TextStyle(fontSize: 18)),
+                    ),
+                    Text(
+                      carData.model,
+                      style: GoogleFonts.abel(
+                          textStyle: const TextStyle(fontSize: 18)),
+                    ),
+                    Text(
+                      "${carData.fuelType}",
+                      style: GoogleFonts.abel(
+                          textStyle: const TextStyle(fontSize: 18)),
+                    ),
+                    // Text(
+                    //   "l/km = ${carData.fuelConsumption}",
+                    //   style: GoogleFonts.abel(
+                    //       textStyle: const TextStyle(fontSize: 18)),
+                    // ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

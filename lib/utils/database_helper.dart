@@ -39,7 +39,8 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
           $carBrandKey TEXT,
           $carModelKey REAL,
           $carYearKey INT,
-          $carInitialKmKey REAL
+          $carInitialKmKey REAL,
+          $carFuelType TEXT
         )
         ''');
         await db.execute('''
@@ -57,9 +58,9 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
         await db.execute(
             '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey) VALUES(0,"Fiat", "Panda", 0000, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Fiat", "Panda", 0000, 0.0, "diesel");''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey) VALUES(1,"Lancia", "Delta", 0000, 0.0);''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(1,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
       },
     );
   }
@@ -112,8 +113,17 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     final db = await database;
     return db.delete(
       cardTableName,
-      where: 'id = ?',
+      where: '$idKey = ?',
       whereArgs: [card.id], // Assuming you have an 'id' field in your CardData
+    );
+  }
+
+  Future<int> deleteAllCardByCarId(int carId) async {
+    final db = await database;
+    return db.delete(
+      cardTableName,
+      where: '$relatedCarIdKey = ?',
+      whereArgs: [carId], // Assuming you have an 'id' field in your CardData
     );
   }
 
@@ -184,6 +194,22 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     return {'previousRefuel': previousRefuel, 'nextRefuel': nextRefuel};
   }
 
+  Future<void> updateCard(CardData newCard) async {
+    final db = await database;
+
+    // // Ensure that the card has a valid ID
+    // if (newCard.id == null) {
+    //   throw ArgumentError("Card ID cannot be null for update operation");
+    // }
+
+    await db.update(
+      cardTableName,
+      newCard.toMap(),
+      where: '$idKey = ?',
+      whereArgs: [newCard.id],
+    );
+  }
+
   // USER SECTION
 
   Future<void> updateUsername(int userId, String newUsername) async {
@@ -238,22 +264,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     }
   }
 
-  Future<void> updateCard(CardData newCard) async {
-    final db = await database;
-
-    // // Ensure that the card has a valid ID
-    // if (newCard.id == null) {
-    //   throw ArgumentError("Card ID cannot be null for update operation");
-    // }
-
-    await db.update(
-      cardTableName,
-      newCard.toMap(),
-      where: '$idKey = ?',
-      whereArgs: [newCard.id],
-    );
-  }
-
   Future<List<CarData>> getCarsByUser(int userId) async {
     print("get db data");
     final db = await database;
@@ -266,5 +276,31 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     return List.generate(maps.length, (i) {
       return CarData.fromMap(maps[i]);
     });
+  }
+
+  Future<void> updateCar(CarData newCar) async {
+    final db = await database;
+
+    // // Ensure that the card has a valid ID
+    // if (newCard.id == null) {
+    //   throw ArgumentError("Card ID cannot be null for update operation");
+    // }
+
+    await db.update(
+      carTableName,
+      newCar.toMap(),
+      where: '$idKey = ?',
+      whereArgs: [newCar.id],
+    );
+  }
+
+  Future<int> deleteCar(CarData car) async {
+    final db = await database;
+    deleteAllCardByCarId(car.id);
+    return db.delete(
+      carTableName,
+      where: 'id = ?',
+      whereArgs: [car.id], // Assuming you have an 'id' field in your CardData
+    );
   }
 }

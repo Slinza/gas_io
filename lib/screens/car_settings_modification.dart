@@ -7,20 +7,21 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/fuel_type.dart';
 
-class CarSettingsScreen extends StatefulWidget {
-  const CarSettingsScreen({super.key});
+class ModifyCarSettingsScreen extends StatefulWidget {
+  CarData carData;
+  ModifyCarSettingsScreen(this.carData, {Key? key}) : super(key: key);
 
   @override
-  _CarSettingsScreenState createState() => _CarSettingsScreenState();
+  _ModifyCarSettingsScreenState createState() =>
+      _ModifyCarSettingsScreenState();
 }
 
-class _CarSettingsScreenState extends State<CarSettingsScreen> {
+class _ModifyCarSettingsScreenState extends State<ModifyCarSettingsScreen> {
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _modelController = TextEditingController();
   final TextEditingController _yearController = TextEditingController();
   final TextEditingController _initialKmController = TextEditingController();
   FuelType _selectedFuelType = FuelType.diesel;
-
   Map<String, dynamic> carDetails = {};
 
   final DatabaseHelper _databaseHelper = DatabaseHelper();
@@ -28,30 +29,38 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
 
   @override
   void initState() {
+    _loadCarData(widget.carData);
     super.initState();
   }
 
-  // Future<void> fetchUserData() async {
-  //   CarData? user = await _databaseHelper.getCarDetailsById();
-  //   if (user != null) {
-  //     _nameController.text = user.name;
-  //     _surnameController.text = user.surname;
-  //     _usernameController.text = user.username;
-  //   }
-  // }
+  void _loadCarData(cardData) {
+    setState(() {
+      _brandController.text = cardData.brand.toString();
+      _modelController.text = cardData.model.toString();
+      _yearController.text = cardData.year.toString();
+      _initialKmController.text = cardData.initialKm.toString();
+      _selectedFuelType = stringToFuelType(cardData.fuelType.toString());
+      // _costController.text = price.toStringAsFixed(2); // Format as needed
+    });
+  }
 
-  Future<void> saveCarData() async {
-    CarData? car = CarData(
-      id: DateTime.now().toUtc().millisecondsSinceEpoch,
-      userId: USER_ID,
+  void _removeCarData(carData) async {
+    _databaseHelper.deleteCar(carData);
+  }
+
+  void _saveCarData() async {
+    CarData newCar = CarData(
+      id: widget.carData.id,
+      userId: widget.carData.userId,
       brand: _brandController.text,
       model: _modelController.text,
       year: int.parse(_yearController.text),
       initialKm: double.parse(_initialKmController.text),
       fuelType: fuelTypeToString(_selectedFuelType),
     );
-
-    await _databaseHelper.insertCar(car);
+    await _databaseHelper.updateCar(newCar);
+    // Navigator.pop with the result (you can pass some data as a result)
+    //Navigator.of(context).pop(newCar);
     Navigator.pop(context, true);
   }
 
@@ -59,7 +68,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Car'),
+        title: const Text('Modify Car'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -156,12 +165,23 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
               }).toList(),
             ),
             const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                saveCarData();
-              },
-              child: const Text('Add'),
-            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    _removeCarData(widget.carData);
+                  },
+                  child: const Text('Remove'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _saveCarData();
+                  },
+                  child: const Text('Update'),
+                ),
+              ],
+            )
           ],
         ),
       ),
