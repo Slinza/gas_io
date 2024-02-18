@@ -4,6 +4,7 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
 import 'package:gas_io/screens/car_settings.dart';
+import 'package:gas_io/screens/car_settings_modification.dart';
 import 'package:gas_io/components/car_card.dart';
 
 const USER_ID = 0; //TODO: Make it changiable
@@ -16,16 +17,16 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  UserData? _user;
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
-  List<CarData> _cardList = [];
-  final ScrollController _listController = ScrollController();
   String profilePic = 'assets/user_icon.png';
+  final DatabaseHelper _databaseHelper = DatabaseHelper();
+  final ScrollController _listController = ScrollController();
+  UserData? _user;
+  List<CarData> _cardList = [];
 
   @override
   void initState() {
-    super.initState();
     fetchUserData();
+    super.initState();
   }
 
   Future<void> fetchUserData() async {
@@ -45,7 +46,8 @@ class _UserScreenState extends State<UserScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CarSettingsScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const CarSettingsScreen()),
               ).then((value) {
                 if (value != null && value) {
                   fetchUserData();
@@ -58,7 +60,8 @@ class _UserScreenState extends State<UserScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const UserSettingsScreen()),
+                MaterialPageRoute(
+                    builder: (context) => const UserSettingsScreen()),
               ).then((value) {
                 if (value != null && value) {
                   fetchUserData();
@@ -95,18 +98,19 @@ class _UserScreenState extends State<UserScreen> {
                     ),
                     const SizedBox(height: 16.0),
                     SizedBox(
-                        width: 200,
-                        height: 450,
-                        child: ListView.builder(
-                          controller: _listController,
-                          itemCount: _cardList.length,
-                          itemBuilder: (context, index) {
-                            final CarData carData = _cardList[index];
-                            return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: CarCard(carData: carData));
-                          },
-                        ))
+                      width: 200,
+                      height: 600,
+                      child: ListView.builder(
+                        controller: _listController,
+                        itemCount: _cardList.length,
+                        itemBuilder: (context, index) {
+                          final CarData carData = _cardList[index];
+                          return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CarCard(carData: carData));
+                        },
+                      ),
+                    )
                   ],
                 )
               : null),
