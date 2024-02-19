@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import 'package:gas_io/screens/insert_refuel.dart';
 import 'package:gas_io/screens/modify_refuel.dart';
 import 'package:gas_io/utils/database_helper.dart';
@@ -76,6 +75,43 @@ class _RefuelScreenState extends State<RefuelScreen> {
     }
   }
 
+  Future<void> _showDeleteConfirmation(CardData cardData) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Do you want to delete this card?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () async {
+                await _databaseHelper.deleteCard(cardData);
+                setState(() {
+                  _cardList.remove(cardData);
+                });
+                Navigator.of(context).pop(); // close dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,71 +132,33 @@ class _RefuelScreenState extends State<RefuelScreen> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Slidable(
-
-              // Specify a key if the Slidable is dismissible.
-              key: Key(cardData.id.toString()),
-
-              // The end action pane is the one at the right or the bottom side.
-              endActionPane: ActionPane(
-                extentRatio: 0.5,
-                motion: const BehindMotion(),
-                // dismissible: DismissiblePane(onDismissed: () async {
-                //   await _databaseHelper.deleteCard(cardData);
-                //   setState(() {
-                //     _cardList.removeAt(index);
-                //   });
-                //   ScaffoldMessenger.of(context).showSnackBar(
-                //     const SnackBar(
-                //       content: Text('Card dismissed'),
-                //     ),
-                //   );
-                // }),
-                children: [
-                  SlidableAction(
-                    // An action can be bigger than the others.
-                    onPressed: (context) => _modifyCard(cardData),
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: Colors.orange,
-                    icon: Icons.edit,
-                    label: 'Edit',
-                    borderRadius: const BorderRadius.all(Radius.circular(100)),
-                  ),
-                  SlidableAction(
-                    onPressed: (context) async {
-                      await _databaseHelper.deleteCard(cardData);
-                      setState(() {
-                        _cardList.removeAt(index);
-                      });
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   const SnackBar(
-                      //     content: Text('Card dismissed'),
-                      //   ),
-                      // );
-                    },
-                    backgroundColor: Colors.transparent,
-                    foregroundColor: Colors.red,
-                    icon: Icons.delete,
-                    label: 'Delete',
-                    borderRadius: const BorderRadius.all(Radius.circular(100)),
-                  ),
-
-                  // Container(
-                  //   height: 10,
-                  //   width: 60,
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.red,
-                  //     borderRadius: const BorderRadius.only(
-                  //       topLeft: Radius.circular(10),
-                  //       bottomLeft: Radius.circular(10),
-                  //     ),
-                  //   ),
-                  // )
-                ],
-              ),
-
-              // The child of the Slidable is what the user sees when the
-              // component is not dragged.
-              child: RefuelCard(refuelData: cardData)),
+            key: Key(cardData.id.toString()),
+            endActionPane: ActionPane(
+              extentRatio: 0.5,
+              motion: const BehindMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) => _modifyCard(cardData),
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.orange,
+                  icon: Icons.edit,
+                  label: 'Edit',
+                  borderRadius: const BorderRadius.all(Radius.circular(100)),
+                ),
+                SlidableAction(
+                  onPressed: (context) async {
+                    await _showDeleteConfirmation(cardData);
+                  },
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.red,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                  borderRadius: const BorderRadius.all(Radius.circular(100)),
+                ),
+              ],
+            ),
+            child: RefuelCard(refuelData: cardData),
+          ),
         );
       },
     );
