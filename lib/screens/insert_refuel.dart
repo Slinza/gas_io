@@ -19,7 +19,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
   final TextEditingController _costController = TextEditingController();
   final TextEditingController _litersController = TextEditingController();
   final TextEditingController _kmController = TextEditingController();
-  // final TextEditingController _locationController = TextEditingController();
   final TextEditingController _pricePerLiterController =
       TextEditingController();
 
@@ -30,6 +29,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
   Map<String, dynamic> carDetails = {};
   double previousRefuelKm = -1;
   double nextRefuelKm = -1;
+  bool isCompleteRefuel = false; // New variable to track refuel completeness
 
   @override
   void initState() {
@@ -69,10 +69,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
     final Map<int, String> carMap = await _databaseHelper.getCarsMap();
     setState(() {
       cars = carMap;
-      // if (carMap.isNotEmpty) {
-      //   selectedCarId = carMap.keys.toList()[0];
-      //   // selectedCarName = carMap[selectedCarId] ?? ''; // Set the first car as default
-      // }
     });
   }
 
@@ -82,22 +78,16 @@ class _InsertRefuelState extends State<InsertRefuel> {
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(Icons.directions_car), // Add car icon
+            const Icon(Icons.directions_car),
             const SizedBox(width: 8.0),
             Text(
               cars[selectedCarId] ?? '',
               style: const TextStyle(
                 fontSize: 18.0,
-                fontWeight: FontWeight.bold, // Make the text bold
-                color: Colors.blue, // Change the text color
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
               ),
             ),
-            // Text(
-            //   ' refuel', // Screen name suggestion
-            //   style: TextStyle(
-            //     fontSize: 18.0,
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -105,10 +95,8 @@ class _InsertRefuelState extends State<InsertRefuel> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: FormBuilder(
-
             key: _formKey,
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
                   children: [
@@ -118,29 +106,19 @@ class _InsertRefuelState extends State<InsertRefuel> {
                           selectedDateTime = value!,
                           _loadPreviousAndNextRefuel()
                         },
-                        // controller: _dateController,
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                         ]),
                         name: 'date',
-                        // firstDate: DateTime(2000),
                         lastDate: DateTime.now(),
                         initialEntryMode: DatePickerEntryMode.calendar,
                         initialValue: DateTime.now(),
-                        format: DateFormat(
-                            "dd/MM/yyyy  HH:mm"), //DateFormat('HH:mm, dd MMMM yyyy'),
+                        format: DateFormat("dd/MM/yyyy  HH:mm"),
                         inputType: InputType.both,
                         decoration: const InputDecoration(
                           labelText: 'Refuel Time',
-                          alignLabelWithHint: true, // Align label with the hint
-
+                          alignLabelWithHint: true,
                           border: OutlineInputBorder(),
-                          // suffixIcon: IconButton(
-                          //   icon: const Icon(Icons.close),
-                          //   onPressed: () {
-                          //     _formKey.currentState!.fields['date']?.didChange(null);
-                          //   },
-                          // ),
                         ),
                       ),
                     ),
@@ -161,7 +139,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
                             FormBuilderValidators.min(carDetails["initialKm"],
                                 inclusive: false,
                                 errorText: "Lower than initial car km"),
-                          // the km inserted must be higher than the previous refuel and lower than a possible next refuel
                           if (carDetails.isNotEmpty &&
                               previousRefuelKm > carDetails["initialKm"])
                             FormBuilderValidators.min(previousRefuelKm,
@@ -181,7 +158,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 16.0),
                 Row(
                   children: [
@@ -205,9 +181,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                         onChanged: (_) => _updatePrice(),
                       ),
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     Expanded(
                       child: FormBuilderTextField(
                         controller: _pricePerLiterController,
@@ -230,7 +204,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 16.0),
                 FormBuilderTextField(
                   controller: _costController,
@@ -243,19 +216,27 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   enabled: false,
                   readOnly: true,
                 ),
-                const SizedBox(
-                    height: 16.0), // Spacer for some vertical separation
+                const SizedBox(height: 16.0),
+                FormBuilderCheckbox(
+                  name: 'isCompleteRefuel',
+                  title: Text('Complete Refuel'),
+                  onChanged: (value) {
+                    setState(() {
+                      isCompleteRefuel = value ?? false;
+                    });
+                  },
+                  initialValue: isCompleteRefuel,
+                ),
+                const SizedBox(height: 16.0),
                 MaterialButton(
                   color: Colors.blue,
                   onPressed: () {
                     if (_formKey.currentState!.saveAndValidate()) {
-                      // debugPrint(_formKey.currentState?.value.toString());
                       _saveDataAndClose(context);
                     }
                   },
                   child: const Text('ADD REFUEL'),
-                )
-
+                ),
               ],
             ),
           ),
@@ -265,7 +246,6 @@ class _InsertRefuelState extends State<InsertRefuel> {
   }
 
   void _saveDataAndClose(BuildContext context) async {
-    // Extract data from controllers
     double price =
         double.tryParse(_costController.text.replaceAll(',', '.')) ?? 0.0;
     double liters =
@@ -276,30 +256,29 @@ class _InsertRefuelState extends State<InsertRefuel> {
     double km = double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
 
     CardData newCard = CardData(
-        id: DateTime.now().toUtc().millisecondsSinceEpoch,
-        carId: selectedCarId,
-        price: price,
-        liters: liters,
-        date: selectedDateTime,
-        location: 'Random Location',
-        euroPerLiter: euroPerLiter,
-        km: km);
+      id: DateTime.now().toUtc().millisecondsSinceEpoch,
+      carId: selectedCarId,
+      price: price,
+      liters: liters,
+      date: selectedDateTime,
+      location: 'Random Location',
+      euroPerLiter: euroPerLiter,
+      km: km,
+      isCompleteRefuel: isCompleteRefuel, // Assign the selected value
+    );
     await _databaseHelper.insertCard(newCard);
-    // Navigator.pop with the result (you can pass some data as a result)
     Navigator.of(context).pop(newCard);
   }
 
   void _updatePrice() {
-    // Update the price based on Liters and €/L values
     double liters =
         double.tryParse(_litersController.text.replaceAll(',', '.')) ?? 0.0;
     double euroPerLiter =
         double.tryParse(_pricePerLiterController.text.replaceAll(',', '.')) ??
             0.0;
     double price = liters * euroPerLiter;
-    // Update the price field
     setState(() {
-      _costController.text = price.toStringAsFixed(2); // Format as needed
+      _costController.text = price.toStringAsFixed(2);
     });
   }
 }

@@ -52,7 +52,8 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
           $dateKey TEXT,
           $locationKey TEXT,
           $euroPerLiterKey REAL,
-          $kmKey REAL
+          $kmKey REAL,
+          $isCompleteRefuelKey INTEGER
         )
         ''');
         await db.execute(

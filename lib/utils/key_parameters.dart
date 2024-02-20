@@ -8,6 +8,7 @@ mixin DatabaseCardKeys {
   final String locationKey = 'location';
   final String euroPerLiterKey = 'euroPerLiter';
   final String kmKey = 'km';
+  final String isCompleteRefuelKey = "isCompleteRefuel";
 }
 
 mixin DatabaseUserKeys {

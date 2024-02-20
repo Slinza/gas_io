@@ -13,17 +13,18 @@ class CardData with DatabaseCardKeys {
   final String location;
   final double euroPerLiter;
   final double km;
+  final bool isCompleteRefuel;
 
-  CardData({
-    required this.id,
-    required this.carId,
-    required this.price,
-    required this.liters,
-    required this.date,
-    required this.location,
-    required this.euroPerLiter,
-    required this.km,
-  });
+  CardData(
+      {required this.id,
+      required this.carId,
+      required this.price,
+      required this.liters,
+      required this.date,
+      required this.location,
+      required this.euroPerLiter,
+      required this.km,
+      required this.isCompleteRefuel});
 
   Map<String, dynamic> toMap() {
     return {
@@ -35,6 +36,7 @@ class CardData with DatabaseCardKeys {
       locationKey: location,
       euroPerLiterKey: euroPerLiter,
       kmKey: km,
+      isCompleteRefuelKey: isCompleteRefuel ? 1 : 0, // Convert bool to integer
     };
   }
 
@@ -47,7 +49,8 @@ class CardData with DatabaseCardKeys {
       date: DateTime.parse(map['date']).toLocal(), // Convert string to DateTime
       location: map['location'],
       euroPerLiter: map['euroPerLiter'],
-      km: map['km']
+      km: map['km'],
+      isCompleteRefuel: map['isCompleteRefuel'] == 1, // Convert integer to bool
     );
   }
 }
