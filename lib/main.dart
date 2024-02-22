@@ -11,7 +11,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -55,15 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: _currentIndex == 2
           ? null // Set app bar to null when UserScreen is selected
           : MyAppBar(
-              selectedCarId: selectedCarId,
-              cars: cars,
-              onCarChanged: (int newValue) {
-                setState(() {
-                  selectedCarId = newValue;
-                  _loadCars();
-                });
-              },
-            ),
+        selectedCarId: selectedCarId,
+        cars: cars,
+        onCarChanged: (int newValue) {
+          setState(() {
+            selectedCarId = newValue;
+            _loadCars();
+          });
+        },
+      ),
       body: _buildBody(),
       bottomNavigationBar: MyBottomNavBar(
         currentIndex: _currentIndex,
@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {
             _currentIndex = index;
           });
+          _loadCars(); // Update car list when tab is changed
         },
       ),
     );
