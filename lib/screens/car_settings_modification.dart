@@ -7,6 +7,13 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/fuel_type.dart';
 
+// ***** DEPRECATED *****
+// ***** DEPRECATED *****
+// ***** DEPRECATED *****
+// ***** DEPRECATED *****
+// ***** DEPRECATED *****
+// ***** DEPRECATED *****
+
 class ModifyCarSettingsScreen extends StatefulWidget {
   CarData carData;
   ModifyCarSettingsScreen(this.carData, {Key? key}) : super(key: key);
