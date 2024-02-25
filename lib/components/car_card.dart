@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:gas_io/screens/car_settings_modification.dart';
+import 'package:gas_io/screens/car_settings_details.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gas_io/utils/key_parameters.dart';
 import 'package:gas_io/components/fuel_type.dart';
+
+CarData defaultCarData = CarData(
+    id: 0,
+    userId: 0,
+    brand: 'Brand',
+    model: 'Model',
+    year: 2000,
+    initialKm: 0,
+    fuelType: 'disel');
 
 class CarData with DatabaseCarKeys {
   int id;
@@ -61,7 +70,7 @@ class CarCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ModifyCarSettingsScreen(carData)),
+                builder: (context) => DetailsCarSettingsScreen(carData)),
           ) //.then((value) {
           //   if (value != null && value) {
           //     fetchUserData();

@@ -4,7 +4,7 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
 import 'package:gas_io/screens/car_settings.dart';
-import 'package:gas_io/screens/car_settings_modification.dart';
+import 'package:gas_io/screens/car_settings_details.dart';
 import 'package:gas_io/components/car_card.dart';
 
 const USER_ID = 0; //TODO: Make it changiable
