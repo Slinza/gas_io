@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
+
+import 'package:gas_io/components/bar_data.dart';
+import 'package:gas_io/design/themes.dart';
+
+class BarGraph extends StatelessWidget {
+  final List sixMonthsSummary;
+  const BarGraph({
+    super.key,
+    required this.sixMonthsSummary,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    BarData currentBarData = BarData(
+        firstMonthAmount: sixMonthsSummary[0],
+        secondMonthAmount: sixMonthsSummary[1],
+        thirdMonthAmount: sixMonthsSummary[2],
+        fourthMonthAmount: sixMonthsSummary[3],
+        fifthMonthAmount: sixMonthsSummary[4],
+        actualMonthAmount: sixMonthsSummary[5]);
+
+    currentBarData.initializeBarData();
+    return BarChart(BarChartData(
+      minY: 0,
+      gridData: FlGridData(show: false),
+      borderData: FlBorderData(show: false),
+      titlesData: FlTitlesData(
+        bottomTitles: AxisTitles(
+          sideTitles: _bottomTitles,
+        ),
+        leftTitles: AxisTitles(
+          sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 45,
+              interval: 20), //interval <= 0.0 ? 1 : interval),
+        ),
+        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+      ),
+      barGroups: currentBarData.barData
+          .map(
+            (data) => BarChartGroupData(
+              x: data.x,
+              barRods: [
+                BarChartRodData(
+                    toY: data.y,
+                    color: primaryColor,
+                    width: 25,
+                    borderRadius: BorderRadius.circular(4)),
+              ],
+            ),
+          )
+          .toList(),
+    ));
+  }
+
+  SideTitles get _bottomTitles => SideTitles(
+        showTitles: true,
+        getTitlesWidget: (value, meta) {
+          String text = '';
+          switch (value.toInt()) {
+            case 0:
+              text = 'Jan';
+              break;
+            case 1:
+              text = 'Feb';
+              break;
+            case 2:
+              text = 'Mar';
+              break;
+            case 3:
+              text = 'Apr';
+              break;
+            case 4:
+              text = 'May';
+              break;
+            case 5:
+              text = 'June';
+              break;
+            case 6:
+              text = 'July';
+              break;
+            case 7:
+              text = 'Aug';
+              break;
+            case 8:
+              text = 'Sep';
+              break;
+            case 9:
+              text = 'Oct';
+              break;
+            case 10:
+              text = 'Nov';
+              break;
+            case 11:
+              text = 'Dec';
+              break;
+          }
+
+          return Text(text);
+        },
+      );
+}

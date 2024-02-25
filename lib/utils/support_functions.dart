@@ -1,4 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gas_io/components/bar_element.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
 const int monthsNumber = 12;
@@ -22,6 +23,18 @@ List<double> pricesList(List<CardData> list) {
 
 List<FlSpot> pricesYearlyList(List<CardData> list) {
   return list.map((e) => FlSpot(e.date.month.toDouble(), e.price)).toList();
+}
+
+List<BarElement> sixMonthsElementsList(List<CardData> list) {
+  var a = list.map((e) => BarElement(x: e.date.month, y: e.price)).toList();
+  return [
+    BarElement(x: 0, y: 1.1),
+    BarElement(x: 0, y: 1.1),
+    BarElement(x: 0, y: 1.1),
+    BarElement(x: 0, y: 1.1),
+    BarElement(x: 0, y: 1.1),
+    BarElement(x: 0, y: 1.1)
+  ];
 }
 
 List<FlSpot> averageYearlyPrice(List<CardData> data) {

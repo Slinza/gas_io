@@ -85,10 +85,20 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     });
   }
 
+  // TODO: check that will fetch only the previous year, discuss if necessary
   Future<List<CardData>> getYearCard(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId GROUP BY STRFTIME('%mm', $dateKey);");
+    return List.generate(maps.length, (i) {
+      return CardData.fromMap(maps[i]);
+    });
+  }
+
+  Future<List<CardData>> geSixMonthsCard(selectedCarId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND date BETWEEN datetime('now', '-6 months') AND datetime('now', 'localtime') GROUP BY STRFTIME('%mm', $dateKey);");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
