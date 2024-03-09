@@ -124,22 +124,45 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
         );
       }
       return missingData;
-    }
-
-    // Handle the case when data is retrieved from the database
-    return List.generate(6, (i) {
-      // Check if the data exists for the current month
-      if (i < maps.length) {
-        return CardData.fromMap(maps[i]);
-      } else {
-        // Create a default CardData object for the missing month
-        return generateEmptyCardData(
-            selectedCarId,
-            DateTime.now().subtract(
-              Duration(days: i * 30),
-            ));
+    } else {
+      List<int> presentMonths = List.generate(
+        maps.length,
+        (i) {
+          return DateTime.parse(maps[i]["date"]).month;
+        },
+      );
+      List<int> expectedMonths = List.generate(
+        6,
+        (i) {
+          return DateTime.now()
+              .subtract(
+                Duration(days: i * 30),
+              )
+              .month;
+        },
+      );
+      print(presentMonths);
+      List<CardData> listOfCardData = [];
+      for (final (index, m) in expectedMonths.indexed) {
+        if (presentMonths.contains(m)) {
+          listOfCardData.add(
+            CardData.fromMap(
+              maps[presentMonths.indexOf(m)],
+            ),
+          );
+        } else {
+          listOfCardData.add(
+            generateEmptyCardData(
+              selectedCarId,
+              DateTime.now().subtract(
+                Duration(days: index * 30),
+              ),
+            ),
+          );
+        }
       }
-    });
+      return listOfCardData;
+    }
   }
 
   Future<List<CardData>> getMonthCard(selectedCarId) async {

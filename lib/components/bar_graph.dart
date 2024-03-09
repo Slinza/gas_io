@@ -15,15 +15,15 @@ class BarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BarData currentBarData = BarData(
-      firstMonthAmount: BarElement(x: 1, y: 0.0),
-      secondMonthAmount: BarElement(x: 2, y: 0.0),
-      thirdMonthAmount: BarElement(x: 3, y: 0.0),
-      fourthMonthAmount: BarElement(x: 4, y: 0.0),
-      fifthMonthAmount: BarElement(x: 5, y: 0.0),
-      actualMonthAmount: BarElement(x: 6, y: 0.0),
+      firstMonthAmount: BarElement(x: 0, y: 0.0),
+      secondMonthAmount: BarElement(x: 1, y: 0.0),
+      thirdMonthAmount: BarElement(x: 2, y: 0.0),
+      fourthMonthAmount: BarElement(x: 3, y: 0.0),
+      fifthMonthAmount: BarElement(x: 4, y: 0.0),
+      actualMonthAmount: BarElement(x: 5, y: 0.0),
     );
     if (sixMonthsSummary.isNotEmpty) {
-      BarData currentBarData = BarData(
+      currentBarData = BarData(
           firstMonthAmount: sixMonthsSummary[0],
           secondMonthAmount: sixMonthsSummary[1],
           thirdMonthAmount: sixMonthsSummary[2],
@@ -72,40 +72,40 @@ class BarGraph extends StatelessWidget {
         getTitlesWidget: (value, meta) {
           String text = '';
           switch (value.toInt()) {
-            case 0:
+            case 1:
               text = 'Jan';
               break;
-            case 1:
+            case 2:
               text = 'Feb';
               break;
-            case 2:
+            case 3:
               text = 'Mar';
               break;
-            case 3:
+            case 4:
               text = 'Apr';
               break;
-            case 4:
+            case 5:
               text = 'May';
               break;
-            case 5:
+            case 6:
               text = 'June';
               break;
-            case 6:
+            case 7:
               text = 'July';
               break;
-            case 7:
+            case 8:
               text = 'Aug';
               break;
-            case 8:
+            case 9:
               text = 'Sep';
               break;
-            case 9:
+            case 10:
               text = 'Oct';
               break;
-            case 10:
+            case 11:
               text = 'Nov';
               break;
-            case 11:
+            case 12:
               text = 'Dec';
               break;
           }

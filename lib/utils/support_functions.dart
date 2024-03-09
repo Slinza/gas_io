@@ -26,7 +26,12 @@ List<FlSpot> pricesYearlyList(List<CardData> list) {
 }
 
 List<BarElement> sixMonthsElementsList(List<CardData> list) {
-  return list.map((e) => BarElement(x: e.date.month, y: e.price)).toList();
+  // Map the data to Bar element and reverese the list to have the oldest values as first ones
+  return list
+      .map((e) => BarElement(x: e.date.month, y: e.price))
+      .toList()
+      .reversed
+      .toList();
 }
 
 List<FlSpot> averageYearlyPrice(List<CardData> data) {
