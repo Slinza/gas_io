@@ -95,19 +95,10 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     });
   }
 
-  // Future<List<CardData>> geSixMonthsCard(selectedCarId) async {
-  //   final db = await database;
-  //   final List<Map<String, dynamic>> maps = await db.rawQuery(
-  //       "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND date BETWEEN datetime('now', '-6 months') AND datetime('now', 'localtime') GROUP BY STRFTIME('%mm', $dateKey);");
-  //   return List.generate(maps.length, (i) {
-  //     return CardData.fromMap(maps[i]);
-  //   });
-  // }
-
   Future<List<CardData>> geSixMonthsCard(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND date BETWEEN datetime('now', '-6 months') AND datetime('now', 'localtime') GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey BETWEEN datetime('now', '-6 months') AND datetime('now', '+1 day') GROUP BY STRFTIME('%mm', $dateKey);");
 
     if (maps.isEmpty) {
       // Handle the case when no data is retrieved from the database
@@ -129,7 +120,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       List<int> presentMonths = List.generate(
         maps.length,
         (i) {
-          return DateTime.parse(maps[i]["date"]).month;
+          return DateTime.parse(maps[i][dateKey]).month;
         },
       );
       List<int> expectedMonths = List.generate(
