@@ -4,8 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/design/themes.dart';
 
-const int YEAR_FACTOR = 8;
-
 class YearLineChartWidget extends StatelessWidget {
   const YearLineChartWidget({
     super.key,
@@ -89,14 +87,4 @@ class YearLineChartWidget extends StatelessWidget {
           return Text(text);
         },
       );
-}
-
-double getUpperLimitMonth(List<FlSpot> monthData) {
-  int max = findMaxY(monthData);
-  return approximateByFactor(approximateByFactor(max, YEAR_FACTOR), 10)
-      .toDouble();
-}
-
-double getIntervalMonth(double upperLimit) {
-  return roundedNumber((upperLimit / YEAR_FACTOR), 0).toDouble();
 }

@@ -17,18 +17,6 @@ class BarData {
     required this.actualMonthAmount,
   });
 
-  // List<BarElement> barData = [];
-
-  // void initializeBarData() {
-  //   barData = [
-  //     BarElement(x: 0, y: firstMonthAmount),
-  //     BarElement(x: 1, y: secondMonthAmount),
-  //     BarElement(x: 2, y: thirdMonthAmount),
-  //     BarElement(x: 3, y: fourthMonthAmount),
-  //     BarElement(x: 4, y: fifthMonthAmount),
-  //     BarElement(x: 5, y: actualMonthAmount),
-  //   ];
-  // }
   List<BarElement> barData = [];
 
   void initializeBarData() {
@@ -40,5 +28,27 @@ class BarData {
       fifthMonthAmount,
       actualMonthAmount,
     ];
+  }
+
+  double maxY() {
+    barData = [
+      firstMonthAmount,
+      secondMonthAmount,
+      thirdMonthAmount,
+      fourthMonthAmount,
+      fifthMonthAmount,
+      actualMonthAmount,
+    ];
+    double max = 0;
+    if (barData.isEmpty) {
+      return 0.0;
+    } else {
+      for (final spot in barData) {
+        if (spot.y > max) {
+          max = spot.y;
+        }
+      }
+      return max;
+    }
   }
 }

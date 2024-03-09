@@ -1,9 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/bar_element.dart';
+import 'package:gas_io/components/bar_data.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
 const int monthsNumber = 12;
 const int monthDays = 31;
+const int yearFactor = 8;
+const int sixMonthFactor = 5;
+const int approximationFactor = 10;
 
 double average(List<double> data) {
   if (data.isNotEmpty) {
@@ -95,4 +99,28 @@ int approximateByFactor(int number, int factor) {
 
 double roundedNumber(double number, [int decimals = 2]) {
   return double.parse(number.toStringAsFixed(decimals));
+}
+
+// Monthly expense utils
+double getIntervalMonth(double upperLimit) {
+  return roundedNumber((upperLimit / yearFactor), 0).toDouble();
+}
+
+double getUpperLimitMonth(List<FlSpot> monthData) {
+  int max = findMaxY(monthData);
+  return approximateByFactor(
+          approximateByFactor(max, yearFactor), approximationFactor)
+      .toDouble();
+}
+
+// Six months expense utils
+double getIntervalSixMonths(double upperLimit) {
+  return roundedNumber((upperLimit / yearFactor), 0).toDouble();
+}
+
+double getUpperLimitSixMonths(BarData data) {
+  return approximateByFactor(
+          approximateByFactor(data.maxY().ceil(), sixMonthFactor),
+          approximationFactor)
+      .toDouble();
 }

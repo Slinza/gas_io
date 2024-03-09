@@ -125,6 +125,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
       }
       return missingData;
     } else {
+      // Add placeholder for missing months
       List<int> presentMonths = List.generate(
         maps.length,
         (i) {
@@ -141,7 +142,6 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
               .month;
         },
       );
-      print(presentMonths);
       List<CardData> listOfCardData = [];
       for (final (index, m) in expectedMonths.indexed) {
         if (presentMonths.contains(m)) {
