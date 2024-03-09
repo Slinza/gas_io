@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gas_io/design/themes.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int selectedCarId;
@@ -21,7 +22,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           const Text(
             'Gas.io',
             style: TextStyle(
-              color: Color(0xFF46BD84),
+              color: primaryColor,
               fontSize: 50,
               fontFamily: 'Red Rose',
               fontWeight: FontWeight.w700,
@@ -29,7 +30,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               letterSpacing: 0.30,
             ),
           ),
-          const SizedBox(width: 16), // Adjust spacing between title and dropdown
+          const SizedBox(
+              width: 16), // Adjust spacing between title and dropdown
           // Car Selector Dropdown
           DropdownButton<int>(
             value: selectedCarId,

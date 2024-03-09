@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/design/themes.dart';
+import 'package:gas_io/design/styles.dart';
 
 class MonthLineChartWidget extends StatelessWidget {
   const MonthLineChartWidget({
@@ -50,8 +51,14 @@ class MonthLineChartWidget extends StatelessWidget {
               interval: interval <= 0.0 ? 1 : interval,
             ),
           ),
-          topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            axisNameWidget: Text(
+              "Expense of the month",
+              style: subtitleTextStyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          //const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),

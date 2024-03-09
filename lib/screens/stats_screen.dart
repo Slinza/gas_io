@@ -78,44 +78,23 @@ class _StatsScreenState extends State<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //print(monthData);
-
-    List<BarElement> sixMonthsData = [
-      BarElement(x: 4, y: 22.3),
-      BarElement(x: 5, y: 44.3),
-      BarElement(x: 6, y: 37.3),
-      BarElement(x: 7, y: 62.3),
-      BarElement(x: 8, y: 55.3),
-      BarElement(x: 9, y: 12.3)
-    ];
-
     return ListView(
       padding: const EdgeInsets.all(15),
       children: <Widget>[
         const SizedBox(height: 40.0),
-        const Text(
-          "Expense of the month",
-          style: subtitleTextStyle,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 30.0),
         Container(
-          height: 250,
-          color: Colors.amber[800],
+          height: 280,
+          padding: EdgeInsets.all(15),
+          decoration: statsContainerDecoration,
           child: MonthLineChartWidget(
             monthData: monthPrices,
           ),
         ),
         const SizedBox(height: 50.0),
-        const Text(
-          "Last months consume trend",
-          style: subtitleTextStyle,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 30.0),
         Container(
-          height: 230,
-          color: Colors.amber[500],
+          height: 260,
+          padding: EdgeInsets.all(10),
+          decoration: statsContainerDecoration,
           child: BarGraph(
             sixMonthsSummary: sixMonthsPrices,
             //monthData: yearPrices,

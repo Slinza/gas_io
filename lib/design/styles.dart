@@ -9,3 +9,15 @@ const TextStyle subtitleTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
   height: 0.01,
 );
+
+BoxDecoration statsContainerDecoration = BoxDecoration(
+  color: cardColor,
+  borderRadius: BorderRadius.circular(20),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.grey,
+      blurRadius: 4,
+      offset: Offset(4, 8), // Shadow position
+    ),
+  ],
+);

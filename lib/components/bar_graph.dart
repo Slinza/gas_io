@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/bar_data.dart';
 import 'package:gas_io/components/bar_element.dart';
 import 'package:gas_io/design/themes.dart';
+import 'package:gas_io/design/styles.dart';
 import 'package:gas_io/utils/support_functions.dart';
 
 class BarGraph extends StatelessWidget {
@@ -51,7 +52,13 @@ class BarGraph extends StatelessWidget {
               reservedSize: 45,
               interval: interval <= 0.0 ? 1 : interval),
         ),
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        topTitles: const AxisTitles(
+          axisNameWidget: Text(
+            "Last months consume trend",
+            style: subtitleTextStyle,
+            textAlign: TextAlign.center,
+          ),
+        ),
         rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       barGroups: currentBarData.barData
