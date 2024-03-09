@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import 'package:gas_io/components/bar_data.dart';
+import 'package:gas_io/components/bar_element.dart';
 import 'package:gas_io/design/themes.dart';
 
 class BarGraph extends StatelessWidget {
@@ -14,12 +15,22 @@ class BarGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BarData currentBarData = BarData(
-        firstMonthAmount: sixMonthsSummary[0],
-        secondMonthAmount: sixMonthsSummary[1],
-        thirdMonthAmount: sixMonthsSummary[2],
-        fourthMonthAmount: sixMonthsSummary[3],
-        fifthMonthAmount: sixMonthsSummary[4],
-        actualMonthAmount: sixMonthsSummary[5]);
+      firstMonthAmount: BarElement(x: 1, y: 0.0),
+      secondMonthAmount: BarElement(x: 2, y: 0.0),
+      thirdMonthAmount: BarElement(x: 3, y: 0.0),
+      fourthMonthAmount: BarElement(x: 4, y: 0.0),
+      fifthMonthAmount: BarElement(x: 5, y: 0.0),
+      actualMonthAmount: BarElement(x: 6, y: 0.0),
+    );
+    if (sixMonthsSummary.isNotEmpty) {
+      BarData currentBarData = BarData(
+          firstMonthAmount: sixMonthsSummary[0],
+          secondMonthAmount: sixMonthsSummary[1],
+          thirdMonthAmount: sixMonthsSummary[2],
+          fourthMonthAmount: sixMonthsSummary[3],
+          fifthMonthAmount: sixMonthsSummary[4],
+          actualMonthAmount: sixMonthsSummary[5]);
+    }
 
     currentBarData.initializeBarData();
     return BarChart(BarChartData(

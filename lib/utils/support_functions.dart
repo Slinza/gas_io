@@ -26,15 +26,7 @@ List<FlSpot> pricesYearlyList(List<CardData> list) {
 }
 
 List<BarElement> sixMonthsElementsList(List<CardData> list) {
-  var a = list.map((e) => BarElement(x: e.date.month, y: e.price)).toList();
-  return [
-    BarElement(x: 0, y: 1.1),
-    BarElement(x: 0, y: 1.1),
-    BarElement(x: 0, y: 1.1),
-    BarElement(x: 0, y: 1.1),
-    BarElement(x: 0, y: 1.1),
-    BarElement(x: 0, y: 1.1)
-  ];
+  return list.map((e) => BarElement(x: e.date.month, y: e.price)).toList();
 }
 
 List<FlSpot> averageYearlyPrice(List<CardData> data) {

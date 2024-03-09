@@ -95,12 +95,50 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
     });
   }
 
+  // Future<List<CardData>> geSixMonthsCard(selectedCarId) async {
+  //   final db = await database;
+  //   final List<Map<String, dynamic>> maps = await db.rawQuery(
+  //       "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND date BETWEEN datetime('now', '-6 months') AND datetime('now', 'localtime') GROUP BY STRFTIME('%mm', $dateKey);");
+  //   return List.generate(maps.length, (i) {
+  //     return CardData.fromMap(maps[i]);
+  //   });
+  // }
+
   Future<List<CardData>> geSixMonthsCard(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
         "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND date BETWEEN datetime('now', '-6 months') AND datetime('now', 'localtime') GROUP BY STRFTIME('%mm', $dateKey);");
-    return List.generate(maps.length, (i) {
-      return CardData.fromMap(maps[i]);
+
+    if (maps.isEmpty) {
+      // Handle the case when no data is retrieved from the database
+      List<CardData> missingData = [];
+      // Loop over the last 6 months and create default CardData objects
+      for (int i = 0; i < 6; i++) {
+        missingData.add(
+          generateEmptyCardData(
+            selectedCarId,
+            DateTime.now().subtract(
+              Duration(days: i * 30),
+            ),
+          ),
+        );
+      }
+      return missingData;
+    }
+
+    // Handle the case when data is retrieved from the database
+    return List.generate(6, (i) {
+      // Check if the data exists for the current month
+      if (i < maps.length) {
+        return CardData.fromMap(maps[i]);
+      } else {
+        // Create a default CardData object for the missing month
+        return generateEmptyCardData(
+            selectedCarId,
+            DateTime.now().subtract(
+              Duration(days: i * 30),
+            ));
+      }
     });
   }
 
