@@ -3,8 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/design/themes.dart';
-
-const int INTERVAL_FACTOR = 3;
+import 'package:gas_io/design/styles.dart';
 
 class MonthLineChartWidget extends StatelessWidget {
   const MonthLineChartWidget({
@@ -36,7 +35,6 @@ class MonthLineChartWidget extends StatelessWidget {
         ],
         minY: 0,
         maxY: upperLimit,
-        //maxX: 33,
         borderData: FlBorderData(
             show: true,
             border: const Border(bottom: BorderSide(), left: BorderSide())),
@@ -53,23 +51,18 @@ class MonthLineChartWidget extends StatelessWidget {
               interval: interval <= 0.0 ? 1 : interval,
             ),
           ),
-          topTitles:
-              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            axisNameWidget: Text(
+              "Expense of the month",
+              style: subtitleTextStyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          //const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
       ),
     );
   }
-}
-
-double getUpperLimitMonth(List<FlSpot> monthData) {
-  int max = findMaxY(monthData);
-  return approximateByFactor(
-          approximateByFactor(max, INTERVAL_FACTOR), INTERVAL_FACTOR)
-      .toDouble();
-}
-
-double getIntervalMonth(double upperLimit) {
-  return (upperLimit / INTERVAL_FACTOR).toDouble();
 }

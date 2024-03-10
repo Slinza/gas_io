@@ -11,6 +11,18 @@ const TextStyle subtitleTextStyle = TextStyle(
   height: 0.01,
 );
 
+BoxDecoration statsContainerDecoration = BoxDecoration(
+  color: cardColor,
+  borderRadius: BorderRadius.circular(20),
+  boxShadow: [
+    BoxShadow(
+      color: Colors.grey,
+      blurRadius: 4,
+      offset: Offset(4, 8), // Shadow position
+    ),
+  ],
+);
+
 TextStyle cardStyle =
     GoogleFonts.abel(textStyle: const TextStyle(fontSize: 18));
 

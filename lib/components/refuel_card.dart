@@ -4,6 +4,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gas_io/utils/key_parameters.dart';
 
+CardData generateEmptyCardData(int carId, DateTime mockedDateTime) {
+  return CardData(
+    id: -1,
+    carId: carId,
+    price: 0.0,
+    liters: 0.0,
+    date: mockedDateTime,
+    location: "Unknown", // TODO check placeholder
+    euroPerLiter: 0.0,
+    km: 0,
+    isCompleteRefuel: false,
+  );
+}
+
 class CardData with DatabaseCardKeys {
   final int id;
   final int carId;

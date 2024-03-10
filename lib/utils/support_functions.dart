@@ -1,8 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gas_io/components/bar_element.dart';
+import 'package:gas_io/components/bar_data.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
 const int monthsNumber = 12;
 const int monthDays = 31;
+const int yearFactor = 8;
+const int sixMonthFactor = 3;
+const int approximationFactor = 10;
+const int monthFactor = 3;
 
 double average(List<double> data) {
   if (data.isNotEmpty) {
@@ -22,6 +28,15 @@ List<double> pricesList(List<CardData> list) {
 
 List<FlSpot> pricesYearlyList(List<CardData> list) {
   return list.map((e) => FlSpot(e.date.month.toDouble(), e.price)).toList();
+}
+
+List<BarElement> sixMonthsElementsList(List<CardData> list) {
+  // Map the data to Bar element and reverese the list to have the oldest values as first ones
+  return list
+      .map((e) => BarElement(x: e.date.month, y: e.price))
+      .toList()
+      .reversed
+      .toList();
 }
 
 List<FlSpot> averageYearlyPrice(List<CardData> data) {
@@ -85,4 +100,40 @@ int approximateByFactor(int number, int factor) {
 
 double roundedNumber(double number, [int decimals = 2]) {
   return double.parse(number.toStringAsFixed(decimals));
+}
+
+// Year expense utils
+// double getIntervalMonth(double upperLimit) {
+//   return roundedNumber((upperLimit / yearFactor), 0).toDouble();
+// }
+
+// double getUpperLimitMonth(List<FlSpot> monthData) {
+//   int max = findMaxY(monthData);
+//   return approximateByFactor(
+//           approximateByFactor(max, yearFactor), approximationFactor)
+//       .toDouble();
+// }
+
+// Six months expense utils
+double getUpperLimitSixMonths(BarData data) {
+  return approximateByFactor(
+          approximateByFactor(data.maxY().ceil(), sixMonthFactor),
+          approximationFactor)
+      .toDouble();
+}
+
+double getIntervalSixMonths(double upperLimit) {
+  return roundedNumber((upperLimit / sixMonthFactor), 0).toDouble();
+}
+
+// Monthly expense utils
+double getUpperLimitMonth(List<FlSpot> monthData) {
+  int max = findMaxY(monthData);
+  return approximateByFactor(
+          approximateByFactor(max, monthFactor), approximationFactor)
+      .toDouble();
+}
+
+double getIntervalMonth(double upperLimit) {
+  return (upperLimit / monthFactor).toDouble();
 }

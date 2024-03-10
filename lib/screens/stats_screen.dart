@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gas_io/components/bar_element.dart';
 import 'package:gas_io/components/month_line_chart.dart';
 //import 'package:gas_io/components/expense_type_pie.dart';
 import 'package:gas_io/components/year_line_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
+import 'package:gas_io/components/bar_graph.dart';
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/design/styles.dart';
@@ -23,6 +25,7 @@ class _StatsScreenState extends State<StatsScreen> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   List<FlSpot> yearPrices = [];
+  List<BarElement> sixMonthsPrices = [];
   List<FlSpot> averageYearPrices = [];
   List<FlSpot> monthPrices = [];
   List<PieChartSectionData> pieYearData = [];
@@ -42,12 +45,13 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Future<void> _loadCards() async {
-    List<CardData> yearCards = await _databaseHelper.getYearCard(
+    List<CardData> sixMonthsCard = await _databaseHelper.geSixMonthsCard(
         widget.selectedCarId); // TODO make it taking the auto context
     List<CardData> monthCards = await _databaseHelper.getMonthCard(
         widget.selectedCarId); // TODO make it taking the auto context
     setState(() {
-      _prepareYearGraphData(yearCards);
+      //_prepareYearGraphData(yearCards);
+      _prepareSixMonthsGraphData(sixMonthsCard);
       _prepareMonthGraphData(monthCards);
       pieYearData = [
         PieChartSectionData(
@@ -58,9 +62,14 @@ class _StatsScreenState extends State<StatsScreen> {
     });
   }
 
-  void _prepareYearGraphData(List<CardData> cards) {
-    yearPrices = pricesYearlyList(cards);
-    averageYearPrices = averageYearlyPrice(cards);
+  // void _prepareYearGraphData(List<CardData> cards) {
+  //   yearPrices = pricesYearlyList(cards);
+  //   averageYearPrices = averageYearlyPrice(cards);
+  // }
+
+  void _prepareSixMonthsGraphData(List<CardData> cards) {
+    sixMonthsPrices = sixMonthsElementsList(cards);
+    //averageYearPrices = averageYearlyPrice(cards);
   }
 
   void _prepareMonthGraphData(List<CardData> cards) {
@@ -69,37 +78,27 @@ class _StatsScreenState extends State<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //print(monthData);
     return ListView(
       padding: const EdgeInsets.all(15),
       children: <Widget>[
         const SizedBox(height: 40.0),
-        const Text(
-          "Expense of the month",
-          style: subtitleTextStyle,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 30.0),
-        SizedBox(
-          height: 250,
-          // color: Colors.amber[800],
+        Container(
+          height: 280,
+          padding: EdgeInsets.all(15),
+          decoration: statsContainerDecoration,
           child: MonthLineChartWidget(
             monthData: monthPrices,
           ),
         ),
         const SizedBox(height: 50.0),
-        const Text(
-          "Yearly consume trend",
-          style: subtitleTextStyle,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 30.0),
-        SizedBox(
-          height: 230,
-          // color: Colors.amber[500],
-          child: YearLineChartWidget(
-            monthData: yearPrices,
-            average: averageYearPrices,
+        Container(
+          height: 260,
+          padding: EdgeInsets.all(10),
+          decoration: statsContainerDecoration,
+          child: BarGraph(
+            sixMonthsSummary: sixMonthsPrices,
+            //monthData: yearPrices,
+            //average: averageYearPrices,
           ),
         ),
         const SizedBox(height: 16.0),
