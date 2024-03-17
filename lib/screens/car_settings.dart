@@ -62,112 +62,114 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
       appBar: AppBar(
         title: const Text('New Car'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FormBuilder(
-          key: _formKey,
-          child: Column(
-            children: [
-              FormBuilderTextField(
-                controller: _brandController,
-                name: 'brand',
-                decoration: const InputDecoration(
-                  labelText: 'Brand',
-                  border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: FormBuilder(
+            key: _formKey,
+            child: Column(
+              children: [
+                FormBuilderTextField(
+                  controller: _brandController,
+                  name: 'brand',
+                  decoration: const InputDecoration(
+                    labelText: 'Brand',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.compose(
+                    [
+                      FormBuilderValidators.required(),
+                    ],
+                  ),
+                  onSaved: (_) => _brandController.text,
                 ),
-                validator: FormBuilderValidators.compose(
-                  [
-                    FormBuilderValidators.required(),
-                  ],
+                const SizedBox(height: 16.0),
+                FormBuilderTextField(
+                  controller: _modelController,
+                  name: 'model',
+                  decoration: const InputDecoration(
+                    labelText: 'Model',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.compose(
+                    [
+                      FormBuilderValidators.required(),
+                    ],
+                  ),
+                  onSaved: (_) => _modelController.text,
                 ),
-                onSaved: (_) => _brandController.text,
-              ),
-              const SizedBox(height: 16.0),
-              FormBuilderTextField(
-                controller: _modelController,
-                name: 'model',
-                decoration: const InputDecoration(
-                  labelText: 'Model',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16.0),
+                FormBuilderTextField(
+                  controller: _yearController,
+                  name: 'year',
+                  decoration: const InputDecoration(
+                    labelText: 'Construction Year',
+                    //suffixText: "Year",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.compose(
+                    [
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.integer(),
+                      // TODO: add construction year limitation
+                      FormBuilderValidators.min(1900),
+                    ],
+                  ),
+                  onSaved: (_) => _yearController.text,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: false),
                 ),
-                validator: FormBuilderValidators.compose(
-                  [
-                    FormBuilderValidators.required(),
-                  ],
+                const SizedBox(height: 16.0),
+                FormBuilderTextField(
+                  controller: _initialKmController,
+                  name: 'km',
+                  decoration: const InputDecoration(
+                    labelText: 'Initial Km',
+                    suffixText: "Km",
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: FormBuilderValidators.compose(
+                    [
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.numeric(),
+                      FormBuilderValidators.min(0),
+                    ],
+                  ),
+                  onSaved: (_) => _initialKmController.text =
+                      _initialKmController.text.replaceAll(',', '.'),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                 ),
-                onSaved: (_) => _modelController.text,
-              ),
-              const SizedBox(height: 16.0),
-              FormBuilderTextField(
-                controller: _yearController,
-                name: 'year',
-                decoration: const InputDecoration(
-                  labelText: 'Construction Year',
-                  //suffixText: "Year",
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16.0),
+                DropdownButton<FuelType>(
+                  value: _selectedFuelType,
+                  onChanged: (value) {
+                    setState(
+                      () {
+                        if (value != null) {
+                          _selectedFuelType = value;
+                        }
+                      },
+                    );
+                  },
+                  items: FuelType.values.map((FuelType fuelType) {
+                    return DropdownMenuItem<FuelType>(
+                      value: fuelType,
+                      child: Text(fuelType.toString().split('.').last),
+                    );
+                  }).toList(),
                 ),
-                validator: FormBuilderValidators.compose(
-                  [
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.integer(),
-                    // TODO: add construction year limitation
-                    FormBuilderValidators.min(1900),
-                  ],
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.saveAndValidate()) {
+                      saveCarData();
+                    }
+                  },
+                  child: const Text('Add'),
                 ),
-                onSaved: (_) => _yearController.text,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: false),
-              ),
-              const SizedBox(height: 16.0),
-              FormBuilderTextField(
-                controller: _initialKmController,
-                name: 'km',
-                decoration: const InputDecoration(
-                  labelText: 'Initial Km',
-                  suffixText: "Km",
-                  border: OutlineInputBorder(),
-                ),
-                validator: FormBuilderValidators.compose(
-                  [
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.numeric(),
-                    FormBuilderValidators.min(0),
-                  ],
-                ),
-                onSaved: (_) => _initialKmController.text =
-                    _initialKmController.text.replaceAll(',', '.'),
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-              ),
-              const SizedBox(height: 16.0),
-              DropdownButton<FuelType>(
-                value: _selectedFuelType,
-                onChanged: (value) {
-                  setState(
-                    () {
-                      if (value != null) {
-                        _selectedFuelType = value;
-                      }
-                    },
-                  );
-                },
-                items: FuelType.values.map((FuelType fuelType) {
-                  return DropdownMenuItem<FuelType>(
-                    value: fuelType,
-                    child: Text(fuelType.toString().split('.').last),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.saveAndValidate()) {
-                    saveCarData();
-                  }
-                },
-                child: const Text('Add'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
