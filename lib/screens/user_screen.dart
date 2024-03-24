@@ -90,35 +90,57 @@ class _UserScreenState extends State<UserScreen> {
       context: context,
       barrierDismissible: false, // user must tap button for close dialog
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Are you sure?'),
-          content: const SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                    'Do you want to delete this car and all the relative refuel?'),
-              ],
+        if (_cardList.length > 1) {
+          return AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'Do you want to delete this car and all the relative refuel?'),
+                ],
+              ),
             ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Delete'),
+                onPressed: () async {
+                  await _databaseHelper.deleteCar(cardData);
+                  setState(() {
+                    _cardList.remove(cardData);
+                  });
+                  Navigator.of(context).pop(); // close dialog
+                },
+              ),
+            ],
+          );
+        } else {
+          return AlertDialog(
+            title: const Text('Operation Denied!'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'There must be at least one car! Create a new one before deleting this one'),
+                ],
+              ),
             ),
-            TextButton(
-              child: const Text('Delete'),
-              onPressed: () async {
-                await _databaseHelper.deleteCar(cardData);
-                setState(() {
-                  _cardList.remove(cardData);
-                });
-                Navigator.of(context).pop(); // close dialog
-              },
-            ),
-          ],
-        );
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
       },
     );
   }
@@ -137,14 +159,14 @@ class _UserScreenState extends State<UserScreen> {
               extentRatio: 0.5,
               motion: const BehindMotion(),
               children: [
-                SlidableAction(
-                  onPressed: (context) => _modifyCard(carData),
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Colors.orange,
-                  icon: Icons.info, //Icons.edit,
-                  label: 'Details', //'Edit',
-                  borderRadius: const BorderRadius.all(Radius.circular(100)),
-                ),
+                // SlidableAction(
+                //   onPressed: (context) => _modifyCard(carData),
+                //   backgroundColor: Colors.transparent,
+                //   foregroundColor: Colors.orange,
+                //   icon: Icons.info, //Icons.edit,
+                //   label: 'Details', //'Edit',
+                //   borderRadius: const BorderRadius.all(Radius.circular(100)),
+                // ),
                 SlidableAction(
                   onPressed: (context) async {
                     await _showDeleteConfirmation(carData);
