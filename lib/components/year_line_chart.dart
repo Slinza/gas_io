@@ -33,7 +33,7 @@ class YearLineChartWidget extends StatelessWidget {
             spots: average,
             isCurved: true,
             barWidth: 3,
-            color: const Color.fromARGB(255, 231, 101, 92),
+            color: redColor,
           ),
         ],
         minY: 0,
