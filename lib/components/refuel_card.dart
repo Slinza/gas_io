@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gas_io/utils/key_parameters.dart';
+import 'package:gas_io/design/themes.dart';
 
 CardData generateEmptyCardData(int carId, DateTime mockedDateTime) {
   return CardData(
@@ -77,6 +78,7 @@ class RefuelCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
+      color: cardColor,
       child: Padding(
         padding: const EdgeInsets.all(5),
         child: Column(

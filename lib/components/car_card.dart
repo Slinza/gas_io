@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gas_io/utils/key_parameters.dart';
 import 'package:gas_io/components/fuel_type.dart';
+import 'package:gas_io/design/themes.dart';
 
 CarData defaultCarData = CarData(
     id: 0,
@@ -79,6 +80,7 @@ class CarCard extends StatelessWidget {
         },
         child: Card(
           margin: EdgeInsets.zero,
+          color: cardColor,
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Column(
