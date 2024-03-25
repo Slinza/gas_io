@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
@@ -32,8 +33,157 @@ class _UserScreenState extends State<UserScreen> {
   Future<void> fetchUserData() async {
     //DatabaseHelper helper = DatabaseHelper.instance;
     _user = await _databaseHelper.getUser();
-    _cardList = await _databaseHelper.getCarsByUser(USER_ID);
-    setState(() {});
+    List<CarData> cardList = await _databaseHelper.getCarsByUser(USER_ID);
+
+    setState(() {
+      _cardList = cardList;
+    });
+    // Scroll to the top when a new card is added
+    if (_listController.hasClients) {
+      _listController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  Future<void> _modifyCard(cardData) async {
+    // Navigate to the insert page and wait for the result
+    final newCard = await Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DetailsCarSettingsScreen(cardData)),
+    );
+
+    // Check if the result is not null and reload the cards
+    if (newCard != null) {
+      fetchUserData();
+    }
+  }
+
+  Future<void> _addNewCard() async {
+    // Navigate to the insert page and wait for the result
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CarSettingsScreen()),
+    ).then((value) {
+      if (value != null && value) {
+        fetchUserData();
+      }
+    });
+  }
+
+  Future<void> _userSettings() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const UserSettingsScreen()),
+    ).then((value) {
+      if (value != null && value) {
+        fetchUserData();
+      }
+    });
+  }
+
+  Future<void> _showDeleteConfirmation(CarData cardData) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog
+      builder: (BuildContext context) {
+        if (_cardList.length > 1) {
+          return AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'Do you want to delete this car and all the relative refuel?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Delete'),
+                onPressed: () async {
+                  await _databaseHelper.deleteCar(cardData);
+                  setState(() {
+                    _cardList.remove(cardData);
+                  });
+                  Navigator.of(context).pop(); // close dialog
+                },
+              ),
+            ],
+          );
+        } else {
+          return AlertDialog(
+            title: const Text('Operation Denied!'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'There must be at least one car! Create a new one before deleting this one'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildCardList() {
+    return ListView.builder(
+      controller: _listController,
+      itemCount: _cardList.length,
+      itemBuilder: (context, index) {
+        final CarData carData = _cardList[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Slidable(
+            key: Key(carData.id.toString()),
+            endActionPane: ActionPane(
+              extentRatio: 0.5,
+              motion: const BehindMotion(),
+              children: [
+                // SlidableAction(
+                //   onPressed: (context) => _modifyCard(carData),
+                //   backgroundColor: Colors.transparent,
+                //   foregroundColor: Colors.orange,
+                //   icon: Icons.info, //Icons.edit,
+                //   label: 'Details', //'Edit',
+                //   borderRadius: const BorderRadius.all(Radius.circular(100)),
+                // ),
+                SlidableAction(
+                  onPressed: (context) async {
+                    await _showDeleteConfirmation(carData);
+                  },
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.red,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                  borderRadius: const BorderRadius.all(Radius.circular(100)),
+                ),
+              ],
+            ),
+            child: CarCard(carData: carData),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -44,29 +194,13 @@ class _UserScreenState extends State<UserScreen> {
           IconButton(
             icon: const Icon(Icons.add_circle_rounded),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CarSettingsScreen()),
-              ).then((value) {
-                if (value != null && value) {
-                  fetchUserData();
-                }
-              });
+              _addNewCard();
             },
           ),
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const UserSettingsScreen()),
-              ).then((value) {
-                if (value != null && value) {
-                  fetchUserData();
-                }
-              });
+              _userSettings();
             },
           ),
         ],
@@ -100,16 +234,7 @@ class _UserScreenState extends State<UserScreen> {
                     SizedBox(
                       width: 200,
                       height: 600,
-                      child: ListView.builder(
-                        controller: _listController,
-                        itemCount: _cardList.length,
-                        itemBuilder: (context, index) {
-                          final CarData carData = _cardList[index];
-                          return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CarCard(carData: carData));
-                        },
-                      ),
+                      child: _buildCardList(),
                     )
                   ],
                 )

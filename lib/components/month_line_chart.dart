@@ -58,11 +58,12 @@ class MonthLineChartWidget extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          //const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles:
               const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
       ),
+      duration:
+          const Duration(milliseconds: 0), // Control graph refresh movements
     );
   }
 }
