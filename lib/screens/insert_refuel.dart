@@ -4,6 +4,8 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:gas_io/utils/location_helper.dart';
+import 'package:gas_io/components/gas_station_schema.dart';
 
 class InsertRefuel extends StatefulWidget {
   int selectedCarId;
@@ -30,6 +32,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
   double previousRefuelKm = -1;
   double nextRefuelKm = -1;
   bool isCompleteRefuel = false; // New variable to track refuel completeness
+  Map<String, dynamic>? nearestGasStation;
 
   @override
   void initState() {
@@ -37,7 +40,94 @@ class _InsertRefuelState extends State<InsertRefuel> {
     _loadCars();
     _loadCarDetails();
     _loadPreviousAndNextRefuel();
+    _fetchNearestGasStation();
     super.initState();
+  }
+
+  Future<void> _fetchNearestGasStation() async {
+    try {
+      List<Map<String, dynamic>> gasStations =
+          await fetchNearestGasStationFromCurrentLocation(
+              5000); // Set your desired radius here
+
+      if (gasStations.isNotEmpty) {
+        setState(() {
+          nearestGasStation = gasStations.first;
+        });
+      }
+    } catch (e) {
+      print('Error fetching nearest gas station: $e');
+    }
+  }
+
+  Widget _buildNearestGasStationCard() {
+    if (nearestGasStation != null) {
+      return Card(
+        elevation: 4.0,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Gas station logo
+              const Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.local_gas_station,
+                  size: 45,
+                  color: Colors.blue, // Adjust color as needed
+                ),
+              ),
+              // Gas station details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nearestGasStation!['displayName']['text'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(nearestGasStation!['shortFormattedAddress']),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      // Return a loading card widget if nearestGasStation is null
+      return const Card(
+        elevation: 4.0,
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height:
+                      20, // Adjust the size of the CircularProgressIndicator
+                  width: 20, // Adjust the size of the CircularProgressIndicator
+                  child: CircularProgressIndicator(),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Searching for the nearest Gas Station',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _loadPreviousAndNextRefuel() async {
@@ -98,6 +188,10 @@ class _InsertRefuelState extends State<InsertRefuel> {
             key: _formKey,
             child: Column(
               children: [
+                // Display the nearest gas station card above the form
+                const SizedBox(height: 16.0),
+                _buildNearestGasStationCard(),
+                const SizedBox(height: 16.0),
                 Row(
                   children: [
                     Expanded(
@@ -255,17 +349,26 @@ class _InsertRefuelState extends State<InsertRefuel> {
             0.0;
     double km = double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
 
+    GasStationData gasStation = GasStationData(
+        id: nearestGasStation!['id'],
+        latitude: nearestGasStation!['location']['latitude'],
+        longitude: nearestGasStation!['location']['longitude'],
+        name: nearestGasStation!['displayName']["text"],
+        formattedAddress: nearestGasStation!['formattedAddress'],
+        shortFormattedAddress: nearestGasStation!['shortFormattedAddress']);
+
     CardData newCard = CardData(
       id: DateTime.now().toUtc().millisecondsSinceEpoch,
       carId: selectedCarId,
       price: price,
       liters: liters,
       date: selectedDateTime,
-      location: 'Random Location',
+      gasStationId: gasStation.id,
       euroPerLiter: euroPerLiter,
       km: km,
       isCompleteRefuel: isCompleteRefuel, // Assign the selected value
     );
+    await _databaseHelper.insertGasStation(gasStation);
     await _databaseHelper.insertCard(newCard);
     Navigator.of(context).pop(newCard);
   }
