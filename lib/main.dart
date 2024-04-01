@@ -5,8 +5,13 @@ import 'package:gas_io/screens/stats_screen.dart';
 import 'package:gas_io/screens/refuel_screen.dart';
 import 'package:gas_io/screens/user_screen.dart';
 import 'package:gas_io/utils/database_helper.dart';
+import 'package:flutter_config/flutter_config.dart';
 
-void main() {
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
+  await FlutterConfig.loadEnvVariables();
+
   runApp(const MyApp());
 }
 
