@@ -4,6 +4,7 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:gas_io/components/gas_station_schema.dart';
 
 class ModifyRefuel extends StatefulWidget {
   int selectedCarId;
@@ -29,6 +30,7 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
   double previousRefuelKm = -1;
   double nextRefuelKm = -1;
   bool isCompleteRefuel = false; // New variable to track refuel completeness
+  GasStationData? nearestGasStation;
 
   @override
   void initState() {
@@ -37,7 +39,86 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
     _loadCarDetails();
     _loadPreviousAndNextRefuel(widget.cardData.date, widget.cardData.id);
     _loadRefuelData(widget.cardData);
+    _loadGasStation(widget.cardData.gasStationId);
     super.initState();
+  }
+
+  Future<void> _loadGasStation(gasStationId) async {
+    final GasStationData? refuelGasStation =
+        await _databaseHelper.getGasStationById(gasStationId);
+    setState(() {
+      nearestGasStation = refuelGasStation;
+    });
+  }
+
+  Widget _buildNearestGasStationCard() {
+    if (nearestGasStation != null) {
+      return Card(
+        elevation: 4.0,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Gas station logo
+              const Padding(
+                padding: EdgeInsets.only(right: 8.0),
+                child: Icon(
+                  Icons.local_gas_station,
+                  size: 45,
+                  color: Colors.blue, // Adjust color as needed
+                ),
+              ),
+              // Gas station details
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      nearestGasStation!.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(nearestGasStation!.shortFormattedAddress),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      // Return a loading card widget if nearestGasStation is null
+      return const Card(
+        elevation: 4.0,
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height:
+                      20, // Adjust the size of the CircularProgressIndicator
+                  width: 20, // Adjust the size of the CircularProgressIndicator
+                  child: CircularProgressIndicator(),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Searching for the nearest Gas Station',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   void _loadRefuelData(cardData) {
@@ -110,6 +191,10 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
             key: _formKey,
             child: Column(
               children: [
+                // Display the nearest gas station card above the form
+                const SizedBox(height: 16.0),
+                _buildNearestGasStationCard(),
+                const SizedBox(height: 16.0),
                 Row(
                   children: [
                     Expanded(
@@ -271,7 +356,7 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
       price: price,
       liters: liters,
       date: _formKey.currentState!.value["date"],
-      location: 'Random Location',
+      gasStationId: 'Random Location',
       euroPerLiter: euroPerLiter,
       km: km,
       isCompleteRefuel: isCompleteRefuel, // Assign the selected value
