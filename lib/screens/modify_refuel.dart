@@ -66,7 +66,7 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
                 child: Icon(
                   Icons.local_gas_station,
                   size: 45,
-                  color: Colors.blue, // Adjust color as needed
+                  color: Colors.orange, // Adjust color as needed
                 ),
               ),
               // Gas station details
@@ -356,7 +356,7 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
       price: price,
       liters: liters,
       date: _formKey.currentState!.value["date"],
-      gasStationId: 'Random Location',
+      gasStationId: nearestGasStation!.id,
       euroPerLiter: euroPerLiter,
       km: km,
       isCompleteRefuel: isCompleteRefuel, // Assign the selected value
