@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:gas_io/design/themes.dart';
+
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -25,7 +27,7 @@ class Home extends StatelessWidget {
                 child: Text(
                   'Gas.io',
                   style: TextStyle(
-                    color: Color(0xFF46BD84),
+                    color: primaryColor,
                     fontSize: 50,
                     fontFamily: 'Red Rose',
                     fontWeight: FontWeight.w700,
@@ -96,7 +98,7 @@ class Home extends StatelessWidget {
                           width: 45,
                           height: 45,
                           decoration: const ShapeDecoration(
-                            color: Color(0xFF46BD84),
+                            color: primaryColor,
                             shape: OvalBorder(),
                           ),
                         ),
@@ -1197,7 +1199,7 @@ class Home extends StatelessWidget {
                           width: 447,
                           height: 86,
                           decoration:
-                              const BoxDecoration(color: Color(0xFF46BD84)),
+                              const BoxDecoration(color: primaryColor),
                         ),
                         const SizedBox(height: 10),
                         Container(

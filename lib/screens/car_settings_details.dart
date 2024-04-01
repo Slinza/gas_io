@@ -47,14 +47,14 @@ class _DetailsCarSettingsScreenState extends State<DetailsCarSettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Car Details'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete_forever),
-            onPressed: () {
-              _removeCarData(widget.carData);
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.delete_forever),
+        //     onPressed: () {
+        //       _removeCarData(widget.carData);
+        //     },
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
