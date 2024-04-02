@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -5,8 +6,14 @@ import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/utils/key_parameters.dart';
+import 'package:gas_io/components/gas_station_schema.dart';
 
-class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
+class DatabaseHelper
+    with
+        DatabaseCardKeys,
+        DatabaseUserKeys,
+        DatabaseCarKeys,
+        DatabaseGasStationKeys {
   static Database? _database;
   static const String dbName = 'card_database.db';
 
@@ -50,27 +57,77 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
           $priceKey REAL,
           $litersKey REAL,
           $dateKey TEXT,
-          $locationKey TEXT,
+          $gasStatIdKey INTEGER,
           $euroPerLiterKey REAL,
           $kmKey REAL,
           $isCompleteRefuelKey INTEGER
         )
         ''');
+        await db.execute('''
+        CREATE TABLE $gasStationTableName(
+          $gasStationIdKey TEXT PRIMARY KEY,
+          $gasStationLatitudeKey REAL,
+          $gasStationLongitudeKey REAL,
+          $gasStationNameKey TEXT,
+          $gasStationFormattedAddressKey TEXT,
+          $gasStationShortFormattedAddressKey TEXT
+        )
+        ''');
+
         await db.execute(
             '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
         await db.execute(
             '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Fiat", "Panda", 0000, 0.0, "diesel");''');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(1,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(0,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
       },
     );
   }
 
   Future<int> insertCard(CardData card) async {
-    print("insert card");
+    if (kDebugMode) {
+      print("insert card");
+    }
     final db = await database;
     return db.insert(cardTableName, card.toMap());
   }
+
+  Future<int> insertGasStation(GasStationData gasStation) async {
+    if (kDebugMode) {
+      print("insert gas station");
+    }
+    final db = await database;
+    final existingGasStations = await db.query(
+      gasStationTableName,
+      where: '$gasStationIdKey = ?',
+      whereArgs: [gasStation.id],
+    );
+
+    if (existingGasStations.isNotEmpty) {
+      // Gas station with the same ID already exists, return 0
+      return 0;
+    } else {
+      // Gas station doesn't exist, insert it
+      return db.insert(gasStationTableName, gasStation.toMap());
+    }
+  }
+
+  Future<GasStationData?> getGasStationById(String gasStationId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      gasStationTableName,
+      where: '$gasStationIdKey = ?',
+      whereArgs: [gasStationId],
+      limit: 1,
+    );
+
+    if (maps.isNotEmpty) {
+      return GasStationData.fromMap(maps.first);
+    } else {
+      return null; // Gas station with the specified ID not found
+    }
+  }
+
 
   Future<List<CardData>> getCardsByCar(selectedCarId) async {
     final db = await database;
@@ -89,7 +146,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   Future<List<CardData>> getYearCard(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $gasStatIdKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId GROUP BY STRFTIME('%mm', $dateKey);");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });
@@ -98,7 +155,7 @@ class DatabaseHelper with DatabaseCardKeys, DatabaseUserKeys, DatabaseCarKeys {
   Future<List<CardData>> geSixMonthsCard(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $locationKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey BETWEEN datetime('now', '-6 months') AND datetime('now', '+1 day') GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $gasStatIdKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey BETWEEN datetime('now', '-6 months') AND datetime('now', '+1 day') GROUP BY STRFTIME('%mm', $dateKey);");
 
     if (maps.isEmpty) {
       // Handle the case when no data is retrieved from the database

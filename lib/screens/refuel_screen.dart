@@ -48,14 +48,14 @@ class _RefuelScreenState extends State<RefuelScreen> {
 
   Future<void> _modifyCard(cardData) async {
     // Navigate to the insert page and wait for the result
-    final newCard = await Navigator.push(
+    final updatedCard = await Navigator.push(
       context,
       MaterialPageRoute(
           builder: (context) => ModifyRefuel(widget.selectedCarId, cardData)),
     );
 
     // Check if the result is not null and reload the cards
-    if (newCard != null) {
+    if (updatedCard != null) {
       _loadCards();
     }
   }
