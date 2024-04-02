@@ -25,7 +25,6 @@ class DatabaseHelper
     }
   }
 
-  @override
   Future<Database> initDatabase() async {
     final path = join(await getDatabasesPath(), dbName);
     return openDatabase(
@@ -76,7 +75,11 @@ class DatabaseHelper
         ''');
 
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(1,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
+            '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
+        await db.execute(
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Fiat", "Panda", 0000, 0.0, "diesel");''');
+        await db.execute(
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(0,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
       },
     );
   }
