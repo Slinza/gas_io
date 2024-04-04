@@ -135,5 +135,5 @@ double getUpperLimitMonth(List<FlSpot> monthData) {
 }
 
 double getIntervalMonth(double upperLimit) {
-  return (upperLimit / monthFactor).toDouble();
+  return roundedNumber((upperLimit / monthFactor), 0).toDouble();
 }

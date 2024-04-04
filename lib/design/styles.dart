@@ -31,3 +31,12 @@ TextStyle detailsStyle =
 
 TextStyle detailsStyleBold = GoogleFonts.abel(
     textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+
+TextStyle appTitle = const TextStyle(
+  color: primaryColor,
+  fontSize: 50,
+  fontFamily: 'Red Rose',
+  fontWeight: FontWeight.w700,
+  height: 0.01,
+  letterSpacing: 0.30,
+);
