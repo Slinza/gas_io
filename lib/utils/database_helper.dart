@@ -36,7 +36,8 @@ class DatabaseHelper
           $userIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
           $userNameKey TEXT,
           $userSurnameKey TEXT,
-          $userUsernameKey TEXT
+          $userUsernameKey TEXT,
+          $userEmailKey TEXT,
         )
         ''');
         await db.execute('''
@@ -75,7 +76,7 @@ class DatabaseHelper
         ''');
 
         await db.execute(
-            '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
+            '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey, $userEmailKey) VALUES("Name", "Surname", "Username", "user@gmail.com");''');
         await db.execute(
             '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Fiat", "Panda", 0000, 0.0, "diesel");''');
         await db.execute(
@@ -127,7 +128,6 @@ class DatabaseHelper
       return null; // Gas station with the specified ID not found
     }
   }
-
 
   Future<List<CardData>> getCardsByCar(selectedCarId) async {
     final db = await database;

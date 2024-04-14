@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:gas_io/screens/home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-// void main() => runApp(MyApp());
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: OnboardingScreens(),
-//     );
-//   }
-// }
+import 'package:gas_io/design/themes.dart';
+import 'package:gas_io/design/styles.dart';
 
 class OnboardingScreens extends StatefulWidget {
   @override
@@ -28,10 +18,6 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
       _pageController.nextPage(
           duration: Duration(milliseconds: 500), curve: Curves.ease);
     } else {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const HomeScreen()),
-      // );
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
@@ -63,15 +49,14 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // TODO remove button from the first page
                 _currentPage > 0
                     ? ElevatedButton(
                         onPressed: () {
                           _pageController.previousPage(
-                              duration: Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 500),
                               curve: Curves.ease);
                         },
-                        child: Text('Back'),
+                        child: const Text('Back'),
                       )
                     : Container(
                         width: 80,
@@ -81,7 +66,9 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
                   onPressed: () {
                     nextAction(_currentPage);
                   },
-                  child: _currentPage + 1 == 3 ? Text("Start") : Text('Next'),
+                  child: _currentPage + 1 == 3
+                      ? const Text("Start")
+                      : const Text('Next'),
                 ),
               ],
             ),
@@ -96,9 +83,12 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blueGrey,
-      child: Center(
-        child: Text('Welcome Page'),
+      color: primaryColor,
+      child: const Center(
+        child: Text(
+          'Welcome to GasIO!',
+          style: onbordingTitleStyle,
+        ),
       ),
     );
   }
@@ -108,9 +98,12 @@ class NameSurnamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.green,
-      child: Center(
-        child: Text('How should we call you?'),
+      color: primaryColor,
+      child: const Center(
+        child: Text(
+          'How should we call you?',
+          style: onbordingTitleStyle,
+        ),
       ),
     );
   }
@@ -120,9 +113,12 @@ class CarDataPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.orange,
-      child: Center(
-        child: Text('Which car do we want to refuel?'),
+      color: primaryColor,
+      child: const Center(
+        child: Text(
+          'Which car do we want to refuel?',
+          style: onbordingTitleStyle,
+        ),
       ),
     );
   }
