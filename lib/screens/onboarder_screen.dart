@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gas_io/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // void main() => runApp(MyApp());
@@ -22,9 +23,19 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
   PageController _pageController = PageController();
   int _currentPage = 0;
 
-  void endOnboarding() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('openedBefore', true);
+  void nextAction(int currentPage) {
+    if (currentPage < 2) {
+      _pageController.nextPage(
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
+    } else {
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const HomeScreen()),
+      // );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+    }
   }
 
   @override
@@ -68,13 +79,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
                 Text('Page ${_currentPage + 1} of 3'),
                 ElevatedButton(
                   onPressed: () {
-                    if (_currentPage < 2) {
-                      _pageController.nextPage(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.ease);
-                    } else {
-                      endOnboarding();
-                    }
+                    nextAction(_currentPage);
                   },
                   child: _currentPage + 1 == 3 ? Text("Start") : Text('Next'),
                 ),
