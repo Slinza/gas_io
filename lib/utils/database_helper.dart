@@ -84,6 +84,47 @@ class DatabaseHelper
     );
   }
 
+  // basic estimation, not very precise
+  Future<double> estimateAverageFuelConsumption(
+      int carId, String startDate, String endDate) async {
+    final db = await database;
+
+    // Retrieve all refuels since the last complete refuel
+    List<Map<String, dynamic>> refuelMaps = await db.query(
+      cardTableName,
+      where:
+          '$relatedCarIdKey = ?  AND $dateKey BETWEEN ? AND ? ORDER BY $dateKey ASC',
+      whereArgs: [carId, startDate, endDate],
+    );
+
+
+    double totalDistanceTraveled = refuelMaps.last['km'] - refuelMaps.first['km'];
+    double totalFuelConsumed = 0.0;
+
+    List<Map<String, dynamic>> lastPreviousRefuel = await db.query(
+      cardTableName,
+      where:
+          '$relatedCarIdKey = ?  AND $dateKey < ? ORDER BY $dateKey DESC LIMIT 1',
+      whereArgs: [carId, startDate],
+    );
+
+    if (lastPreviousRefuel.isNotEmpty) {
+      totalFuelConsumed += lastPreviousRefuel[0]['liters'];
+    }
+    for (int i = 0; i < refuelMaps.length - 1; i++) {
+      // Extract the value of "liters" from each map
+      totalFuelConsumed += refuelMaps[i]['liters'];
+    }
+
+    if (totalDistanceTraveled == 0) {
+      return 0.0; // No distance traveled since the last complete refuel
+    }
+
+    // Calculate average fuel consumption per unit distance
+    // Consumption in liters per 100 km
+    return  (totalFuelConsumed / totalDistanceTraveled) * 100;
+  }
+
   Future<int> insertCard(CardData card) async {
     if (kDebugMode) {
       print("insert card");
@@ -127,7 +168,6 @@ class DatabaseHelper
       return null; // Gas station with the specified ID not found
     }
   }
-
 
   Future<List<CardData>> getCardsByCar(selectedCarId) async {
     final db = await database;
