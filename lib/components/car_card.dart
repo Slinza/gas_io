@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gas_io/utils/key_parameters.dart';
 import 'package:gas_io/components/fuel_type.dart';
 import 'package:gas_io/design/themes.dart';
+import 'package:gas_io/design/styles.dart';
 
 CarData defaultCarData = CarData(
     id: 0,
@@ -92,18 +93,15 @@ class CarCard extends StatelessWidget {
                   children: [
                     Text(
                       carData.brand,
-                      style: GoogleFonts.abel(
-                          textStyle: const TextStyle(fontSize: 18)),
+                      style: cardStyle,
                     ),
                     Text(
                       carData.model,
-                      style: GoogleFonts.abel(
-                          textStyle: const TextStyle(fontSize: 18)),
+                      style: cardStyle,
                     ),
                     Text(
-                      "${carData.fuelType}",
-                      style: GoogleFonts.abel(
-                          textStyle: const TextStyle(fontSize: 18)),
+                      carData.fuelType,
+                      style: cardStyle,
                     ),
                     // Text(
                     //   "l/km = ${carData.fuelConsumption}",
