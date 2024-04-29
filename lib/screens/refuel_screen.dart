@@ -33,8 +33,9 @@ class _RefuelScreenState extends State<RefuelScreen> {
   }
 
   Future<void> _loadCards() async {
-    final averageConsumption = await _databaseHelper.calculateAverageFuelConsumption(widget.selectedCarId, '2024-03-01', '2024-04-10');
-    print('Average consumption: $averageConsumption liters per 100 km');
+    // debugging
+    // final averageConsumption = await _databaseHelper.estimateAverageFuelConsumption(widget.selectedCarId, '2024-04-01', '2024-05-01');
+    // print('Average consumption: $averageConsumption liters per 100 km between 2024-04-01 and 2024-05-01');
     List<CardData> cards =
         await _databaseHelper.getCardsByCar(widget.selectedCarId);
     setState(() {
