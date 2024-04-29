@@ -14,6 +14,7 @@ import 'package:gas_io/design/styles.dart';
 
 class StatsScreen extends StatefulWidget {
   int selectedCarId;
+  double averageConsumption= 0;
   StatsScreen({Key? key, required this.selectedCarId}) : super(key: key);
 
   @override
@@ -49,6 +50,8 @@ class _StatsScreenState extends State<StatsScreen> {
         widget.selectedCarId); // TODO make it taking the auto context
     List<CardData> monthCards = await _databaseHelper.getMonthCard(
         widget.selectedCarId); // TODO make it taking the auto context
+    // TODO: write automatic dates
+    widget.averageConsumption = await _databaseHelper.estimateAverageFuelConsumption(widget.selectedCarId, '2024-04-01', '2024-05-01');
     setState(() {
       //_prepareYearGraphData(yearCards);
       _prepareSixMonthsGraphData(sixMonthsCard);
@@ -135,7 +138,7 @@ class _StatsScreenState extends State<StatsScreen> {
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          'test2',
+                          (widget.averageConsumption).toStringAsFixed(2),
                           style: cardStyle,
                           textAlign: TextAlign.center,
                         ),
