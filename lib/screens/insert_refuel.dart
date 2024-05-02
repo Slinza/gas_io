@@ -140,9 +140,15 @@ class _InsertRefuelState extends State<InsertRefuel> {
       if (previousRefuel != null) {
         previousRefuelKm = previousRefuel.km;
       }
+      else {
+        previousRefuelKm = -1;
+      }
 
       if (nextRefuel != null) {
         nextRefuelKm = nextRefuel.km;
+      }
+      else {
+        nextRefuelKm = -1;
       }
     });
   }
@@ -313,7 +319,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 const SizedBox(height: 16.0),
                 FormBuilderCheckbox(
                   name: 'isCompleteRefuel',
-                  title: Text('Complete Refuel'),
+                  title: const Text('Complete Refuel'),
                   onChanged: (value) {
                     setState(() {
                       isCompleteRefuel = value ?? false;
