@@ -21,20 +21,23 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<int, String> cars = {};
 
   @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
-    if (this.mounted) {
-      _loadCars();
-    }
+    _loadCars();
   }
 
   Future<void> _loadCars() async {
     final Map<int, String> carMap = await _databaseHelper.getCarsMap();
-    if (this.mounted) {
-      setState(() {
-        cars = carMap;
-      });
-    }
+    setState(() {
+      cars = carMap;
+    });
   }
 
   @override
