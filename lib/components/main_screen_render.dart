@@ -37,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
     if (showOnboarding) {
       return const OnboardingScreens();
     } else {
-      return const HomeScreen();
+      return const OnboardingScreens(); //HomeScreen();
     }
   }
 }
