@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:gas_io/utils/location_helper.dart';
-import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(const MyApp());
@@ -93,14 +90,14 @@ class MapSampleState extends State<MapSample> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Selected Place'),
+          title: const Text('Selected Place'),
           content: Text(name),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -113,7 +110,7 @@ class MapSampleState extends State<MapSample> {
     return Scaffold(
       body: GoogleMap(
         mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
+        initialCameraPosition: const CameraPosition(
           target: LatLng(0, 0),
           zoom: 15,
         ),

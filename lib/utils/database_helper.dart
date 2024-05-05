@@ -37,7 +37,7 @@ class DatabaseHelper
           $userNameKey TEXT,
           $userSurnameKey TEXT,
           $userUsernameKey TEXT,
-          $userEmailKey TEXT,
+          $userEmailKey TEXT
         )
         ''');
         await db.execute('''
@@ -76,7 +76,7 @@ class DatabaseHelper
         ''');
 
         await db.execute(
-            '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey, $userEmailKey) VALUES("Name", "Surname", "Username", "user@gmail.com");''');
+            'INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey, $userEmailKey) VALUES("Name", "Surname", "Username", "Email");');
         await db.execute(
             '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Fiat", "Panda", 0000, 0.0, "diesel");''');
         await db.execute(

@@ -35,7 +35,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
   Future<void> _loadCards() async {
     List<CardData> cards =
         await _databaseHelper.getCardsByCar(widget.selectedCarId);
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         _cardList = cards;
       });

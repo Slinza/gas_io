@@ -3,7 +3,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:gas_io/components/bar_element.dart';
 import 'package:gas_io/components/month_line_chart.dart';
 //import 'package:gas_io/components/expense_type_pie.dart';
-import 'package:gas_io/components/year_line_chart.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:gas_io/components/bar_graph.dart';
 import 'package:gas_io/utils/support_functions.dart';
@@ -84,7 +83,7 @@ class _StatsScreenState extends State<StatsScreen> {
         const SizedBox(height: 40.0),
         Container(
           height: 280,
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           decoration: statsContainerDecoration,
           child: MonthLineChartWidget(
             monthData: monthPrices,
@@ -93,7 +92,7 @@ class _StatsScreenState extends State<StatsScreen> {
         const SizedBox(height: 50.0),
         Container(
           height: 260,
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: statsContainerDecoration,
           child: BarGraph(
             sixMonthsSummary: sixMonthsPrices,

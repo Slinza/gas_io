@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 
+import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/screens/home_screen.dart';
 import 'package:gas_io/design/themes.dart';
 import 'package:gas_io/design/styles.dart';
 
 class OnboardingScreens extends StatefulWidget {
+  const OnboardingScreens({super.key});
+
   @override
   _OnboardingScreensState createState() => _OnboardingScreensState();
 }
 
 class _OnboardingScreensState extends State<OnboardingScreens> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   int _currentPage = 0;
 
   void nextAction(int currentPage) {
     if (currentPage < 2) {
       _pageController.nextPage(
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
     } else {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
@@ -37,9 +40,9 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
               });
             },
             children: [
-              WelcomePage(),
+              const WelcomePage(),
               NameSurnamePage(),
-              CarDataPage(),
+              const CarDataPage(),
             ],
           ),
           Positioned(
@@ -80,6 +83,8 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
 }
 
 class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -95,21 +100,57 @@ class WelcomePage extends StatelessWidget {
 }
 
 class NameSurnamePage extends StatelessWidget {
+  NameSurnamePage({super.key});
+
+  // final TextEditingController _nameController = TextEditingController();
+  // final TextEditingController _surnameController = TextEditingController();
+  // final TextEditingController _usernameController = TextEditingController();
+  // final TextEditingController _emailController = TextEditingController();
+  // final DatabaseHelper _databaseHelper = DatabaseHelper();
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: primaryColor,
-      child: const Center(
-        child: Text(
-          'How should we call you?',
-          style: onbordingTitleStyle,
-        ),
+      child: Column(
+        children: [
+          const Text(
+            'How should we call you?',
+            style: onbordingTitleStyle,
+          ),
+          // TextField(
+          //   controller: _nameController,
+          //   decoration: const InputDecoration(
+          //     labelText: 'Name',
+          //   ),
+          // ),
+          // TextField(
+          //   controller: _surnameController,
+          //   decoration: const InputDecoration(
+          //     labelText: 'Surname',
+          //   ),
+          // ),
+          // TextField(
+          //   controller: _usernameController,
+          //   decoration: const InputDecoration(
+          //     labelText: 'Username',
+          //   ),
+          // ),
+          // TextField(
+          //   controller: _emailController,
+          //   decoration: const InputDecoration(
+          //     labelText: 'Email',
+          //   ),
+          // ),
+        ],
       ),
     );
   }
 }
 
 class CarDataPage extends StatelessWidget {
+  const CarDataPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
