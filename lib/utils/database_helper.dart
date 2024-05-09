@@ -85,50 +85,6 @@ class DatabaseHelper
     );
   }
 
-  // basic estimation, not very precise
-  Future<double> estimateAverageFuelConsumption(
-      int carId, String startDate, String endDate) async {
-    final db = await database;
-
-    // Retrieve all refuels since the last complete refuel
-    List<Map<String, dynamic>> refuelMaps = await db.query(
-      cardTableName,
-      where:
-          '$relatedCarIdKey = ?  AND $dateKey BETWEEN ? AND ? ORDER BY $dateKey ASC',
-      whereArgs: [carId, startDate, endDate],
-    );
-
-    double totalDistanceTraveled = 0.0;
-    double totalFuelConsumed = 0.0;
-
-    if (refuelMaps.isNotEmpty) {
-      totalDistanceTraveled = refuelMaps.last['km'] - refuelMaps.first['km'];
-    }
-
-    List<Map<String, dynamic>> lastPreviousRefuel = await db.query(
-      cardTableName,
-      where:
-          '$relatedCarIdKey = ?  AND $dateKey < ? ORDER BY $dateKey DESC LIMIT 1',
-      whereArgs: [carId, startDate],
-    );
-
-    if (lastPreviousRefuel.isNotEmpty) {
-      totalFuelConsumed += lastPreviousRefuel[0]['liters'];
-    }
-    for (int i = 0; i < refuelMaps.length - 1; i++) {
-      // Extract the value of "liters" from each map
-      totalFuelConsumed += refuelMaps[i]['liters'];
-    }
-
-    if (totalDistanceTraveled == 0) {
-      return 0.0; // No distance traveled since the last complete refuel
-    }
-
-    // Calculate average fuel consumption per unit distance
-    // Consumption in liters per 100 km
-    return (totalFuelConsumed / totalDistanceTraveled) * 100;
-  }
-
   Future<int> insertCard(CardData card) async {
     if (kDebugMode) {
       print("insert card");
@@ -267,7 +223,7 @@ class DatabaseHelper
       formattedMonth = month.toString();
     }
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND STRFTIME('%m', $dateKey) = '$formattedMonth';");
+        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND STRFTIME('%m', $dateKey) = '$formattedMonth' ORDER BY $dateKey ASC;");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });

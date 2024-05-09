@@ -114,7 +114,7 @@ double roundedNumber(double number, [int decimals = 2]) {
 //       .toDouble();
 // }
 
-// Six months expense utils
+// Six months expense graph utils
 double getUpperLimitSixMonths(BarData data) {
   return approximateByFactor(
           approximateByFactor(data.maxY().ceil(), sixMonthFactor),
@@ -126,7 +126,7 @@ double getIntervalSixMonths(double upperLimit) {
   return roundedNumber((upperLimit / sixMonthFactor), 0).toDouble();
 }
 
-// Monthly expense utils
+// Monthly expense graph utils
 double getUpperLimitMonth(List<FlSpot> monthData) {
   int max = findMaxY(monthData);
   return approximateByFactor(
@@ -136,4 +136,24 @@ double getUpperLimitMonth(List<FlSpot> monthData) {
 
 double getIntervalMonth(double upperLimit) {
   return roundedNumber((upperLimit / monthFactor), 0).toDouble();
+}
+
+// Monthly stats
+double getTotalKm(List<CardData> data) {
+  // TODO change to not sum them, but subtract first and last
+  if (data.isNotEmpty) {
+    return data.last.km - data.first.km;
+  } else {
+    return 0.0;
+  }
+}
+
+// basic estimation
+double getAverageConsuption(List<CardData> data) {
+  double totalDistanceTraveled = getTotalKm(data);
+  double totalFuelConsumed = data.fold(0, (t, e) => t + e.liters);
+
+  // Calculate average fuel consumption per unit distance
+  // Consumption in liters per 100 km
+  return (totalFuelConsumed / totalDistanceTraveled) * 100;
 }
