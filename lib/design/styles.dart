@@ -39,3 +39,12 @@ const TextStyle onbordingTitleStyle = TextStyle(
   fontWeight: FontWeight.w500,
   height: 0.01,
 );
+
+TextStyle appTitle = const TextStyle(
+  color: primaryColor,
+  fontSize: 50,
+  fontFamily: 'Red Rose',
+  fontWeight: FontWeight.w700,
+  height: 0.01,
+  letterSpacing: 0.30,
+);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import 'package:gas_io/design/styles.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
@@ -223,12 +224,15 @@ class _UserScreenState extends State<UserScreen> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                    TextField(
+                    Text(
+                      _user!.name,
                       textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        hintText: 'Name: ${_user!.name}',
-                        border: InputBorder.none,
-                      ),
+                      style: detailsStyle,
+                      // textAlign: TextAlign.center,
+                      // decoration: InputDecoration(
+                      //   hintText: 'Name: ${_user!.name}',
+                      //   border: InputBorder.none,
+                      // ),
                     ),
                     const SizedBox(height: 16.0),
                     SizedBox(

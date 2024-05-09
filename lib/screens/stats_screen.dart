@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+
 import 'package:gas_io/components/bar_element.dart';
 import 'package:gas_io/components/month_line_chart.dart';
 //import 'package:gas_io/components/expense_type_pie.dart';
@@ -13,6 +14,7 @@ import 'package:gas_io/design/styles.dart';
 
 class StatsScreen extends StatefulWidget {
   int selectedCarId;
+  double averageConsumption = 0;
   StatsScreen({Key? key, required this.selectedCarId}) : super(key: key);
 
   @override
@@ -48,6 +50,10 @@ class _StatsScreenState extends State<StatsScreen> {
         widget.selectedCarId); // TODO make it taking the auto context
     List<CardData> monthCards = await _databaseHelper.getMonthCard(
         widget.selectedCarId); // TODO make it taking the auto context
+    // TODO: write automatic dates
+    widget.averageConsumption =
+        await _databaseHelper.estimateAverageFuelConsumption(
+            widget.selectedCarId, '2024-04-01', '2024-05-01');
     setState(() {
       //_prepareYearGraphData(yearCards);
       _prepareSixMonthsGraphData(sixMonthsCard);
@@ -77,10 +83,11 @@ class _StatsScreenState extends State<StatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool CONDITION = true;
     return ListView(
       padding: const EdgeInsets.all(15),
       children: <Widget>[
-        const SizedBox(height: 40.0),
+        const SizedBox(height: 20.0),
         Container(
           height: 280,
           padding: const EdgeInsets.all(15),
@@ -89,9 +96,9 @@ class _StatsScreenState extends State<StatsScreen> {
             monthData: monthPrices,
           ),
         ),
-        const SizedBox(height: 50.0),
+        const SizedBox(height: 30.0),
         Container(
-          height: 260,
+          height: 240,
           padding: const EdgeInsets.all(10),
           decoration: statsContainerDecoration,
           child: BarGraph(
@@ -99,6 +106,58 @@ class _StatsScreenState extends State<StatsScreen> {
             //monthData: yearPrices,
             //average: averageYearPrices,
           ),
+        ),
+        const SizedBox(height: 16.0),
+        Container(
+          height: 100,
+          padding: EdgeInsets.all(10),
+          decoration: statsContainerDecoration,
+          child: CONDITION == true
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'Total KM done',
+                          style: cardStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          'Average consumption [l/100km]',
+                          style: cardStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'test2',
+                          style: cardStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          (widget.averageConsumption).toStringAsFixed(2),
+                          style: cardStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Do a full refuel in order to unlock more statistics",
+                      style: cardStyle,
+                    ),
+                  ],
+                ),
         ),
         const SizedBox(height: 16.0),
         // Container(

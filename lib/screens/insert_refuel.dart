@@ -140,9 +140,15 @@ class _InsertRefuelState extends State<InsertRefuel> {
       if (previousRefuel != null) {
         previousRefuelKm = previousRefuel.km;
       }
+      else {
+        previousRefuelKm = -1;
+      }
 
       if (nextRefuel != null) {
         nextRefuelKm = nextRefuel.km;
+      }
+      else {
+        nextRefuelKm = -1;
       }
     });
   }
