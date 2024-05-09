@@ -98,9 +98,12 @@ class DatabaseHelper
       whereArgs: [carId, startDate, endDate],
     );
 
-
-    double totalDistanceTraveled = refuelMaps.last['km'] - refuelMaps.first['km'];
+    double totalDistanceTraveled = 0.0;
     double totalFuelConsumed = 0.0;
+
+    if (refuelMaps.isNotEmpty) {
+      totalDistanceTraveled = refuelMaps.last['km'] - refuelMaps.first['km'];
+    }
 
     List<Map<String, dynamic>> lastPreviousRefuel = await db.query(
       cardTableName,
@@ -123,7 +126,7 @@ class DatabaseHelper
 
     // Calculate average fuel consumption per unit distance
     // Consumption in liters per 100 km
-    return  (totalFuelConsumed / totalDistanceTraveled) * 100;
+    return (totalFuelConsumed / totalDistanceTraveled) * 100;
   }
 
   Future<int> insertCard(CardData card) async {
