@@ -48,8 +48,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             children: [
               const WelcomePage(),
               NameSurnamePage(),
-              //const AddCarPage()
-              CarDataPage(),
+              const CarDataPage(),
             ],
           ),
           Positioned(
