@@ -52,7 +52,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         title: const Text('Settings Screen'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           children: [
             TextField(
@@ -78,6 +78,9 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               decoration: const InputDecoration(
                 labelText: 'Email',
               ),
+            ),
+            const SizedBox(
+              height: 30,
             ),
             ElevatedButton(
               onPressed: () {

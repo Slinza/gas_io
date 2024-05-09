@@ -78,9 +78,9 @@ class DatabaseHelper
         await db.execute(
             'INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey, $userEmailKey) VALUES("Name", "Surname", "Username", "Email");');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Fiat", "Panda", 0000, 0.0, "diesel");''');
-        await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(0,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Brand", "Model", 0000, 0.0, "diesel");''');
+        // await db.execute(
+        //     '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(0,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
       },
     );
   }
