@@ -35,15 +35,17 @@ class _RefuelScreenState extends State<RefuelScreen> {
   Future<void> _loadCards() async {
     List<CardData> cards =
         await _databaseHelper.getCardsByCar(widget.selectedCarId);
-    setState(() {
-      _cardList = cards;
-    });
+    if (mounted) {
+      setState(() {
+        _cardList = cards;
+      });
+      _listController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
     // Scroll to the top when a new card is added
-    _listController.animateTo(
-      0.0,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
   }
 
   Future<void> _modifyCard(cardData) async {

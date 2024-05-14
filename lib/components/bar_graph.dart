@@ -59,7 +59,7 @@ class BarGraph extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
       barGroups: currentBarData.barData
           .map(

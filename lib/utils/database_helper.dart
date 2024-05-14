@@ -36,7 +36,8 @@ class DatabaseHelper
           $userIdKey INTEGER PRIMARY KEY AUTOINCREMENT,
           $userNameKey TEXT,
           $userSurnameKey TEXT,
-          $userUsernameKey TEXT
+          $userUsernameKey TEXT,
+          $userEmailKey TEXT
         )
         ''');
         await db.execute('''
@@ -75,54 +76,13 @@ class DatabaseHelper
         ''');
 
         await db.execute(
-            '''INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey) VALUES("Name", "Surname", "Username");''');
+            'INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey, $userEmailKey) VALUES("Name", "Surname", "Username", "Email");');
         await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Fiat", "Panda", 0000, 0.0, "diesel");''');
-        await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(0,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
+            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Brand", "Model", 0000, 0.0, "diesel");''');
+        // await db.execute(
+        //     '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(0,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
       },
     );
-  }
-
-  // basic estimation, not very precise
-  Future<double> estimateAverageFuelConsumption(
-      int carId, String startDate, String endDate) async {
-    final db = await database;
-
-    // Retrieve all refuels since the last complete refuel
-    List<Map<String, dynamic>> refuelMaps = await db.query(
-      cardTableName,
-      where:
-          '$relatedCarIdKey = ?  AND $dateKey BETWEEN ? AND ? ORDER BY $dateKey ASC',
-      whereArgs: [carId, startDate, endDate],
-    );
-
-
-    double totalDistanceTraveled = refuelMaps.last['km'] - refuelMaps.first['km'];
-    double totalFuelConsumed = 0.0;
-
-    List<Map<String, dynamic>> lastPreviousRefuel = await db.query(
-      cardTableName,
-      where:
-          '$relatedCarIdKey = ?  AND $dateKey < ? ORDER BY $dateKey DESC LIMIT 1',
-      whereArgs: [carId, startDate],
-    );
-
-    if (lastPreviousRefuel.isNotEmpty) {
-      totalFuelConsumed += lastPreviousRefuel[0]['liters'];
-    }
-    for (int i = 0; i < refuelMaps.length - 1; i++) {
-      // Extract the value of "liters" from each map
-      totalFuelConsumed += refuelMaps[i]['liters'];
-    }
-
-    if (totalDistanceTraveled == 0) {
-      return 0.0; // No distance traveled since the last complete refuel
-    }
-
-    // Calculate average fuel consumption per unit distance
-    // Consumption in liters per 100 km
-    return  (totalFuelConsumed / totalDistanceTraveled) * 100;
   }
 
   Future<int> insertCard(CardData card) async {
@@ -263,7 +223,7 @@ class DatabaseHelper
       formattedMonth = month.toString();
     }
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND STRFTIME('%m', $dateKey) = '$formattedMonth';");
+        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND STRFTIME('%m', $dateKey) = '$formattedMonth' ORDER BY $dateKey ASC;");
     return List.generate(maps.length, (i) {
       return CardData.fromMap(maps[i]);
     });

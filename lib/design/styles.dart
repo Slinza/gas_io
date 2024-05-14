@@ -14,7 +14,7 @@ const TextStyle subtitleTextStyle = TextStyle(
 BoxDecoration statsContainerDecoration = BoxDecoration(
   color: cardColor,
   borderRadius: BorderRadius.circular(20),
-  boxShadow: [
+  boxShadow: const [
     BoxShadow(
       color: Colors.grey,
       blurRadius: 4,
@@ -31,6 +31,14 @@ TextStyle detailsStyle =
 
 TextStyle detailsStyleBold = GoogleFonts.abel(
     textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold));
+
+const TextStyle onbordingTitleStyle = TextStyle(
+  color: cardColor,
+  fontSize: 24,
+  fontFamily: 'Red Rose',
+  fontWeight: FontWeight.w500,
+  height: 0.01,
+);
 
 TextStyle appTitle = const TextStyle(
   color: primaryColor,

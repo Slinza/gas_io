@@ -64,7 +64,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(30.0),
           child: FormBuilder(
             key: _formKey,
             child: Column(
@@ -74,7 +74,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                   name: 'brand',
                   decoration: const InputDecoration(
                     labelText: 'Brand',
-                    border: OutlineInputBorder(),
+                    border: UnderlineInputBorder(),
                   ),
                   validator: FormBuilderValidators.compose(
                     [
@@ -89,7 +89,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                   name: 'model',
                   decoration: const InputDecoration(
                     labelText: 'Model',
-                    border: OutlineInputBorder(),
+                    border: UnderlineInputBorder(),
                   ),
                   validator: FormBuilderValidators.compose(
                     [
@@ -105,7 +105,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Construction Year',
                     //suffixText: "Year",
-                    border: OutlineInputBorder(),
+                    border: UnderlineInputBorder(),
                   ),
                   validator: FormBuilderValidators.compose(
                     [
@@ -126,7 +126,7 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Initial Km',
                     suffixText: "Km",
-                    border: OutlineInputBorder(),
+                    border: UnderlineInputBorder(),
                   ),
                   validator: FormBuilderValidators.compose(
                     [

@@ -82,7 +82,7 @@ class RefuelCard extends StatelessWidget {
       future: DatabaseHelper().getGasStationById(refuelData.gasStationId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Placeholder while loading
+          return const CircularProgressIndicator(); // Placeholder while loading
         }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');

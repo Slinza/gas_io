@@ -14,6 +14,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   @override
@@ -28,6 +29,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       _nameController.text = user.name;
       _surnameController.text = user.surname;
       _usernameController.text = user.username;
+      _emailController.text = user.email;
     }
   }
 
@@ -37,6 +39,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       user.name = _nameController.text;
       user.surname = _surnameController.text;
       user.username = _usernameController.text;
+      user.email = _emailController.text;
       await _databaseHelper.updateUser(user);
       Navigator.pop(context, true);
     }
@@ -49,7 +52,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         title: const Text('Settings Screen'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           children: [
             TextField(
@@ -69,6 +72,15 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
               decoration: const InputDecoration(
                 labelText: 'Username',
               ),
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+              ),
+            ),
+            const SizedBox(
+              height: 30,
             ),
             ElevatedButton(
               onPressed: () {

@@ -5,7 +5,7 @@ mixin DatabaseCardKeys {
   final String priceKey = 'price';
   final String litersKey = 'liters';
   final String dateKey = 'date';
-  final String gasStatIdKey = 'gasStationId';  // foreign key
+  final String gasStatIdKey = 'gasStationId'; // foreign key
   final String euroPerLiterKey = 'euroPerLiter';
   final String kmKey = 'km';
   final String isCompleteRefuelKey = "isCompleteRefuel";
@@ -17,6 +17,7 @@ mixin DatabaseUserKeys {
   final String userNameKey = 'name';
   final String userSurnameKey = 'surname';
   final String userUsernameKey = 'username';
+  final String userEmailKey = 'email';
 }
 
 mixin DatabaseCarKeys {

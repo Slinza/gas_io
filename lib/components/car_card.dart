@@ -3,7 +3,6 @@ import 'package:gas_io/screens/car_settings_details.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gas_io/utils/key_parameters.dart';
-import 'package:gas_io/components/fuel_type.dart';
 import 'package:gas_io/design/themes.dart';
 import 'package:gas_io/design/styles.dart';
 
@@ -101,7 +100,8 @@ class CarCard extends StatelessWidget {
                     ),
                     Text(
                       carData.fuelType,
-                      style: cardStyle,
+                      style: GoogleFonts.abel(
+                          textStyle: const TextStyle(fontSize: 18)),
                     ),
                     // Text(
                     //   "l/km = ${carData.fuelConsumption}",

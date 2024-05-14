@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-// import 'package:gas_io/screens/user_screen.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/fuel_type.dart';

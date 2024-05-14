@@ -41,6 +41,7 @@ dependencies:
   http: ^1.2.0
   geolocator: 7.7.0
   flutter_config: ^2.0.2
+  shared_preferences: ^2.2.2
 #  datetime_picker_formfield_new: ^2.1.0
 #  timezone: ^0.9.2
 

@@ -14,7 +14,7 @@ import 'package:gas_io/design/styles.dart';
 
 class StatsScreen extends StatefulWidget {
   int selectedCarId;
-  double averageConsumption= 0;
+  double averageConsumption = 0;
   StatsScreen({Key? key, required this.selectedCarId}) : super(key: key);
 
   @override
@@ -30,6 +30,8 @@ class _StatsScreenState extends State<StatsScreen> {
   List<FlSpot> averageYearPrices = [];
   List<FlSpot> monthPrices = [];
   List<PieChartSectionData> pieYearData = [];
+  double averageConsumption = 0.0;
+  double totalKmDone = 0.0;
 
   @override
   void initState() {
@@ -50,19 +52,21 @@ class _StatsScreenState extends State<StatsScreen> {
         widget.selectedCarId); // TODO make it taking the auto context
     List<CardData> monthCards = await _databaseHelper.getMonthCard(
         widget.selectedCarId); // TODO make it taking the auto context
-    // TODO: write automatic dates
-    widget.averageConsumption = await _databaseHelper.estimateAverageFuelConsumption(widget.selectedCarId, '2024-04-01', '2024-05-01');
-    setState(() {
-      //_prepareYearGraphData(yearCards);
-      _prepareSixMonthsGraphData(sixMonthsCard);
-      _prepareMonthGraphData(monthCards);
-      pieYearData = [
-        PieChartSectionData(
-            //value: 10,
-            radius:
-                100), //TODO: add real values once the type of the expense will be introduced
-      ];
-    });
+    setState(
+      () {
+        //_prepareYearGraphData(yearCards);
+        _prepareSixMonthsGraphData(sixMonthsCard);
+        _prepareMonthGraphData(monthCards);
+        _prepareMonthStatsData(monthCards);
+
+        pieYearData = [
+          PieChartSectionData(
+              //value: 10,
+              radius:
+                  100), //TODO: add real values once the type of the expense will be introduced
+        ];
+      },
+    );
   }
 
   // void _prepareYearGraphData(List<CardData> cards) {
@@ -79,16 +83,22 @@ class _StatsScreenState extends State<StatsScreen> {
     monthPrices = monthlyPrice(cards);
   }
 
+  void _prepareMonthStatsData(List<CardData> cards) {
+    totalKmDone = getTotalKm(cards);
+    averageConsumption = getAverageConsuption(cards);
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool CONDITION = true;
+    bool CONDITION =
+        true; // TODO evaluate if apply any condition for the last card
     return ListView(
       padding: const EdgeInsets.all(15),
       children: <Widget>[
         const SizedBox(height: 20.0),
         Container(
           height: 280,
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           decoration: statsContainerDecoration,
           child: MonthLineChartWidget(
             monthData: monthPrices,
@@ -97,7 +107,7 @@ class _StatsScreenState extends State<StatsScreen> {
         const SizedBox(height: 30.0),
         Container(
           height: 240,
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: statsContainerDecoration,
           child: BarGraph(
             sixMonthsSummary: sixMonthsPrices,
@@ -133,12 +143,12 @@ class _StatsScreenState extends State<StatsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          'test2',
+                          totalKmDone.toStringAsFixed(2),
                           style: cardStyle,
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          (widget.averageConsumption).toStringAsFixed(2),
+                          averageConsumption.toStringAsFixed(2),
                           style: cardStyle,
                           textAlign: TextAlign.center,
                         ),
