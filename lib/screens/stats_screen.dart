@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import 'package:gas_io/components/bar_element.dart';
+import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/month_line_chart.dart';
 //import 'package:gas_io/components/expense_type_pie.dart';
 import 'package:gas_io/components/refuel_card.dart';
@@ -30,6 +31,7 @@ class _StatsScreenState extends State<StatsScreen> {
   List<FlSpot> averageYearPrices = [];
   List<FlSpot> monthPrices = [];
   List<PieChartSectionData> pieYearData = [];
+  CarData carDetails = defaultCarData;
   double averageConsumption = 0.0;
   double totalKmDone = 0.0;
 
@@ -52,6 +54,10 @@ class _StatsScreenState extends State<StatsScreen> {
         widget.selectedCarId); // TODO make it taking the auto context
     List<CardData> monthCards = await _databaseHelper.getMonthCard(
         widget.selectedCarId); // TODO make it taking the auto context
+
+    Map<String, dynamic> carData =
+        await _databaseHelper.getCarDetailsById(widget.selectedCarId);
+
     setState(
       () {
         //_prepareYearGraphData(yearCards);
@@ -59,12 +65,7 @@ class _StatsScreenState extends State<StatsScreen> {
         _prepareMonthGraphData(monthCards);
         _prepareMonthStatsData(monthCards);
 
-        pieYearData = [
-          PieChartSectionData(
-              //value: 10,
-              radius:
-                  100), //TODO: add real values once the type of the expense will be introduced
-        ];
+        _getCarInitialKm(carData);
       },
     );
   }
@@ -84,27 +85,20 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   void _prepareMonthStatsData(List<CardData> cards) {
-    totalKmDone = getTotalKm(cards);
-    averageConsumption = getAverageConsuption(cards);
+    totalKmDone = getTotalKm(cards, carDetails.initialKm);
+    averageConsumption = getAverageConsuption(cards, carDetails.initialKm);
+  }
+
+  void _getCarInitialKm(carData) {
+    carDetails = CarData.fromMap(carData);
   }
 
   @override
   Widget build(BuildContext context) {
-    bool CONDITION =
-        true; // TODO evaluate if apply any condition for the last card
     return ListView(
       padding: const EdgeInsets.all(15),
       children: <Widget>[
         const SizedBox(height: 20.0),
-        Container(
-          height: 280,
-          padding: const EdgeInsets.all(15),
-          decoration: statsContainerDecoration,
-          child: MonthLineChartWidget(
-            monthData: monthPrices,
-          ),
-        ),
-        const SizedBox(height: 30.0),
         Container(
           height: 240,
           padding: const EdgeInsets.all(10),
@@ -115,64 +109,56 @@ class _StatsScreenState extends State<StatsScreen> {
             //average: averageYearPrices,
           ),
         ),
+        const SizedBox(height: 30.0),
+        Container(
+          height: 280,
+          padding: const EdgeInsets.all(15),
+          decoration: statsContainerDecoration,
+          child: MonthLineChartWidget(
+            monthData: monthPrices,
+          ),
+        ),
         const SizedBox(height: 16.0),
         Container(
           height: 100,
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(15),
           decoration: statsContainerDecoration,
-          child: CONDITION == true
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          'Total KM done',
-                          style: cardStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          'Average consumption [l/100km]',
-                          style: cardStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          totalKmDone.toStringAsFixed(2),
-                          style: cardStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          averageConsumption.toStringAsFixed(2),
-                          style: cardStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Do a full refuel in order to unlock more statistics",
-                      style: cardStyle,
-                    ),
-                  ],
-                ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'Monthly Distance [km]',
+                    style: cardStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Consumption [l/100km]',
+                    style: cardStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    totalKmDone.toStringAsFixed(2),
+                    style: cardStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    averageConsumption.toStringAsFixed(2),
+                    style: cardStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 16.0),
-        // Container(
-        //   height: 100,
-        //   color: Colors.amber[100],
-        //   child: YearPieChartWidget(pieData: pieYearData),
-        // ),
       ],
     );
   }

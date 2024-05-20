@@ -139,18 +139,22 @@ double getIntervalMonth(double upperLimit) {
 }
 
 // Monthly stats
-double getTotalKm(List<CardData> data) {
+double getTotalKm(List<CardData> data, [double initialKm = 0.0]) {
   // TODO change to not sum them, but subtract first and last
   if (data.isNotEmpty) {
-    return data.last.km - data.first.km;
+    if (data.last.km == data.first.km) {
+      return data.last.km - initialKm;
+    } else {
+      return data.last.km - data.first.km;
+    }
   } else {
     return 0.0;
   }
 }
 
 // basic estimation
-double getAverageConsuption(List<CardData> data) {
-  double totalDistanceTraveled = getTotalKm(data);
+double getAverageConsuption(List<CardData> data, [double initialKm = 0.0]) {
+  double totalDistanceTraveled = getTotalKm(data, initialKm);
   double totalFuelConsumed = data.fold(0, (t, e) => t + e.liters);
 
   // Calculate average fuel consumption per unit distance
