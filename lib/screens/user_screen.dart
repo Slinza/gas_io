@@ -212,20 +212,21 @@ class _UserScreenState extends State<UserScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Center(
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 50.0,
-                            backgroundImage: AssetImage(
-                                profilePic), //NetworkImage(profilePic),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16.0),
+                    // Center(
+                    //   child: Stack(
+                    //     children: [
+                    //       CircleAvatar(
+                    //         radius: 50.0,
+                    //         backgroundImage: AssetImage(
+                    //             profilePic), //NetworkImage(profilePic),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 16.0),
+                    const SizedBox(height: 50.0),
                     Text(
-                      _user!.name,
+                      _user!.username,
                       textAlign: TextAlign.center,
                       style: detailsStyle,
                       // textAlign: TextAlign.center,
@@ -234,7 +235,7 @@ class _UserScreenState extends State<UserScreen> {
                       //   border: InputBorder.none,
                       // ),
                     ),
-                    const SizedBox(height: 16.0),
+                    const SizedBox(height: 50.0),
                     SizedBox(
                       width: 200,
                       height: 600,
