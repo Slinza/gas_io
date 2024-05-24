@@ -75,7 +75,7 @@ class _CarDataPageState extends State<CarDataPage> {
                     style: onbordingTitleStyle,
                   ),
                   const SizedBox(
-                    height: 100,
+                    height: 80,
                   ),
                   FormBuilderTextField(
                     controller: _brandController,
@@ -91,7 +91,6 @@ class _CarDataPageState extends State<CarDataPage> {
                     ),
                     onSaved: (_) => _brandController.text,
                   ),
-                  const SizedBox(height: 16.0),
                   FormBuilderTextField(
                     controller: _modelController,
                     name: 'model',
@@ -106,7 +105,6 @@ class _CarDataPageState extends State<CarDataPage> {
                     ),
                     onSaved: (_) => _modelController.text,
                   ),
-                  const SizedBox(height: 16.0),
                   FormBuilderTextField(
                     controller: _yearController,
                     name: 'year',
@@ -127,7 +125,6 @@ class _CarDataPageState extends State<CarDataPage> {
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: false),
                   ),
-                  const SizedBox(height: 16.0),
                   FormBuilderTextField(
                     controller: _initialKmController,
                     name: 'km',

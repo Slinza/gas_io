@@ -47,7 +47,7 @@ class NameSurnamePage extends StatelessWidget {
                   style: onbordingTitleStyle,
                 ),
                 const SizedBox(
-                  height: 100,
+                  height: 80,
                 ),
                 FormBuilderTextField(
                   controller: _nameController,
