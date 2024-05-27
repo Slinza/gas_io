@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/design/styles.dart';
 

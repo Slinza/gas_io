@@ -112,6 +112,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
                 validator: FormBuilderValidators.compose(
                   [
                     FormBuilderValidators.required(),
+                    FormBuilderValidators.email(),
                   ],
                 ),
                 onSaved: (_) => _emailController.text,
