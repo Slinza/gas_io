@@ -14,7 +14,6 @@ class DetailsCarSettingsScreen extends StatefulWidget {
 }
 
 class _DetailsCarSettingsScreenState extends State<DetailsCarSettingsScreen> {
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
   CarData carDetails = defaultCarData;
 
   @override
@@ -29,28 +28,11 @@ class _DetailsCarSettingsScreenState extends State<DetailsCarSettingsScreen> {
     });
   }
 
-  void _removeCarData(carData) async {
-    await _databaseHelper.deleteCar(carData);
-    Navigator.pop(context, true);
-  }
-
-  void _closeDetailsScreen() {
-    Navigator.pop(context, true);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Car Details'),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.delete_forever),
-        //     onPressed: () {
-        //       _removeCarData(widget.carData);
-        //     },
-        //   ),
-        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

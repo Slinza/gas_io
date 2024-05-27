@@ -23,7 +23,6 @@ class StatsScreen extends StatefulWidget {
 }
 
 class _StatsScreenState extends State<StatsScreen> {
-  // StatsScreen({super.key, required this.cardList});
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   List<FlSpot> yearPrices = [];
@@ -60,24 +59,16 @@ class _StatsScreenState extends State<StatsScreen> {
 
     setState(
       () {
-        //_prepareYearGraphData(yearCards);
         _prepareSixMonthsGraphData(sixMonthsCard);
         _prepareMonthGraphData(monthCards);
         _prepareMonthStatsData(monthCards);
-
         _getCarInitialKm(carData);
       },
     );
   }
 
-  // void _prepareYearGraphData(List<CardData> cards) {
-  //   yearPrices = pricesYearlyList(cards);
-  //   averageYearPrices = averageYearlyPrice(cards);
-  // }
-
   void _prepareSixMonthsGraphData(List<CardData> cards) {
     sixMonthsPrices = sixMonthsElementsList(cards);
-    //averageYearPrices = averageYearlyPrice(cards);
   }
 
   void _prepareMonthGraphData(List<CardData> cards) {
@@ -105,8 +96,6 @@ class _StatsScreenState extends State<StatsScreen> {
           decoration: statsContainerDecoration,
           child: BarGraph(
             sixMonthsSummary: sixMonthsPrices,
-            //monthData: yearPrices,
-            //average: averageYearPrices,
           ),
         ),
         const SizedBox(height: 30.0),
