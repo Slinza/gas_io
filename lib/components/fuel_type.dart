@@ -1,4 +1,4 @@
-enum FuelType { diesel, gasoline, gas, electricity }
+enum FuelType { diesel, gasoline, gas }
 
 String fuelTypeToString(FuelType fuelType) {
   return fuelType.toString().split('.').last;
@@ -12,8 +12,8 @@ FuelType stringToFuelType(String fuelTypeString) {
       return FuelType.gasoline;
     case 'gas':
       return FuelType.gas;
-    case 'electricity':
-      return FuelType.electricity;
+    // case 'electricity':
+    //   return FuelType.electricity;
     default:
       throw Exception('Invalid FuelType');
   }

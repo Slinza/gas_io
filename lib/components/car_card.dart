@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gas_io/screens/car_settings_details.dart';
+import 'package:gas_io/screens/car_details.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:gas_io/utils/key_parameters.dart';
@@ -71,7 +71,7 @@ class CarCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailsCarSettingsScreen(carData)),
+                builder: (context) => DetailsCarInsertionScreen(carData)),
           ) //.then((value) {
           //   if (value != null && value) {
           //     fetchUserData();

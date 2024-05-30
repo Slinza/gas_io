@@ -5,7 +5,7 @@ import 'package:gas_io/design/styles.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
-import 'package:gas_io/screens/car_settings.dart';
+import 'package:gas_io/screens/car_insertion.dart';
 import 'package:gas_io/components/car_card.dart';
 
 const USER_ID = 0; //TODO: Make it changiable
@@ -53,7 +53,7 @@ class _UserScreenState extends State<UserScreen> {
     // Navigate to the insert page and wait for the result
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CarSettingsScreen()),
+      MaterialPageRoute(builder: (context) => const CarInsertionScreen()),
     ).then((value) {
       if (value != null && value) {
         fetchUserData();

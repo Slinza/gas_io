@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/design/styles.dart';
 
-class DetailsCarSettingsScreen extends StatefulWidget {
+class DetailsCarInsertionScreen extends StatefulWidget {
   CarData carData;
-  DetailsCarSettingsScreen(this.carData, {Key? key}) : super(key: key);
+  DetailsCarInsertionScreen(this.carData, {Key? key}) : super(key: key);
 
   @override
-  _DetailsCarSettingsScreenState createState() =>
-      _DetailsCarSettingsScreenState();
+  _DetailsCarInsertionScreenState createState() =>
+      _DetailsCarInsertionScreenState();
 }
 
-class _DetailsCarSettingsScreenState extends State<DetailsCarSettingsScreen> {
+class _DetailsCarInsertionScreenState extends State<DetailsCarInsertionScreen> {
   CarData carDetails = defaultCarData;
 
   @override
