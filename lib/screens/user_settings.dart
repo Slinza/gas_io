@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
@@ -11,6 +13,7 @@ class UserSettingsScreen extends StatefulWidget {
 }
 
 class _UserSettingsScreenState extends State<UserSettingsScreen> {
+  final _formKeyInitUser = GlobalKey<FormBuilderState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
@@ -53,42 +56,80 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Name',
+        child: FormBuilder(
+          key: _formKeyInitUser,
+          child: Column(
+            children: [
+              FormBuilderTextField(
+                controller: _nameController,
+                name: 'name',
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  border: UnderlineInputBorder(),
+                ),
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(),
+                  ],
+                ),
+                onSaved: (_) => _nameController.text,
               ),
-            ),
-            TextField(
-              controller: _surnameController,
-              decoration: const InputDecoration(
-                labelText: 'Surname',
+              FormBuilderTextField(
+                controller: _surnameController,
+                name: 'surname',
+                decoration: const InputDecoration(
+                  labelText: 'Surname',
+                  border: UnderlineInputBorder(),
+                ),
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(),
+                  ],
+                ),
+                onSaved: (_) => _surnameController.text,
               ),
-            ),
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'Username',
+              FormBuilderTextField(
+                controller: _usernameController,
+                name: 'username',
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  border: UnderlineInputBorder(),
+                ),
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(),
+                  ],
+                ),
+                onSaved: (_) => _usernameController.text,
               ),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
+              FormBuilderTextField(
+                controller: _emailController,
+                name: 'email',
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: UnderlineInputBorder(),
+                ),
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.email(),
+                  ],
+                ),
+                onSaved: (_) => _emailController.text,
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                saveUserData();
-              },
-              child: const Text('Save'),
-            ),
-          ],
+              const SizedBox(
+                height: 30,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKeyInitUser.currentState!.saveAndValidate()) {
+                    saveUserData();
+                  }
+                },
+                child: const Text('Save'),
+              ),
+            ],
+          ),
         ),
       ),
     );

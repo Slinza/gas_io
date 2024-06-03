@@ -5,8 +5,7 @@ import 'package:gas_io/design/styles.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
 import 'package:gas_io/screens/user_settings.dart';
-import 'package:gas_io/screens/car_settings.dart';
-import 'package:gas_io/screens/car_settings_details.dart';
+import 'package:gas_io/screens/car_insertion.dart';
 import 'package:gas_io/components/car_card.dart';
 
 const USER_ID = 0; //TODO: Make it changiable
@@ -19,7 +18,6 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
-  String profilePic = 'assets/user_icon.png';
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   final ScrollController _listController = ScrollController();
   UserData? _user;
@@ -32,13 +30,15 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Future<void> fetchUserData() async {
-    //DatabaseHelper helper = DatabaseHelper.instance;
     _user = await _databaseHelper.getUser();
     List<CarData> cardList = await _databaseHelper.getCarsByUser(USER_ID);
 
-    setState(() {
-      _cardList = cardList;
-    });
+    setState(
+      () {
+        _cardList = cardList;
+      },
+    );
+
     // Scroll to the top when a new card is added
     if (_listController.hasClients) {
       _listController.animateTo(
@@ -49,25 +49,11 @@ class _UserScreenState extends State<UserScreen> {
     }
   }
 
-  Future<void> _modifyCard(cardData) async {
-    // Navigate to the insert page and wait for the result
-    final newCard = await Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => DetailsCarSettingsScreen(cardData)),
-    );
-
-    // Check if the result is not null and reload the cards
-    if (newCard != null) {
-      fetchUserData();
-    }
-  }
-
   Future<void> _addNewCard() async {
     // Navigate to the insert page and wait for the result
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CarSettingsScreen()),
+      MaterialPageRoute(builder: (context) => const CarInsertionScreen()),
     ).then((value) {
       if (value != null && value) {
         fetchUserData();
@@ -89,7 +75,6 @@ class _UserScreenState extends State<UserScreen> {
   Future<void> _showDeleteConfirmation(CarData cardData) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button for close dialog
       builder: (BuildContext context) {
         if (_cardList.length > 1) {
           return AlertDialog(
@@ -160,14 +145,6 @@ class _UserScreenState extends State<UserScreen> {
               extentRatio: 0.5,
               motion: const BehindMotion(),
               children: [
-                // SlidableAction(
-                //   onPressed: (context) => _modifyCard(carData),
-                //   backgroundColor: Colors.transparent,
-                //   foregroundColor: Colors.orange,
-                //   icon: Icons.info, //Icons.edit,
-                //   label: 'Details', //'Edit',
-                //   borderRadius: const BorderRadius.all(Radius.circular(100)),
-                // ),
                 SlidableAction(
                   onPressed: (context) async {
                     await _showDeleteConfirmation(carData);
@@ -204,6 +181,9 @@ class _UserScreenState extends State<UserScreen> {
               _userSettings();
             },
           ),
+          const SizedBox(
+            width: 10,
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -212,30 +192,13 @@ class _UserScreenState extends State<UserScreen> {
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Center(
-                    //   child: Stack(
-                    //     children: [
-                    //       CircleAvatar(
-                    //         radius: 50.0,
-                    //         backgroundImage: AssetImage(
-                    //             profilePic), //NetworkImage(profilePic),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(height: 16.0),
-                    const SizedBox(height: 50.0),
+                    const SizedBox(height: 40.0),
                     Text(
                       _user!.username,
                       textAlign: TextAlign.center,
                       style: detailsStyle,
-                      // textAlign: TextAlign.center,
-                      // decoration: InputDecoration(
-                      //   hintText: 'Name: ${_user!.name}',
-                      //   border: InputBorder.none,
-                      // ),
                     ),
-                    const SizedBox(height: 50.0),
+                    const SizedBox(height: 60.0),
                     SizedBox(
                       width: 200,
                       height: 600,

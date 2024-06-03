@@ -62,7 +62,7 @@ class _CarDataPageState extends State<CarDataPage> {
       child: Center(
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(30),
+            padding: const EdgeInsets.all(30),
             child: FormBuilder(
               key: _formKeyInit,
               child: Column(
@@ -110,14 +110,12 @@ class _CarDataPageState extends State<CarDataPage> {
                     name: 'year',
                     decoration: const InputDecoration(
                       labelText: 'Construction Year',
-                      //suffixText: "Year",
                       border: UnderlineInputBorder(),
                     ),
                     validator: FormBuilderValidators.compose(
                       [
                         FormBuilderValidators.required(),
                         FormBuilderValidators.integer(),
-                        // TODO: add construction year limitation
                         FormBuilderValidators.min(1900),
                       ],
                     ),

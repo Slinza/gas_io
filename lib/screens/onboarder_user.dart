@@ -72,7 +72,7 @@ class NameSurnamePage extends StatelessWidget {
                   ),
                   validator: FormBuilderValidators.compose(
                     [
-                      //FormBuilderValidators.required(),
+                      FormBuilderValidators.required(),
                     ],
                   ),
                   onSaved: (_) => _surnameController.text,
@@ -86,7 +86,7 @@ class NameSurnamePage extends StatelessWidget {
                   ),
                   validator: FormBuilderValidators.compose(
                     [
-                      //FormBuilderValidators.required(),
+                      FormBuilderValidators.required(),
                     ],
                   ),
                   onSaved: (_) => _usernameController.text,
@@ -100,7 +100,8 @@ class NameSurnamePage extends StatelessWidget {
                   ),
                   validator: FormBuilderValidators.compose(
                     [
-                      //FormBuilderValidators.required(),
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.email(),
                     ],
                   ),
                   onSaved: (_) => _emailController.text,

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/design/styles.dart';
 
-class DetailsCarSettingsScreen extends StatefulWidget {
+class DetailsCarInsertionScreen extends StatefulWidget {
   CarData carData;
-  DetailsCarSettingsScreen(this.carData, {Key? key}) : super(key: key);
+  DetailsCarInsertionScreen(this.carData, {Key? key}) : super(key: key);
 
   @override
-  _DetailsCarSettingsScreenState createState() =>
-      _DetailsCarSettingsScreenState();
+  _DetailsCarInsertionScreenState createState() =>
+      _DetailsCarInsertionScreenState();
 }
 
-class _DetailsCarSettingsScreenState extends State<DetailsCarSettingsScreen> {
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
+class _DetailsCarInsertionScreenState extends State<DetailsCarInsertionScreen> {
   CarData carDetails = defaultCarData;
 
   @override
@@ -29,28 +27,11 @@ class _DetailsCarSettingsScreenState extends State<DetailsCarSettingsScreen> {
     });
   }
 
-  void _removeCarData(carData) async {
-    await _databaseHelper.deleteCar(carData);
-    Navigator.pop(context, true);
-  }
-
-  void _closeDetailsScreen() {
-    Navigator.pop(context, true);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Car Details'),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.delete_forever),
-        //     onPressed: () {
-        //       _removeCarData(widget.carData);
-        //     },
-        //   ),
-        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

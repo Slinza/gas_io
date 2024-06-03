@@ -7,14 +7,14 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/fuel_type.dart';
 
-class CarSettingsScreen extends StatefulWidget {
-  const CarSettingsScreen({super.key});
+class CarInsertionScreen extends StatefulWidget {
+  const CarInsertionScreen({super.key});
 
   @override
-  _CarSettingsScreenState createState() => _CarSettingsScreenState();
+  _CarInsertionScreenState createState() => _CarInsertionScreenState();
 }
 
-class _CarSettingsScreenState extends State<CarSettingsScreen> {
+class _CarInsertionScreenState extends State<CarInsertionScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _modelController = TextEditingController();
@@ -31,15 +31,6 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
   void initState() {
     super.initState();
   }
-
-  // Future<void> fetchUserData() async {
-  //   CarData? user = await _databaseHelper.getCarDetailsById();
-  //   if (user != null) {
-  //     _nameController.text = user.name;
-  //     _surnameController.text = user.surname;
-  //     _usernameController.text = user.username;
-  //   }
-  // }
 
   Future<void> saveCarData() async {
     CarData? car = CarData(
@@ -83,7 +74,6 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                   ),
                   onSaved: (_) => _brandController.text,
                 ),
-                const SizedBox(height: 16.0),
                 FormBuilderTextField(
                   controller: _modelController,
                   name: 'model',
@@ -98,7 +88,6 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                   ),
                   onSaved: (_) => _modelController.text,
                 ),
-                const SizedBox(height: 16.0),
                 FormBuilderTextField(
                   controller: _yearController,
                   name: 'year',
@@ -119,7 +108,6 @@ class _CarSettingsScreenState extends State<CarSettingsScreen> {
                   keyboardType:
                       const TextInputType.numberWithOptions(decimal: false),
                 ),
-                const SizedBox(height: 16.0),
                 FormBuilderTextField(
                   controller: _initialKmController,
                   name: 'km',
