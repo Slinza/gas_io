@@ -10,7 +10,9 @@ import 'package:gas_io/components/car_card.dart';
 import 'package:gas_io/components/fuel_type.dart';
 
 class CarDataPage extends StatefulWidget {
-  const CarDataPage({super.key});
+  final Function(bool) onCarDataValid;
+
+  const CarDataPage({super.key, required this.onCarDataValid});
 
   @override
   State<CarDataPage> createState() => _CarDataPageState();
@@ -29,19 +31,13 @@ class _CarDataPageState extends State<CarDataPage> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   List<CarCard> car = [];
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
+  bool _isSaving = false;
 
   Future<void> saveCarData() async {
+    setState(() {
+      _isSaving = true;
+    });
+
     CarData? car = CarData(
       id: 0,
       userId: USER_ID,
@@ -53,6 +49,12 @@ class _CarDataPageState extends State<CarDataPage> {
     );
 
     await _databaseHelper.insertCar(car);
+
+    setState(() {
+      _isSaving = false;
+    });
+
+    widget.onCarDataValid(true);
   }
 
   @override
@@ -89,7 +91,7 @@ class _CarDataPageState extends State<CarDataPage> {
                         FormBuilderValidators.required(),
                       ],
                     ),
-                    onSaved: (_) => _brandController.text,
+                    enabled: !_isSaving,
                   ),
                   FormBuilderTextField(
                     controller: _modelController,
@@ -103,7 +105,7 @@ class _CarDataPageState extends State<CarDataPage> {
                         FormBuilderValidators.required(),
                       ],
                     ),
-                    onSaved: (_) => _modelController.text,
+                    enabled: !_isSaving,
                   ),
                   FormBuilderTextField(
                     controller: _yearController,
@@ -119,9 +121,8 @@ class _CarDataPageState extends State<CarDataPage> {
                         FormBuilderValidators.min(1900),
                       ],
                     ),
-                    onSaved: (_) => _yearController.text,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: false),
+                    enabled: !_isSaving,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: false),
                   ),
                   FormBuilderTextField(
                     controller: _initialKmController,
@@ -138,22 +139,18 @@ class _CarDataPageState extends State<CarDataPage> {
                         FormBuilderValidators.min(0),
                       ],
                     ),
-                    onSaved: (_) => _initialKmController.text =
-                        _initialKmController.text.replaceAll(',', '.'),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    enabled: !_isSaving,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   ),
                   const SizedBox(height: 16.0),
                   DropdownButton<FuelType>(
                     value: _selectedFuelType,
                     onChanged: (value) {
-                      setState(
-                        () {
-                          if (value != null) {
-                            _selectedFuelType = value;
-                          }
-                        },
-                      );
+                      setState(() {
+                        if (value != null) {
+                          _selectedFuelType = value;
+                        }
+                      });
                     },
                     items: FuelType.values.map((FuelType fuelType) {
                       return DropdownMenuItem<FuelType>(
@@ -164,12 +161,20 @@ class _CarDataPageState extends State<CarDataPage> {
                   ),
                   const SizedBox(height: 16.0),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: _isSaving
+                        ? null
+                        : () {
                       if (_formKeyInit.currentState!.saveAndValidate()) {
                         saveCarData();
+                      } else {
+                        widget.onCarDataValid(false);
                       }
                     },
-                    child: const Text('Add'),
+                    child: _isSaving
+                        ? const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    )
+                        : const Text('Add'),
                   ),
                 ],
               ),

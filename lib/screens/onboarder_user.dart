@@ -7,8 +7,16 @@ import 'package:gas_io/design/themes.dart';
 import 'package:gas_io/design/styles.dart';
 import 'package:gas_io/components/user_schema.dart';
 
-class NameSurnamePage extends StatelessWidget {
-  NameSurnamePage({super.key});
+class NameSurnamePage extends StatefulWidget {
+  final Function(bool) onUserDataValid;
+
+  const NameSurnamePage({super.key, required this.onUserDataValid});
+
+  @override
+  _NameSurnamePageState createState() => _NameSurnamePageState();
+}
+
+class _NameSurnamePageState extends State<NameSurnamePage> {
   final _formKeyInitUser = GlobalKey<FormBuilderState>();
 
   final TextEditingController _nameController = TextEditingController();
@@ -17,9 +25,27 @@ class NameSurnamePage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
+  bool _isSaving = false;
+
   Future<void> saveUserData() async {
-    UserData? user = UserData(id: 0, name: _nameController.text, surname: _surnameController.text, username: _usernameController.text, email: _emailController.text);
+    setState(() {
+      _isSaving = true;
+    });
+
+    UserData user = UserData(
+      id: 0,
+      name: _nameController.text,
+      surname: _surnameController.text,
+      username: _usernameController.text,
+      email: _emailController.text,
+    );
     await _databaseHelper.insertUser(user);
+
+    setState(() {
+      _isSaving = false;
+    });
+
+    widget.onUserDataValid(true);
   }
 
   @override
@@ -55,7 +81,7 @@ class NameSurnamePage extends StatelessWidget {
                       FormBuilderValidators.required(),
                     ],
                   ),
-                  onSaved: (_) => _nameController.text,
+                  enabled: !_isSaving,
                 ),
                 FormBuilderTextField(
                   controller: _surnameController,
@@ -69,7 +95,7 @@ class NameSurnamePage extends StatelessWidget {
                       FormBuilderValidators.required(),
                     ],
                   ),
-                  onSaved: (_) => _surnameController.text,
+                  enabled: !_isSaving,
                 ),
                 FormBuilderTextField(
                   controller: _usernameController,
@@ -83,7 +109,7 @@ class NameSurnamePage extends StatelessWidget {
                       FormBuilderValidators.required(),
                     ],
                   ),
-                  onSaved: (_) => _usernameController.text,
+                  enabled: !_isSaving,
                 ),
                 FormBuilderTextField(
                   controller: _emailController,
@@ -98,18 +124,27 @@ class NameSurnamePage extends StatelessWidget {
                       FormBuilderValidators.email(),
                     ],
                   ),
-                  onSaved: (_) => _emailController.text,
+                  enabled: !_isSaving,
                 ),
                 const SizedBox(
                   height: 30,
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: _isSaving
+                      ? null
+                      : () {
                     if (_formKeyInitUser.currentState!.saveAndValidate()) {
                       saveUserData();
+                    } else {
+                      widget.onUserDataValid(false);
                     }
                   },
-                  child: const Text('Save'),
+                  child: _isSaving
+                      ? const CircularProgressIndicator(
+                    valueColor:
+                    AlwaysStoppedAnimation<Color>(Colors.white),
+                  )
+                      : const Text('Save'),
                 ),
               ],
             ),

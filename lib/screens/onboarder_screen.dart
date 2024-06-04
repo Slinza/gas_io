@@ -16,13 +16,24 @@ class OnboardingScreens extends StatefulWidget {
 class _OnboardingScreensState extends State<OnboardingScreens> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool _isUserDataValid = false;
+  bool _isCarDataValid = false;
 
   void nextAction(int currentPage) {
+    if (currentPage == 1 && !_isUserDataValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter valid user data and save.')),
+      );
+      return;
+    }
+
+    if (currentPage == 2 && !_isCarDataValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter valid car data and save.')),
+      );
+      return;
+    }
+
     if (currentPage < 2) {
       _pageController.nextPage(
           duration: const Duration(milliseconds: 500), curve: Curves.ease);
@@ -33,6 +44,18 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
     }
   }
 
+  void onUserDataValid(bool isValid) {
+    setState(() {
+      _isUserDataValid = isValid;
+    });
+  }
+
+  void onCarDataValid(bool isValid) {
+    setState(() {
+      _isCarDataValid = isValid;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +64,7 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
         children: [
           PageView(
             controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(), // Disable swipe navigation
             onPageChanged: (int page) {
               setState(() {
                 _currentPage = page;
@@ -48,8 +72,8 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             },
             children: [
               const WelcomePage(),
-              NameSurnamePage(),
-              const CarDataPage(),
+              NameSurnamePage(onUserDataValid: onUserDataValid),
+              CarDataPage(onCarDataValid: onCarDataValid),
             ],
           ),
           Positioned(
@@ -59,18 +83,12 @@ class _OnboardingScreensState extends State<OnboardingScreens> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Remove the "Back" button to prevent going back to previous pages
                 _currentPage > 0
-                    ? ElevatedButton(
-                        onPressed: () {
-                          _pageController.previousPage(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.ease);
-                        },
-                        child: const Text('Back'),
-                      )
+                    ? const SizedBox(width: 80)
                     : Container(
-                        width: 80,
-                      ),
+                  width: 80,
+                ),
                 Text('Page ${_currentPage + 1} of 3'),
                 ElevatedButton(
                   onPressed: () {
