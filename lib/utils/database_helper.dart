@@ -10,12 +10,12 @@ import 'package:gas_io/components/gas_station_schema.dart';
 
 class DatabaseHelper
     with
-        DatabaseCardKeys,
+        DatabaseRefuelKeys,
         DatabaseUserKeys,
         DatabaseCarKeys,
         DatabaseGasStationKeys {
   static Database? _database;
-  static const String dbName = 'card_database.db';
+  static const String dbName = 'refuels_database.db';
 
   Future<Database> get database async {
     if (_database != null) {
@@ -52,7 +52,7 @@ class DatabaseHelper
         )
         ''');
         await db.execute('''
-        CREATE TABLE $cardTableName(
+        CREATE TABLE $refuelTableName(
           $idKey INTEGER PRIMARY KEY AUTOINCREMENT,
           $relatedCarIdKey INTEGER,
           $priceKey REAL,
@@ -74,23 +74,16 @@ class DatabaseHelper
           $gasStationShortFormattedAddressKey TEXT
         )
         ''');
-
-        await db.execute(
-            'INSERT INTO $userTableName($userNameKey, $userSurnameKey, $userUsernameKey, $userEmailKey) VALUES("Name", "Surname", "Username", "Email");');
-        await db.execute(
-            '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey, $carInitialKmKey, $carFuelType) VALUES(0,"Brand", "Model", 0000, 0.0, "diesel");''');
-        // await db.execute(
-        //     '''INSERT INTO $carTableName($carUserIdKey, $carBrandKey, $carModelKey, $carYearKey , $carInitialKmKey, $carFuelType) VALUES(0,"Lancia", "Delta", 0000, 0.0, "gasoline");''');
       },
     );
   }
 
-  Future<int> insertCard(CardData card) async {
+  Future<int> insertRefuel(RefuelData refuel) async {
     if (kDebugMode) {
-      print("insert card");
+      print("insert refuel");
     }
     final db = await database;
-    return db.insert(cardTableName, card.toMap());
+    return db.insert(refuelTableName, refuel.toMap());
   }
 
   Future<int> insertGasStation(GasStationData gasStation) async {
@@ -129,41 +122,41 @@ class DatabaseHelper
     }
   }
 
-  Future<List<CardData>> getCardsByCar(selectedCarId) async {
+  Future<List<RefuelData>> getRefuelsByCar(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
-      cardTableName,
+      refuelTableName,
       where: '$relatedCarIdKey = ?',
       whereArgs: [selectedCarId],
       orderBy: 'date DESC',
     );
     return List.generate(maps.length, (i) {
-      return CardData.fromMap(maps[i]);
+      return RefuelData.fromMap(maps[i]);
     });
   }
 
   // TODO: check that will fetch only the previous year, discuss if necessary
-  Future<List<CardData>> getYearCard(selectedCarId) async {
+  Future<List<RefuelData>> getYearRefuels(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $gasStatIdKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $gasStatIdKey, $euroPerLiterKey, $kmKey FROM $refuelTableName WHERE $relatedCarIdKey = $selectedCarId GROUP BY STRFTIME('%mm', $dateKey);");
     return List.generate(maps.length, (i) {
-      return CardData.fromMap(maps[i]);
+      return RefuelData.fromMap(maps[i]);
     });
   }
 
-  Future<List<CardData>> geSixMonthsCard(selectedCarId) async {
+  Future<List<RefuelData>> geSixMonthsRefuels(selectedCarId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $gasStatIdKey, $euroPerLiterKey, $kmKey FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey BETWEEN datetime('now', '-6 months') AND datetime('now', '+1 day') GROUP BY STRFTIME('%mm', $dateKey);");
+        "SELECT $idKey, $relatedCarIdKey, ROUND(SUM($priceKey), 2) AS $priceKey, ROUND(SUM($litersKey), 2) AS $litersKey, $dateKey, $gasStatIdKey, $euroPerLiterKey, $kmKey FROM $refuelTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey BETWEEN datetime('now', '-6 months') AND datetime('now', '+1 day') GROUP BY STRFTIME('%mm', $dateKey);");
 
     if (maps.isEmpty) {
       // Handle the case when no data is retrieved from the database
-      List<CardData> missingData = [];
-      // Loop over the last 6 months and create default CardData objects
+      List<RefuelData> missingData = [];
+      // Loop over the last 6 months and create default RefuelData objects
       for (int i = 0; i < 6; i++) {
         missingData.add(
-          generateEmptyCardData(
+          generateEmptyRefuelData(
             selectedCarId,
             DateTime.now().subtract(
               Duration(days: i * 30),
@@ -190,17 +183,17 @@ class DatabaseHelper
               .month;
         },
       );
-      List<CardData> listOfCardData = [];
+      List<RefuelData> listOfRefuelsData = [];
       for (final (index, m) in expectedMonths.indexed) {
         if (presentMonths.contains(m)) {
-          listOfCardData.add(
-            CardData.fromMap(
+          listOfRefuelsData.add(
+            RefuelData.fromMap(
               maps[presentMonths.indexOf(m)],
             ),
           );
         } else {
-          listOfCardData.add(
-            generateEmptyCardData(
+          listOfRefuelsData.add(
+            generateEmptyRefuelData(
               selectedCarId,
               DateTime.now().subtract(
                 Duration(days: index * 30),
@@ -209,11 +202,11 @@ class DatabaseHelper
           );
         }
       }
-      return listOfCardData;
+      return listOfRefuelsData;
     }
   }
 
-  Future<List<CardData>> getMonthCard(selectedCarId) async {
+  Future<List<RefuelData>> getMonthRefuels(selectedCarId) async {
     final db = await database;
     int month = DateTime.now().month;
     String formattedMonth = '';
@@ -223,27 +216,29 @@ class DatabaseHelper
       formattedMonth = month.toString();
     }
     final List<Map<String, dynamic>> maps = await db.rawQuery(
-        "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND STRFTIME('%m', $dateKey) = '$formattedMonth' ORDER BY $dateKey ASC;");
+        "SELECT * FROM $refuelTableName WHERE $relatedCarIdKey = $selectedCarId AND STRFTIME('%m', $dateKey) = '$formattedMonth' ORDER BY $dateKey ASC;");
     return List.generate(maps.length, (i) {
-      return CardData.fromMap(maps[i]);
+      return RefuelData.fromMap(maps[i]);
     });
   }
 
-  Future<int> deleteCard(CardData card) async {
+  Future<int> deleteRefuels(RefuelData refuel) async {
     final db = await database;
     return db.delete(
-      cardTableName,
+      refuelTableName,
       where: '$idKey = ?',
-      whereArgs: [card.id], // Assuming you have an 'id' field in your CardData
+      whereArgs: [
+        refuel.id
+      ], // Assuming you have an 'id' field in your RefuelData
     );
   }
 
-  Future<int> deleteAllCardByCarId(int carId) async {
+  Future<int> deleteAllRefuelsByCarId(int carId) async {
     final db = await database;
     return db.delete(
-      cardTableName,
+      refuelTableName,
       where: '$relatedCarIdKey = ?',
-      whereArgs: [carId], // Assuming you have an 'id' field in your CardData
+      whereArgs: [carId], // Assuming you have an 'id' field in your RefuelData
     );
   }
 
@@ -282,51 +277,46 @@ class DatabaseHelper
     );
   }
 
-  Future<Map<String, CardData?>> getPreviousAndNextRefuel(
+  Future<Map<String, RefuelData?>> getPreviousAndNextRefuel(
       int selectedCarId, DateTime currentDate,
       {int? excludeRefuelId}) async {
     final db = await database;
 
     // Get the previous refuel
     final List<Map<String, dynamic>> previousRefuelMap = await db.rawQuery(
-      "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey < ?"
+      "SELECT * FROM $refuelTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey < ?"
       "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
       " ORDER BY $dateKey DESC LIMIT 1;",
       [currentDate.toIso8601String()],
     );
-    CardData? previousRefuel;
+    RefuelData? previousRefuel;
     if (previousRefuelMap.isNotEmpty) {
-      previousRefuel = CardData.fromMap(previousRefuelMap.first);
+      previousRefuel = RefuelData.fromMap(previousRefuelMap.first);
     }
 
     // Get the next refuel
     final List<Map<String, dynamic>> nextRefuelMap = await db.rawQuery(
-      "SELECT * FROM $cardTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey > ?"
+      "SELECT * FROM $refuelTableName WHERE $relatedCarIdKey = $selectedCarId AND $dateKey > ?"
       "${excludeRefuelId != null ? ' AND $idKey != $excludeRefuelId' : ''}"
       " ORDER BY $dateKey ASC LIMIT 1;",
       [currentDate.toIso8601String()],
     );
-    CardData? nextRefuel;
+    RefuelData? nextRefuel;
     if (nextRefuelMap.isNotEmpty) {
-      nextRefuel = CardData.fromMap(nextRefuelMap.first);
+      nextRefuel = RefuelData.fromMap(nextRefuelMap.first);
     }
 
     return {'previousRefuel': previousRefuel, 'nextRefuel': nextRefuel};
   }
 
-  Future<void> updateCard(CardData newCard) async {
+  Future<void> updateRefuel(RefuelData newRefuel) async {
     final db = await database;
 
-    // // Ensure that the card has a valid ID
-    // if (newCard.id == null) {
-    //   throw ArgumentError("Card ID cannot be null for update operation");
-    // }
-
     await db.update(
-      cardTableName,
-      newCard.toMap(),
+      refuelTableName,
+      newRefuel.toMap(),
       where: '$idKey = ?',
-      whereArgs: [newCard.id],
+      whereArgs: [newRefuel.id],
     );
   }
 
@@ -401,11 +391,6 @@ class DatabaseHelper
   Future<void> updateCar(CarData newCar) async {
     final db = await database;
 
-    // // Ensure that the card has a valid ID
-    // if (newCard.id == null) {
-    //   throw ArgumentError("Card ID cannot be null for update operation");
-    // }
-
     await db.update(
       carTableName,
       newCar.toMap(),
@@ -416,11 +401,11 @@ class DatabaseHelper
 
   Future<int> deleteCar(CarData car) async {
     final db = await database;
-    deleteAllCardByCarId(car.id);
+    deleteAllRefuelsByCarId(car.id);
     return db.delete(
       carTableName,
       where: 'id = ?',
-      whereArgs: [car.id], // Assuming you have an 'id' field in your CardData
+      whereArgs: [car.id], // Assuming you have an 'id' field in your CarData
     );
   }
 }

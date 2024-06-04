@@ -1,5 +1,5 @@
-mixin DatabaseCardKeys {
-  final String cardTableName = 'cards';
+mixin DatabaseRefuelKeys {
+  final String refuelTableName = 'refuels';
   final String idKey = 'id';
   final String relatedCarIdKey = 'carId';
   final String priceKey = 'price';

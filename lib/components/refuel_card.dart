@@ -7,8 +7,8 @@ import 'package:gas_io/design/themes.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/gas_station_schema.dart';
 
-CardData generateEmptyCardData(int carId, DateTime mockedDateTime) {
-  return CardData(
+RefuelData generateEmptyRefuelData(int carId, DateTime mockedDateTime) {
+  return RefuelData(
     id: -1,
     carId: carId,
     price: 0.0,
@@ -21,7 +21,7 @@ CardData generateEmptyCardData(int carId, DateTime mockedDateTime) {
   );
 }
 
-class CardData with DatabaseCardKeys {
+class RefuelData with DatabaseRefuelKeys {
   final int id;
   final int carId;
   final double price;
@@ -32,7 +32,7 @@ class CardData with DatabaseCardKeys {
   final double km;
   final bool isCompleteRefuel;
 
-  CardData(
+  RefuelData(
       {required this.id,
       required this.carId,
       required this.price,
@@ -57,8 +57,8 @@ class CardData with DatabaseCardKeys {
     };
   }
 
-  factory CardData.fromMap(Map<String, dynamic> map) {
-    return CardData(
+  factory RefuelData.fromMap(Map<String, dynamic> map) {
+    return RefuelData(
       id: map['id'],
       carId: map["carId"],
       price: map['price'],
@@ -74,7 +74,7 @@ class CardData with DatabaseCardKeys {
 
 class RefuelCard extends StatelessWidget {
   const RefuelCard({Key? key, required this.refuelData}) : super(key: key);
-  final CardData refuelData;
+  final RefuelData refuelData;
 
   @override
   Widget build(BuildContext context) {

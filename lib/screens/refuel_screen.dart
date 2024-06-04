@@ -15,7 +15,7 @@ class RefuelScreen extends StatefulWidget {
 
 class _RefuelScreenState extends State<RefuelScreen> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  List<CardData> _cardList = [];
+  List<RefuelData> _cardList = [];
   final ScrollController _listController = ScrollController();
 
   @override
@@ -33,8 +33,8 @@ class _RefuelScreenState extends State<RefuelScreen> {
   }
 
   Future<void> _loadCards() async {
-    List<CardData> cards =
-        await _databaseHelper.getCardsByCar(widget.selectedCarId);
+    List<RefuelData> cards =
+        await _databaseHelper.getRefuelsByCar(widget.selectedCarId);
     if (mounted) {
       setState(() {
         _cardList = cards;
@@ -77,7 +77,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
     }
   }
 
-  Future<void> _showDeleteConfirmation(CardData cardData) async {
+  Future<void> _showDeleteConfirmation(RefuelData cardData) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button for close dialog
@@ -101,7 +101,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
             TextButton(
               child: const Text('Delete'),
               onPressed: () async {
-                await _databaseHelper.deleteCard(cardData);
+                await _databaseHelper.deleteRefuels(cardData);
                 setState(() {
                   _cardList.remove(cardData);
                 });
@@ -130,7 +130,7 @@ class _RefuelScreenState extends State<RefuelScreen> {
       controller: _listController,
       itemCount: _cardList.length,
       itemBuilder: (context, index) {
-        final CardData cardData = _cardList[index];
+        final RefuelData cardData = _cardList[index];
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Slidable(

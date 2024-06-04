@@ -8,7 +8,7 @@ import 'package:gas_io/components/gas_station_schema.dart';
 
 class ModifyRefuel extends StatefulWidget {
   int selectedCarId;
-  CardData cardData;
+  RefuelData cardData;
   ModifyRefuel(this.selectedCarId, this.cardData, {Key? key}) : super(key: key);
 
   @override
@@ -133,12 +133,12 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
   }
 
   Future<void> _loadPreviousAndNextRefuel(selectedDateTime, refuelId) async {
-    Map<String, CardData?> refuels = await _databaseHelper
+    Map<String, RefuelData?> refuels = await _databaseHelper
         .getPreviousAndNextRefuel(selectedCarId, selectedDateTime,
             excludeRefuelId: refuelId);
 
-    CardData? previousRefuel = refuels['previousRefuel'];
-    CardData? nextRefuel = refuels['nextRefuel'];
+    RefuelData? previousRefuel = refuels['previousRefuel'];
+    RefuelData? nextRefuel = refuels['nextRefuel'];
     setState(() {
       if (previousRefuel != null) {
         previousRefuelKm = previousRefuel.km;
@@ -350,7 +350,7 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
             0.0;
     double km = double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
 
-    CardData newCard = CardData(
+    RefuelData newCard = RefuelData(
       id: widget.cardData.id,
       carId: selectedCarId,
       price: price,
@@ -361,7 +361,7 @@ class _ModifyRefuelState extends State<ModifyRefuel> {
       km: km,
       isCompleteRefuel: isCompleteRefuel, // Assign the selected value
     );
-    await _databaseHelper.updateCard(newCard);
+    await _databaseHelper.updateRefuel(newCard);
     Navigator.of(context).pop(newCard);
   }
 

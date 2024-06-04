@@ -18,14 +18,8 @@ class NameSurnamePage extends StatelessWidget {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
   Future<void> saveUserData() async {
-    UserData? user = await _databaseHelper.getUser();
-    if (user != null) {
-      user.name = _nameController.text;
-      user.surname = _surnameController.text;
-      user.username = _usernameController.text;
-      user.email = _emailController.text;
-      await _databaseHelper.updateUser(user);
-    }
+    UserData? user = UserData(id: 0, name: _nameController.text, surname: _surnameController.text, username: _usernameController.text, email: _emailController.text);
+    await _databaseHelper.insertUser(user);
   }
 
   @override

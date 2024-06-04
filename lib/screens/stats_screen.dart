@@ -49,9 +49,9 @@ class _StatsScreenState extends State<StatsScreen> {
   }
 
   Future<void> _loadCards() async {
-    List<CardData> sixMonthsCard = await _databaseHelper.geSixMonthsCard(
+    List<RefuelData> sixMonthsCard = await _databaseHelper.geSixMonthsRefuels(
         widget.selectedCarId); // TODO make it taking the auto context
-    List<CardData> monthCards = await _databaseHelper.getMonthCard(
+    List<RefuelData> monthCards = await _databaseHelper.getMonthRefuels(
         widget.selectedCarId); // TODO make it taking the auto context
 
     Map<String, dynamic> carData =
@@ -67,15 +67,15 @@ class _StatsScreenState extends State<StatsScreen> {
     );
   }
 
-  void _prepareSixMonthsGraphData(List<CardData> cards) {
+  void _prepareSixMonthsGraphData(List<RefuelData> cards) {
     sixMonthsPrices = sixMonthsElementsList(cards);
   }
 
-  void _prepareMonthGraphData(List<CardData> cards) {
+  void _prepareMonthGraphData(List<RefuelData> cards) {
     monthPrices = monthlyPrice(cards);
   }
 
-  void _prepareMonthStatsData(List<CardData> cards) {
+  void _prepareMonthStatsData(List<RefuelData> cards) {
     totalKmDone = getTotalKm(cards, carDetails.initialKm);
     averageConsumption = getAverageConsuption(cards, carDetails.initialKm);
   }

@@ -131,23 +131,21 @@ class _InsertRefuelState extends State<InsertRefuel> {
   }
 
   Future<void> _loadPreviousAndNextRefuel() async {
-    Map<String, CardData?> refuels = await _databaseHelper
+    Map<String, RefuelData?> refuels = await _databaseHelper
         .getPreviousAndNextRefuel(selectedCarId, selectedDateTime);
 
-    CardData? previousRefuel = refuels['previousRefuel'];
-    CardData? nextRefuel = refuels['nextRefuel'];
+    RefuelData? previousRefuel = refuels['previousRefuel'];
+    RefuelData? nextRefuel = refuels['nextRefuel'];
     setState(() {
       if (previousRefuel != null) {
         previousRefuelKm = previousRefuel.km;
-      }
-      else {
+      } else {
         previousRefuelKm = -1;
       }
 
       if (nextRefuel != null) {
         nextRefuelKm = nextRefuel.km;
-      }
-      else {
+      } else {
         nextRefuelKm = -1;
       }
     });
@@ -363,7 +361,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
         formattedAddress: nearestGasStation!['formattedAddress'],
         shortFormattedAddress: nearestGasStation!['shortFormattedAddress']);
 
-    CardData newCard = CardData(
+    RefuelData newCard = RefuelData(
       id: DateTime.now().toUtc().millisecondsSinceEpoch,
       carId: selectedCarId,
       price: price,
@@ -375,7 +373,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
       isCompleteRefuel: isCompleteRefuel, // Assign the selected value
     );
     await _databaseHelper.insertGasStation(gasStation);
-    await _databaseHelper.insertCard(newCard);
+    await _databaseHelper.insertRefuel(newCard);
     Navigator.of(context).pop(newCard);
   }
 

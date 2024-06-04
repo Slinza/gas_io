@@ -43,7 +43,7 @@ class _CarDataPageState extends State<CarDataPage> {
 
   Future<void> saveCarData() async {
     CarData? car = CarData(
-      id: DateTime.now().toUtc().millisecondsSinceEpoch,
+      id: 0,
       userId: USER_ID,
       brand: _brandController.text,
       model: _modelController.text,

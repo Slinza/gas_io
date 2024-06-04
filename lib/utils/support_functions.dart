@@ -18,20 +18,20 @@ double average(List<double> data) {
   }
 }
 
-double averagePrice(List<CardData> data) {
+double averagePrice(List<RefuelData> data) {
   return data.map((m) => m.price).reduce((a, b) => a + b) / data.length;
 }
 
-List<double> pricesList(List<CardData> list) {
+List<double> pricesList(List<RefuelData> list) {
   return list.map((e) => e.price).toList();
 }
 
-List<FlSpot> pricesYearlyList(List<CardData> list) {
+List<FlSpot> pricesYearlyList(List<RefuelData> list) {
   return list.map((e) => FlSpot(e.date.month.toDouble(), e.price)).toList();
 }
 
-List<BarElement> sixMonthsElementsList(List<CardData> list) {
-  // Map the data to Bar element and reverese the list to have the oldest values as first ones
+List<BarElement> sixMonthsElementsList(List<RefuelData> list) {
+  // Map the data to Bar element and reverse the list to have the oldest values as first ones
   return list
       .map((e) => BarElement(x: e.date.month, y: e.price))
       .toList()
@@ -39,7 +39,7 @@ List<BarElement> sixMonthsElementsList(List<CardData> list) {
       .toList();
 }
 
-List<FlSpot> averageYearlyPrice(List<CardData> data) {
+List<FlSpot> averageYearlyPrice(List<RefuelData> data) {
   return List.generate(
     monthsNumber,
     (index) {
@@ -49,7 +49,7 @@ List<FlSpot> averageYearlyPrice(List<CardData> data) {
   );
 }
 
-Map<int, double> mapOfDailyPrices(List<CardData> objects) {
+Map<int, double> mapOfDailyPrices(List<RefuelData> objects) {
   Map<int, double> resultMap = {};
 
   for (var obj in objects) {
@@ -65,7 +65,7 @@ Map<int, double> mapOfDailyPrices(List<CardData> objects) {
   return resultMap;
 }
 
-List<FlSpot> monthlyPrice(List<CardData> data) {
+List<FlSpot> monthlyPrice(List<RefuelData> data) {
   List<FlSpot> monthlyList = [];
   double padding = 0;
   Map<int, double> priceMap = mapOfDailyPrices(data);
@@ -127,7 +127,7 @@ double getIntervalMonth(double upperLimit) {
 }
 
 // Monthly stats
-double getTotalKm(List<CardData> data, [double initialKm = 0.0]) {
+double getTotalKm(List<RefuelData> data, [double initialKm = 0.0]) {
   if (data.isNotEmpty) {
     if (data.last.km == data.first.km) {
       return data.last.km - initialKm;
@@ -140,7 +140,7 @@ double getTotalKm(List<CardData> data, [double initialKm = 0.0]) {
 }
 
 // Basic estimation
-double getAverageConsuption(List<CardData> data, [double initialKm = 0.0]) {
+double getAverageConsuption(List<RefuelData> data, [double initialKm = 0.0]) {
   double totalDistanceTraveled = getTotalKm(data, initialKm);
   double totalFuelConsumed = data.fold(0, (t, e) => t + e.liters);
 

@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   int _currentIndex = 1;
 
-  int selectedCarId = 1; // Initialize with a default car ID
+  int selectedCarId = 0; // Initialize with a default car ID
   Map<int, String> cars = {};
 
   @override
@@ -30,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    if(mounted){
     _loadCars();
+    }
   }
 
   Future<void> _loadCars() async {
