@@ -57,5 +57,5 @@ Get involved, and let's build something great together with GasIO! 🚗⛽🚀
 
 [![GitHub issues](https://img.shields.io/github/issues/Slinza/gas_io)](https://github.com/Slinza/gas_io/issues)
 [![GitHub forks](https://img.shields.io/github/forks/Slinza/gas_io)](https://github.com/Slinza/gas_io/network)
-[![GitHub stars](https://img.shields.io/github/stars//Slinza/gas_io)](https://github.com/Slinza/gas_io/stargazers)
-[![GitHub license](https://img.shields.io/github/license//Slinza/gas_io)](https://github.com/Slinza/gas_io/blob/main/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Slinza/gas_io)](https://github.com/Slinza/gas_io/stargazers)
+[![GitHub license](https://img.shields.io/github/license/Slinza/gas_io)](https://github.com/Slinza/gas_io/blob/main/LICENSE)
