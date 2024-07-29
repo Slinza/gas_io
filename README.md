@@ -8,6 +8,23 @@ GasIO is an open-source Flutter application designed to help you easily record c
 - **Statistics:** View basic fuel consumption statistics to monitor your vehicle's efficiency over time.
 - **User-Friendly Interface:** Intuitive and easy-to-navigate interface built with Flutter, ensuring a smooth user experience across different devices.
 
+## Screenshots
+
+![Home Screen](screenshots/refuel_list.png)
+*Home Screen*
+
+![Add Refuel](screenshots/sliding_elements.png)
+*Add Refuel*
+
+![Add Refuel](screenshots/add_refuel.png)
+*Add Refuel*
+
+![Add Refuel](screenshots/update_refuel.png)
+*Add Refuel*
+
+![Statistics](screenshots/statistics.png)
+*Statistics*
+
 ## Getting Started
 
 To get a copy of the GasIO app up and running on your local machine, follow these steps:
