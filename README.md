@@ -22,8 +22,8 @@ GasIO is an open-source Flutter application designed to help you easily record c
 ![Add Refuel](screenshots/update_refuel.jpg)
 *Update Refuel*
 
-![Statistics](screenshots/statistics.jpg)
-*Statistics*
+<!-- ![Statistics](screenshots/statistics.jpg)
+*Statistics* -->
 
 ## Getting Started
 
