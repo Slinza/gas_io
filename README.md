@@ -10,19 +10,19 @@ GasIO is an open-source Flutter application designed to help you easily record c
 
 ## Screenshots
 
-![Home Screen](screenshots/refuel_list.png)
+![Home Screen](screenshots/refuel_list.jpg)
 *Home Screen*
 
-![Add Refuel](screenshots/sliding_elements.png)
+![Add Refuel](screenshots/sliding_elements.jpg)
+*Modify Refuel*
+
+![Add Refuel](screenshots/add_refuel.jpg)
 *Add Refuel*
 
-![Add Refuel](screenshots/add_refuel.png)
-*Add Refuel*
+![Add Refuel](screenshots/update_refuel.jpg)
+*Update Refuel*
 
-![Add Refuel](screenshots/update_refuel.png)
-*Add Refuel*
-
-![Statistics](screenshots/statistics.png)
+![Statistics](screenshots/statistics.jpg)
 *Statistics*
 
 ## Getting Started
