@@ -1,38 +1,167 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
+import 'package:gas_io/design/styles.dart';
 import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/user_schema.dart';
+import 'package:gas_io/screens/user_settings.dart';
+import 'package:gas_io/screens/car_insertion.dart';
+import 'package:gas_io/components/car_card.dart';
+
+const USER_ID = 0; //TODO: Make it changiable
 
 class UserScreen extends StatefulWidget {
+  const UserScreen({super.key});
+
   @override
   _UserScreenState createState() => _UserScreenState();
 }
 
 class _UserScreenState extends State<UserScreen> {
-  bool isEditable = false;
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  UserData userData = UserData(id: 0, name: "", surname: "", username: "");
-  String userName = "sdfase";
-  String carBrand = 'Brand';
-  String carModel = 'Model';
-  String profilePic =
-      'https://buffer.com/cdn-cgi/image/w=1000,fit=contain,q=90,f=auto/library/content/images/size/w1200/2023/10/free-images.jpg';
+  final ScrollController _listController = ScrollController();
+  UserData? _user;
+  List<CarData> _cardList = [];
 
   @override
   void initState() {
+    fetchUserData();
     super.initState();
-    _loadUserData();
   }
 
-  void toggleEditable() {
-    setState(() {
-      isEditable = !isEditable;
+  Future<void> fetchUserData() async {
+    _user = await _databaseHelper.getUser();
+    List<CarData> cardList = await _databaseHelper.getCarsByUser(USER_ID);
+
+    setState(
+      () {
+        _cardList = cardList;
+      },
+    );
+
+    // Scroll to the top when a new card is added
+    if (_listController.hasClients) {
+      _listController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  Future<void> _addNewCard() async {
+    // Navigate to the insert page and wait for the result
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CarInsertionScreen()),
+    ).then((value) {
+      if (value != null && value) {
+        fetchUserData();
+      }
     });
   }
 
-  Future<void> _loadUserData() async {
-    userData = await _databaseHelper.getUserData(0);
-    userName = userData.username;
+  Future<void> _userSettings() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const UserSettingsScreen()),
+    ).then((value) {
+      if (value != null && value) {
+        fetchUserData();
+      }
+    });
+  }
+
+  Future<void> _showDeleteConfirmation(CarData cardData) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        if (_cardList.length > 1) {
+          return AlertDialog(
+            title: const Text('Are you sure?'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'Do you want to delete this car and all the relative refuel?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Delete'),
+                onPressed: () async {
+                  await _databaseHelper.deleteCar(cardData);
+                  setState(() {
+                    _cardList.remove(cardData);
+                  });
+                  Navigator.of(context).pop(); // close dialog
+                },
+              ),
+            ],
+          );
+        } else {
+          return AlertDialog(
+            title: const Text('Operation Denied!'),
+            content: const SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text(
+                      'There must be at least one car! Create a new one before deleting this one'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildCardList() {
+    return ListView.builder(
+      controller: _listController,
+      itemCount: _cardList.length,
+      itemBuilder: (context, index) {
+        final CarData carData = _cardList[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Slidable(
+            key: Key(carData.id.toString()),
+            endActionPane: ActionPane(
+              extentRatio: 0.5,
+              motion: const BehindMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) async {
+                    await _showDeleteConfirmation(carData);
+                  },
+                  backgroundColor: Colors.transparent,
+                  foregroundColor: Colors.red,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                  borderRadius: const BorderRadius.all(Radius.circular(100)),
+                ),
+              ],
+            ),
+            child: CarCard(carData: carData),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -41,111 +170,43 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-            icon: Icon(
-              isEditable ? Icons.save : Icons.edit,
-              color: Colors.white,
-            ),
-            onPressed: toggleEditable,
+            icon: const Icon(Icons.add_circle_rounded),
+            onPressed: () {
+              _addNewCard();
+            },
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              _userSettings();
+            },
+          ),
+          const SizedBox(
+            width: 10,
+          )
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 50.0,
-                    backgroundImage: NetworkImage(profilePic),
-                  ),
-                  Positioned(
-                    bottom: 0.0,
-                    right: 0.0,
-                    child: Container(
-                      width: 30.0,
-                      height: 30.0,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blueAccent,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.5),
-                            spreadRadius: 1.0,
-                            blurRadius: 2.0,
-                            offset: Offset(1.0, 1.0),
-                          ),
-                        ],
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          isEditable ? Icons.save : Icons.edit,
-                          color: Colors.white,
-                          size: 16.0,
-                        ),
-                        onPressed: toggleEditable,
-                      ),
+          padding: const EdgeInsets.all(16.0),
+          child: _user != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 40.0),
+                    Text(
+                      _user!.username,
+                      textAlign: TextAlign.center,
+                      style: detailsStyle,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16.0),
-            // Text(
-            //   'Name',
-            //   style: TextStyle(fontWeight: FontWeight.bold),
-            // ),
-            SizedBox(height: 8.0),
-            TextField(
-              enabled: isEditable,
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                hintText: userName,
-                border: InputBorder.none,
-              ),
-              onChanged: (value) {
-                setState(() {
-                  userName = value;
-                });
-              },
-            ),
-
-            SizedBox(height: 24.0),
-            Text(
-              'Selected Car',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8.0),
-            TextField(
-              enabled: isEditable,
-              decoration: InputDecoration(
-                hintText: carBrand,
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  carModel = value;
-                });
-              },
-            ),
-            SizedBox(height: 8.0),
-            TextField(
-              enabled: isEditable,
-              decoration: InputDecoration(
-                hintText: carModel,
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  carModel = value;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
+                    const SizedBox(height: 60.0),
+                    SizedBox(
+                      width: 200,
+                      height: 600,
+                      child: _buildCardList(),
+                    )
+                  ],
+                )
+              : null),
     );
   }
 }

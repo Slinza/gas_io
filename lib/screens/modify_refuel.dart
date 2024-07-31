@@ -4,18 +4,18 @@ import 'package:gas_io/utils/database_helper.dart';
 import 'package:gas_io/components/refuel_card.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:gas_io/utils/location_helper.dart';
 import 'package:gas_io/components/gas_station_schema.dart';
 
-class InsertRefuel extends StatefulWidget {
+class ModifyRefuel extends StatefulWidget {
   int selectedCarId;
-  InsertRefuel(this.selectedCarId, {Key? key}) : super(key: key);
+  RefuelData cardData;
+  ModifyRefuel(this.selectedCarId, this.cardData, {Key? key}) : super(key: key);
 
   @override
-  _InsertRefuelState createState() => _InsertRefuelState();
+  _ModifyRefuelState createState() => _ModifyRefuelState();
 }
 
-class _InsertRefuelState extends State<InsertRefuel> {
+class _ModifyRefuelState extends State<ModifyRefuel> {
   final _formKey = GlobalKey<FormBuilderState>();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   final TextEditingController _costController = TextEditingController();
@@ -24,40 +24,31 @@ class _InsertRefuelState extends State<InsertRefuel> {
   final TextEditingController _pricePerLiterController =
       TextEditingController();
 
-  DateTime selectedDateTime = DateTime.now();
-
   late int selectedCarId;
   Map<int, String> cars = {};
   Map<String, dynamic> carDetails = {};
   double previousRefuelKm = -1;
   double nextRefuelKm = -1;
   bool isCompleteRefuel = false; // New variable to track refuel completeness
-  Map<String, dynamic>? nearestGasStation;
+  GasStationData? nearestGasStation;
 
   @override
   void initState() {
     selectedCarId = widget.selectedCarId;
     _loadCars();
     _loadCarDetails();
-    _loadPreviousAndNextRefuel();
-    _fetchNearestGasStation();
+    _loadPreviousAndNextRefuel(widget.cardData.date, widget.cardData.id);
+    _loadRefuelData(widget.cardData);
+    _loadGasStation(widget.cardData.gasStationId);
     super.initState();
   }
 
-  Future<void> _fetchNearestGasStation() async {
-    try {
-      List<Map<String, dynamic>> gasStations =
-          await fetchNearestGasStationFromCurrentLocation(
-              5000); // Set your desired radius here
-
-      if (gasStations.isNotEmpty) {
-        setState(() {
-          nearestGasStation = gasStations.first;
-        });
-      }
-    } catch (e) {
-      print('Error fetching nearest gas station: $e');
-    }
+  Future<void> _loadGasStation(gasStationId) async {
+    final GasStationData? refuelGasStation =
+        await _databaseHelper.getGasStationById(gasStationId);
+    setState(() {
+      nearestGasStation = refuelGasStation;
+    });
   }
 
   Widget _buildNearestGasStationCard() {
@@ -75,7 +66,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 child: Icon(
                   Icons.local_gas_station,
                   size: 45,
-                  color: Colors.blue, // Adjust color as needed
+                  color: Colors.orange, // Adjust color as needed
                 ),
               ),
               // Gas station details
@@ -84,13 +75,13 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      nearestGasStation!['displayName']['text'],
+                      nearestGasStation!.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8.0),
-                    Text(nearestGasStation!['shortFormattedAddress']),
+                    Text(nearestGasStation!.shortFormattedAddress),
                   ],
                 ),
               ),
@@ -130,23 +121,31 @@ class _InsertRefuelState extends State<InsertRefuel> {
     }
   }
 
-  Future<void> _loadPreviousAndNextRefuel() async {
+  void _loadRefuelData(cardData) {
+    setState(() {
+      _pricePerLiterController.text = cardData.euroPerLiter.toString();
+      _litersController.text = cardData.liters.toString();
+      _costController.text = cardData.price.toString();
+      _kmController.text = cardData.km.toString();
+      isCompleteRefuel =
+          cardData.isCompleteRefuel; // Load the completeness value
+    });
+  }
+
+  Future<void> _loadPreviousAndNextRefuel(selectedDateTime, refuelId) async {
     Map<String, RefuelData?> refuels = await _databaseHelper
-        .getPreviousAndNextRefuel(selectedCarId, selectedDateTime);
+        .getPreviousAndNextRefuel(selectedCarId, selectedDateTime,
+            excludeRefuelId: refuelId);
 
     RefuelData? previousRefuel = refuels['previousRefuel'];
     RefuelData? nextRefuel = refuels['nextRefuel'];
     setState(() {
       if (previousRefuel != null) {
         previousRefuelKm = previousRefuel.km;
-      } else {
-        previousRefuelKm = -1;
       }
 
       if (nextRefuel != null) {
         nextRefuelKm = nextRefuel.km;
-      } else {
-        nextRefuelKm = -1;
       }
     });
   }
@@ -179,7 +178,7 @@ class _InsertRefuelState extends State<InsertRefuel> {
               style: const TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: Colors.orange,
               ),
             ),
           ],
@@ -200,17 +199,15 @@ class _InsertRefuelState extends State<InsertRefuel> {
                   children: [
                     Expanded(
                       child: FormBuilderDateTimePicker(
-                        onChanged: (value) => {
-                          selectedDateTime = value!,
-                          _loadPreviousAndNextRefuel()
-                        },
+                        onChanged: (value) => _loadPreviousAndNextRefuel(
+                            value, widget.cardData.id),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
                         ]),
                         name: 'date',
                         lastDate: DateTime.now(),
                         initialEntryMode: DatePickerEntryMode.calendar,
-                        initialValue: DateTime.now(),
+                        initialValue: widget.cardData.date,
                         format: DateFormat("dd/MM/yyyy  HH:mm"),
                         inputType: InputType.both,
                         decoration: const InputDecoration(
@@ -327,14 +324,14 @@ class _InsertRefuelState extends State<InsertRefuel> {
                 ),
                 const SizedBox(height: 16.0),
                 MaterialButton(
-                  color: Colors.blue,
+                  color: Colors.orange,
                   onPressed: () {
                     if (_formKey.currentState!.saveAndValidate()) {
                       _saveDataAndClose(context);
                     }
                   },
-                  child: const Text('ADD REFUEL'),
-                ),
+                  child: const Text('UPDATE REFUEL'),
+                )
               ],
             ),
           ),
@@ -353,27 +350,18 @@ class _InsertRefuelState extends State<InsertRefuel> {
             0.0;
     double km = double.tryParse(_kmController.text.replaceAll(',', '.')) ?? 0.0;
 
-    GasStationData gasStation = GasStationData(
-        id: nearestGasStation!['id'],
-        latitude: nearestGasStation!['location']['latitude'],
-        longitude: nearestGasStation!['location']['longitude'],
-        name: nearestGasStation!['displayName']["text"],
-        formattedAddress: nearestGasStation!['formattedAddress'],
-        shortFormattedAddress: nearestGasStation!['shortFormattedAddress']);
-
     RefuelData newCard = RefuelData(
-      id: DateTime.now().toUtc().millisecondsSinceEpoch,
+      id: widget.cardData.id,
       carId: selectedCarId,
       price: price,
       liters: liters,
-      date: selectedDateTime,
-      gasStationId: gasStation.id,
+      date: _formKey.currentState!.value["date"],
+      gasStationId: nearestGasStation!.id,
       euroPerLiter: euroPerLiter,
       km: km,
       isCompleteRefuel: isCompleteRefuel, // Assign the selected value
     );
-    await _databaseHelper.insertGasStation(gasStation);
-    await _databaseHelper.insertRefuel(newCard);
+    await _databaseHelper.updateRefuel(newCard);
     Navigator.of(context).pop(newCard);
   }
 

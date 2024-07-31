@@ -1,16 +1,18 @@
 import 'package:gas_io/utils/key_parameters.dart';
 
 class UserData with DatabaseUserKeys {
-  final int id;
-  final String name;
-  final String surname;
-  final String username;
+  int id;
+  String name;
+  String surname;
+  String username;
+  String email;
 
   UserData({
     required this.id,
     required this.name,
     required this.surname,
     required this.username,
+    required this.email,
   });
 
   Map<String, dynamic> toMap() {
@@ -18,7 +20,8 @@ class UserData with DatabaseUserKeys {
       userIdKey: id,
       userNameKey: name,
       userSurnameKey: surname,
-      userUsernameKey: username
+      userUsernameKey: username,
+      userEmailKey: email,
     };
   }
 
@@ -28,6 +31,7 @@ class UserData with DatabaseUserKeys {
       name: map['name'],
       surname: map['surname'],
       username: map['username'],
+      email: map['email'],
     );
   }
 }

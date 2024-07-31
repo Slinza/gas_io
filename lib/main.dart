@@ -1,62 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:gas_io/components/app_bar.dart';
-import 'package:gas_io/components/bottom_nav_bar.dart';
-import 'package:gas_io/screens/stats_screen.dart';
-import 'package:gas_io/screens/refuel_screen.dart';
-import 'package:gas_io/screens/user_screen.dart';
+import 'package:flutter_config/flutter_config.dart';
 
-void main() {
+import 'package:gas_io/components/main_screen_render.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
+  await FlutterConfig.loadEnvVariables();
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: MainScreen(),
     );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MyAppBar(),
-      body: _buildBody(),
-      bottomNavigationBar: MyBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    switch (_currentIndex) {
-      case 0:
-        return StatsScreen();
-      case 1:
-        return const RefuelScreen();
-      case 2:
-        return UserScreen();
-      default:
-        return Container(); // Handle unexpected index
-    }
   }
 }

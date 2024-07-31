@@ -1,13 +1,14 @@
-mixin DatabaseCardKeys {
-  final String cardTableName = 'cards';
+mixin DatabaseRefuelKeys {
+  final String refuelTableName = 'refuels';
   final String idKey = 'id';
   final String relatedCarIdKey = 'carId';
   final String priceKey = 'price';
   final String litersKey = 'liters';
   final String dateKey = 'date';
-  final String locationKey = 'location';
+  final String gasStatIdKey = 'gasStationId'; // foreign key
   final String euroPerLiterKey = 'euroPerLiter';
   final String kmKey = 'km';
+  final String isCompleteRefuelKey = "isCompleteRefuel";
 }
 
 mixin DatabaseUserKeys {
@@ -16,6 +17,7 @@ mixin DatabaseUserKeys {
   final String userNameKey = 'name';
   final String userSurnameKey = 'surname';
   final String userUsernameKey = 'username';
+  final String userEmailKey = 'email';
 }
 
 mixin DatabaseCarKeys {
@@ -25,6 +27,16 @@ mixin DatabaseCarKeys {
   final String carBrandKey = 'brand';
   final String carModelKey = 'model';
   final String carYearKey = 'year';
-  final String carConsumptionKey = 'fuelConsumption';
-  final String carTotalKmKey = 'totalKm';
+  final String carInitialKmKey = 'initialKm';
+  final String carFuelType = 'fuelType';
+}
+
+mixin DatabaseGasStationKeys {
+  final String gasStationTableName = 'gasStations';
+  final String gasStationIdKey = 'id';
+  final String gasStationLatitudeKey = 'latitude';
+  final String gasStationLongitudeKey = 'longitude';
+  final String gasStationNameKey = 'name';
+  final String gasStationFormattedAddressKey = 'formattedAddress';
+  final String gasStationShortFormattedAddressKey = 'shortFormattedAddress';
 }

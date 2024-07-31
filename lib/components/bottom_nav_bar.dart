@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:gas_io/design/themes.dart';
+
 class MyBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
@@ -11,7 +13,7 @@ class MyBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: currentIndex,
-      backgroundColor: const Color(0xFF46BD84),
+      backgroundColor: primaryColor,
       onTap: onTap,
       items: const [
         BottomNavigationBarItem(

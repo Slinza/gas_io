@@ -1,8 +1,14 @@
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gas_io/components/bar_element.dart';
+import 'package:gas_io/components/bar_data.dart';
 import 'package:gas_io/components/refuel_card.dart';
 
 const int monthsNumber = 12;
 const int monthDays = 31;
+const int yearFactor = 8;
+const int sixMonthFactor = 3;
+const int approximationFactor = 10;
+const int monthFactor = 3;
 
 double average(List<double> data) {
   if (data.isNotEmpty) {
@@ -12,19 +18,28 @@ double average(List<double> data) {
   }
 }
 
-double averagePrice(List<CardData> data) {
+double averagePrice(List<RefuelData> data) {
   return data.map((m) => m.price).reduce((a, b) => a + b) / data.length;
 }
 
-List<double> pricesList(List<CardData> list) {
+List<double> pricesList(List<RefuelData> list) {
   return list.map((e) => e.price).toList();
 }
 
-List<FlSpot> pricesYearlyList(List<CardData> list) {
+List<FlSpot> pricesYearlyList(List<RefuelData> list) {
   return list.map((e) => FlSpot(e.date.month.toDouble(), e.price)).toList();
 }
 
-List<FlSpot> averageYearlyPrice(List<CardData> data) {
+List<BarElement> sixMonthsElementsList(List<RefuelData> list) {
+  // Map the data to Bar element and reverse the list to have the oldest values as first ones
+  return list
+      .map((e) => BarElement(x: e.date.month, y: e.price))
+      .toList()
+      .reversed
+      .toList();
+}
+
+List<FlSpot> averageYearlyPrice(List<RefuelData> data) {
   return List.generate(
     monthsNumber,
     (index) {
@@ -34,24 +49,23 @@ List<FlSpot> averageYearlyPrice(List<CardData> data) {
   );
 }
 
-Map<int, double> mapOfDailyPrices(List<CardData> objects) {
+Map<int, double> mapOfDailyPrices(List<RefuelData> objects) {
   Map<int, double> resultMap = {};
 
-  objects.forEach(
-    (obj) {
-      if (resultMap.containsKey(obj.date.day)) {
-        if (resultMap[obj.date.day] != null)
-          resultMap.update(obj.date.day, (value) => value + obj.price);
-      } else {
-        resultMap[obj.date.day] = obj.price;
+  for (var obj in objects) {
+    if (resultMap.containsKey(obj.date.day)) {
+      if (resultMap[obj.date.day] != null) {
+        resultMap.update(obj.date.day, (value) => value + obj.price);
       }
-    },
-  );
+    } else {
+      resultMap[obj.date.day] = obj.price;
+    }
+  }
 
   return resultMap;
 }
 
-List<FlSpot> monthlyPrice(List<CardData> data) {
+List<FlSpot> monthlyPrice(List<RefuelData> data) {
   List<FlSpot> monthlyList = [];
   double padding = 0;
   Map<int, double> priceMap = mapOfDailyPrices(data);
@@ -76,7 +90,7 @@ int findMaxY(List<FlSpot> data) {
   return max;
 }
 
-int approximateToNextDivisibleByFactor(int number, int factor) {
+int approximateByFactor(int number, int factor) {
   if (number % factor == 0) {
     return number;
   } else {
@@ -84,6 +98,57 @@ int approximateToNextDivisibleByFactor(int number, int factor) {
   }
 }
 
-double roundedNumber(double number) {
-  return double.parse(number.toStringAsFixed(2));
+double roundedNumber(double number, [int decimals = 2]) {
+  return double.parse(number.toStringAsFixed(decimals));
+}
+
+// Six months expense graph utils
+double getUpperLimitSixMonths(BarData data) {
+  return approximateByFactor(
+          approximateByFactor(data.maxY().ceil(), sixMonthFactor),
+          approximationFactor)
+      .toDouble();
+}
+
+double getIntervalSixMonths(double upperLimit) {
+  return roundedNumber((upperLimit / sixMonthFactor), 0).toDouble();
+}
+
+// Monthly expense graph utils
+double getUpperLimitMonth(List<FlSpot> monthData) {
+  int max = findMaxY(monthData);
+  return approximateByFactor(
+          approximateByFactor(max, monthFactor), approximationFactor)
+      .toDouble();
+}
+
+double getIntervalMonth(double upperLimit) {
+  return roundedNumber((upperLimit / monthFactor), 0).toDouble();
+}
+
+// Monthly stats
+double getTotalKm(List<RefuelData> data, [double initialKm = 0.0]) {
+  if (data.isNotEmpty) {
+    if (data.last.km == data.first.km) {
+      return data.last.km - initialKm;
+    } else {
+      return data.last.km - data.first.km;
+    }
+  } else {
+    return 0.0;
+  }
+}
+
+// Basic estimation
+double getAverageConsuption(List<RefuelData> data, [double initialKm = 0.0]) {
+  double totalDistanceTraveled = getTotalKm(data, initialKm);
+  double totalFuelConsumed = data.fold(0, (t, e) => t + e.liters);
+
+  // Calculate average fuel consumption per unit distance
+  // Consumption in liters per 100 km
+  if (totalDistanceTraveled == 0.0) {
+    return 0.0;
+  } else {
+    return (totalFuelConsumed / totalDistanceTraveled) * 100;
+  }
 }

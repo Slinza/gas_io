@@ -30,13 +30,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^6.1.0
+  google_fonts: 6.1.0
   sqflite: ^2.0.0
   fl_chart: ^0.65.0
   intl: ^0.18.1
   flutter_slidable: ^3.0.1
-#  form_builder_validators: ^9.1.0
-  flutter_form_builder: ^9.1.1
+  form_builder_validators: ^9.1.0
+  flutter_form_builder: ^9.1.0
+  google_maps_flutter: ^2.5.3
+  http: ^1.2.0
+  geolocator: 7.7.0
+  flutter_config: ^2.0.2
+  shared_preferences: ^2.2.2
 #  datetime_picker_formfield_new: ^2.1.0
 #  timezone: ^0.9.2
 
@@ -72,7 +77,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

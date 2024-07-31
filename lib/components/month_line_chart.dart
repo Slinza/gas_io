@@ -3,8 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 
 import 'package:gas_io/utils/support_functions.dart';
 import 'package:gas_io/design/themes.dart';
-
-const int INTERVAL_FACTOR = 3;
+import 'package:gas_io/design/styles.dart';
 
 class MonthLineChartWidget extends StatelessWidget {
   const MonthLineChartWidget({
@@ -16,7 +15,7 @@ class MonthLineChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double upperLimit = getUpperLimitMonth(monthData);
+    double upperLimit = roundedNumber(getUpperLimitMonth(monthData), 0);
     double interval = getIntervalMonth(upperLimit);
     return LineChart(
       LineChartData(
@@ -27,7 +26,7 @@ class MonthLineChartWidget extends StatelessWidget {
             color: primaryColor,
             barWidth: 3,
             isStrokeCapRound: true,
-            dotData: FlDotData(show: false),
+            dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
               color: primaryColor.withOpacity(0.2),
@@ -36,36 +35,35 @@ class MonthLineChartWidget extends StatelessWidget {
         ],
         minY: 0,
         maxY: upperLimit,
-        //maxX: 33,
         borderData: FlBorderData(
             show: true,
             border: const Border(bottom: BorderSide(), left: BorderSide())),
         gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
-          bottomTitles: AxisTitles(
+          bottomTitles: const AxisTitles(
             sideTitles:
                 SideTitles(showTitles: false, reservedSize: 30, interval: 3),
           ),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 30,
+              reservedSize: 37,
               interval: interval <= 0.0 ? 1 : interval,
             ),
           ),
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(
+            axisNameWidget: Text(
+              "Expense of the month",
+              style: subtitleTextStyle,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
       ),
+      duration:
+          const Duration(milliseconds: 0), // Control graph refresh movements
     );
   }
-}
-
-double getUpperLimitMonth(List<FlSpot> monthData) {
-  int max = findMaxY(monthData);
-  return approximateToNextDivisibleByFactor(max, INTERVAL_FACTOR).toDouble();
-}
-
-double getIntervalMonth(double upperLimit) {
-  return (upperLimit / INTERVAL_FACTOR).toDouble();
 }
