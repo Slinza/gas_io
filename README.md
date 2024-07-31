@@ -11,10 +11,10 @@ GasIO is an open-source Flutter application designed to help you easily record c
 ## Screenshots
 
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-    <img src="screenshots/refuel_list.jpg" alt="Refuel list" style="width: 100px;">
-    <img src="screenshots/sliding_elements.jpg" alt="Modify Refuel" style="width: 100px;">
-    <img src="screenshots/add_refuel.jpg" alt="Add Refuel" style="width: 100px;">
-    <img src="screenshots/update_refuel.jpg" alt="Update Refuel" style="width: 100px;">
+    <img src="screenshots/refuel_list.jpg" alt="Refuel list" style="width: 200px;">
+    <img src="screenshots/sliding_elements.jpg" alt="Modify Refuel" style="width: 200px;">
+    <img src="screenshots/add_refuel.jpg" alt="Add Refuel" style="width: 200px;">
+    <img src="screenshots/update_refuel.jpg" alt="Update Refuel" style="width: 200px;">
 </div>
 
 <!--
