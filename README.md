@@ -1,6 +1,6 @@
 # GasIO
 
-GasIO is an open-source Flutter application designed to help you easily record car refuels and track fuel consumption statistics. This prototype serves as a foundational project for developers interested in enhancing its features and functionality.
+GasIO is a free and open-source Flutter application designed to help you easily record car refuels and track fuel consumption statistics. This prototype serves as a foundational project for developers interested in enhancing its features and functionality.
 
 ## Features
 
